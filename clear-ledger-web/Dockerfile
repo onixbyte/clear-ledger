@@ -15,7 +15,6 @@ COPY . .
 # Build the application
 RUN npm run build
 
-# Stage 2: Deploy
 FROM nginx:alpine
 
 # Copy the build output from the builder stage
