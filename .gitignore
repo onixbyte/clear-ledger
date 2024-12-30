@@ -60,3 +60,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+### User Defined
+config/

@@ -4,5 +4,5 @@ logging:
 
 spring:
   application:
-    name: spring-boot-template
+    name: clear-ledger-server
 
