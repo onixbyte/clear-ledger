@@ -1,0 +1,8 @@
+logging:
+  pattern:
+    dateformat: dd MMM yyyy HH:mm:ss
+
+spring:
+  application:
+    name: spring-boot-template
+
