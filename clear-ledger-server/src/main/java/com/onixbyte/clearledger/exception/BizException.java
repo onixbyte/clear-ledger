@@ -8,8 +8,8 @@ import org.springframework.http.ResponseEntity;
 import java.time.LocalDateTime;
 
 /**
- * This is a business exception that can specify the http status and a customised message. All exceptions that extends
- * from this exception will be captured by
+ * This is a business exception that can specify the http status and a customised message. All
+ * exceptions that extends from this exception will be captured by
  * {@link com.onixbyte.clearledger.controller.advice.ApplicationExceptionAdvice#handleBizException(BizException)}
  * and return a {@link BizExceptionResponse} automatically to the web.
  *
