@@ -62,5 +62,5 @@ dist-ssr
 *.sw?
 
 ### User Defined
-config/*
+config/*.yaml
 !config/*.yaml.default
