@@ -32,6 +32,6 @@ CREATE TABLE transactions
     user_id          BIGINT REFERENCES users (id),
     amount           DECIMAL(10, 2) NOT NULL,
     description      TEXT,
-    transaction_date DATE           NOT NULL,
+    transaction_date TIMESTAMP      NOT NULL,
     created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
