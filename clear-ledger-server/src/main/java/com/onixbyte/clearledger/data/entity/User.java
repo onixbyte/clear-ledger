@@ -1,22 +1,23 @@
 package com.onixbyte.clearledger.data.entity;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.mybatisflex.annotation.Id;
+import com.mybatisflex.annotation.KeyType;
+import com.mybatisflex.annotation.RelationManyToMany;
+import com.mybatisflex.annotation.Table;
+import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity(name = "users")
+@ToString
+@Table("users")
 public class User {
 
-    @Id
+    @Id(keyType = KeyType.None)
     private Long id;
 
     private String username;
@@ -26,13 +27,5 @@ public class User {
     private String email;
 
     private LocalDateTime createdAt;
-
-    @ManyToMany
-    @JoinTable(
-        name = "user_ledgers",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "ledger_id")
-    )
-    private Set<Ledger> ledgers;
 
 }

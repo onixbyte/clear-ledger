@@ -1,7 +1,8 @@
 package com.onixbyte.clearledger.data.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.mybatisflex.annotation.Id;
+import com.mybatisflex.annotation.KeyType;
+import com.mybatisflex.annotation.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,10 +14,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity(name = "transactions")
+@Table("transactions")
 public class Transaction {
 
-    @Id
+    @Id(keyType = KeyType.None)
     private Long id;
 
     private Long ledgerId;
