@@ -1,0 +1,12 @@
+logging:
+  pattern:
+    dateformat: dd MMM yyyy HH:mm:ss
+
+spring:
+  application:
+    name: clear-ledger-server
+
+mybatis-flex:
+  configuration:
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+    map-underscore-to-camel-case: true

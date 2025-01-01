@@ -64,3 +64,4 @@ dist-ssr
 ### User Defined
 **/config/*
 !**/config/*.yaml.default
+!**/config/*.java

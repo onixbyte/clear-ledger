@@ -1,0 +1,3 @@
+app:
+  concurrent:
+    max-task-thread-count: 20
