@@ -7,6 +7,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Ledger entrypoint.
+ *
+ * @author zihluwang
+ */
 @RestController
 @RequestMapping("/ledgers")
 public class LedgerController {

@@ -11,7 +11,8 @@ import java.util.List;
 public record UserDomain(
         Long userId,
         String username,
-        String password
+        String password,
+        String email
 ) implements UserDetails {
 
     @Override
