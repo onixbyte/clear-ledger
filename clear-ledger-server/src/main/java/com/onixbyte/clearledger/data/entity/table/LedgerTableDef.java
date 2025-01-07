@@ -14,8 +14,6 @@ public class LedgerTableDef extends TableDef {
 
     public final QueryColumn CREATED_AT = new QueryColumn(this, "created_at");
 
-    public final QueryColumn CREATED_BY = new QueryColumn(this, "created_by");
-
     public final QueryColumn DESCRIPTION = new QueryColumn(this, "description");
 
     /**
@@ -26,7 +24,7 @@ public class LedgerTableDef extends TableDef {
     /**
      * 默认字段，不包含逻辑删除或者 large 等字段。
      */
-    public final QueryColumn[] DEFAULT_COLUMNS = new QueryColumn[]{ID, NAME, CREATED_AT, CREATED_BY, DESCRIPTION};
+    public final QueryColumn[] DEFAULT_COLUMNS = new QueryColumn[]{ID, NAME, CREATED_AT, DESCRIPTION};
 
     public LedgerTableDef() {
         super("", "ledgers");

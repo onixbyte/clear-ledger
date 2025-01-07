@@ -2,10 +2,13 @@ package com.onixbyte.clearledger.service;
 
 import com.onixbyte.clearledger.data.entity.Ledger;
 import com.onixbyte.clearledger.data.entity.UserLedger;
+import com.onixbyte.clearledger.data.entity.table.LedgerTableDef;
+import com.onixbyte.clearledger.exception.BizException;
 import com.onixbyte.clearledger.holder.UserHolder;
 import com.onixbyte.clearledger.repository.LedgerRepository;
 import com.onixbyte.clearledger.repository.UserLedgerRepository;
 import com.onixbyte.guid.GuidCreator;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,20 +36,15 @@ public class LedgerService {
     /**
      * Create a ledger.
      *
-     * @param name        the name of the ledger
-     * @param description the description of the ledger
      * @return the created ledger
      */
     @Transactional
-    public Ledger createLedger(String name, String description) {
+    public Ledger saveLedger(Ledger ledger) {
         var currentUser = UserHolder.getCurrentUser();
 
-        var ledger = Ledger.builder()
-                .id(ledgerIdCreator.nextId()) // set ledger id
-                .name(name) // set ledger name
-                .description(description) // set ledger description
-                .createdAt(LocalDateTime.now())
-                .build();
+        if (isNameTaken(ledger.getName())) {
+            throw new BizException(HttpStatus.CONFLICT, "Ledger name is taken.");
+        }
 
         ledgerRepository.insert(ledger);
         userLedgerRepository.insert(UserLedger.builder()
@@ -57,6 +55,10 @@ public class LedgerService {
                 .build());
 
         return ledger;
+    }
+
+    public boolean isNameTaken(String name) {
+        return ledgerRepository.selectCountByCondition(LedgerTableDef.LEDGER.NAME.eq(name)) != 0;
     }
 
 }

@@ -12,7 +12,12 @@ post {
 
 body:json {
   {
-    "username": "zhangsan",
-    "password": "zhangsan"
+    "username": "zihluwang",
+    "password": "zihluwang"
   }
+}
+
+script:post-response {
+  console.log(`User token is ${res.headers.authorization}`)
+  bru.setEnvVar("user_token", res.headers.authorization)
 }
