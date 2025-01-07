@@ -4,11 +4,14 @@ import com.onixbyte.clearledger.data.biz.BizLedger;
 import com.onixbyte.clearledger.data.entity.Ledger;
 import com.onixbyte.clearledger.data.entity.UserLedger;
 import com.onixbyte.clearledger.data.entity.table.LedgerTableDef;
+import com.onixbyte.clearledger.data.entity.table.TransactionTableDef;
 import com.onixbyte.clearledger.data.entity.table.UserLedgerTableDef;
 import com.onixbyte.clearledger.exception.BizException;
 import com.onixbyte.clearledger.holder.UserHolder;
 import com.onixbyte.clearledger.repository.LedgerRepository;
+import com.onixbyte.clearledger.repository.TransactionRepository;
 import com.onixbyte.clearledger.repository.UserLedgerRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,11 +28,14 @@ public class LedgerService {
 
     private final LedgerRepository ledgerRepository;
     private final UserLedgerRepository userLedgerRepository;
+    private final TransactionRepository transactionRepository;
 
     public LedgerService(LedgerRepository ledgerRepository,
-                         UserLedgerRepository userLedgerRepository) {
+                         UserLedgerRepository userLedgerRepository,
+                         TransactionRepository transactionRepository) {
         this.ledgerRepository = ledgerRepository;
         this.userLedgerRepository = userLedgerRepository;
+        this.transactionRepository = transactionRepository;
     }
 
     /**
@@ -120,4 +126,24 @@ public class LedgerService {
         return ledgerRepository.selectCountByCondition(LedgerTableDef.LEDGER.ID.eq(ledgerId)) == 1;
     }
 
+    @Transactional
+    public void deleteLedger(Long ledgerId) {
+        // check whether the ledger exists
+        if (!hasLedger(ledgerId)) {
+            throw new BizException(HttpStatus.NOT_FOUND, "No ledger with given ledger id.");
+        }
+
+        if (!canEdit(ledgerId)) {
+            throw new BizException(HttpStatus.FORBIDDEN, "You can't delete a ledger which is not created by you.");
+        }
+
+        transactionRepository.deleteByCondition(TransactionTableDef.TRANSACTION.LEDGER_ID.eq(ledgerId));
+        userLedgerRepository.deleteByCondition(UserLedgerTableDef.USER_LEDGER.LEDGER_ID.eq(ledgerId));
+        ledgerRepository.deleteByCondition(LedgerTableDef.LEDGER.ID.eq(ledgerId));
+    }
+
+    public boolean canEdit(Long ledgerId) {
+        var currentUser = UserHolder.getCurrentUser();
+        return "owner".equals(userLedgerRepository.selectRole(currentUser.id(), ledgerId));
+    }
 }

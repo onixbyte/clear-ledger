@@ -1,0 +1,15 @@
+meta {
+  name: Delete Ledger
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{baseUrl}}/ledgers/:ledgerid
+  body: none
+  auth: none
+}
+
+params:path {
+  ledgerid: 1326086603575136256
+}
