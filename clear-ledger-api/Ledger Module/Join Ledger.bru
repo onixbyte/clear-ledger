@@ -1,0 +1,15 @@
+meta {
+  name: Join Ledger
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/ledgers/join/:ledgerId
+  body: none
+  auth: none
+}
+
+params:path {
+  ledgerId: 1326086603575136256
+}

@@ -2,13 +2,11 @@ package com.onixbyte.clearledger.controller;
 
 import com.onixbyte.clearledger.data.request.CreateLedgerRequest;
 import com.onixbyte.clearledger.data.entity.Ledger;
+import com.onixbyte.clearledger.data.view.BizLedgerView;
 import com.onixbyte.clearledger.data.view.LedgerView;
 import com.onixbyte.clearledger.service.LedgerService;
 import com.onixbyte.guid.GuidCreator;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
@@ -29,9 +27,6 @@ public class LedgerController {
         this.ledgerService = ledgerService;
     }
 
-    /**
-     * Create ledger.
-     */
     @PostMapping
     public LedgerView createLedger(@RequestBody CreateLedgerRequest request) {
         var ledger = Ledger.builder()
@@ -42,6 +37,18 @@ public class LedgerController {
                 .build();
 
         return ledgerService.saveLedger(ledger).toView();
+    }
+
+    @PostMapping("/join/{ledgerId}")
+    public BizLedgerView joinLedger(@PathVariable Long ledgerId) {
+        var bizLedger = ledgerService.joinLedger(ledgerId);
+        return BizLedgerView.builder()
+                .id(String.valueOf(bizLedger.id()))
+                .name(bizLedger.name())
+                .description(bizLedger.description())
+                .role(bizLedger.role())
+                .joinedAt(bizLedger.joinedAt())
+                .build();
     }
 
 }
