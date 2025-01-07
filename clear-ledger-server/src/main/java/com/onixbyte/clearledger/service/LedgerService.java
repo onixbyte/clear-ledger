@@ -24,12 +24,10 @@ import java.util.concurrent.CompletableFuture;
 @Service
 public class LedgerService {
 
-    private final GuidCreator<Long> ledgerIdCreator;
     private final LedgerRepository ledgerRepository;
     private final UserLedgerRepository userLedgerRepository;
 
-    public LedgerService(GuidCreator<Long> ledgerIdCreator, LedgerRepository ledgerRepository, UserLedgerRepository userLedgerRepository) {
-        this.ledgerIdCreator = ledgerIdCreator;
+    public LedgerService(LedgerRepository ledgerRepository, UserLedgerRepository userLedgerRepository) {
         this.ledgerRepository = ledgerRepository;
         this.userLedgerRepository = userLedgerRepository;
     }
