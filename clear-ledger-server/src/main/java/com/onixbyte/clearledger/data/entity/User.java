@@ -4,6 +4,7 @@ import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.RelationManyToMany;
 import com.mybatisflex.annotation.Table;
+import com.onixbyte.clearledger.data.domain.UserDomain;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -27,5 +28,19 @@ public class User {
     private String email;
 
     private LocalDateTime createdAt;
+
+    /**
+     * Convert object to domain object.
+     *
+     * @return the domain object
+     */
+    public UserDomain toDomain() {
+        return UserDomain.builder()
+                .userId(getId())
+                .username(getUsername())
+                .password(getPassword())
+                .email(getEmail())
+                .build();
+    }
 
 }

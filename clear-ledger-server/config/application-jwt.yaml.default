@@ -1,0 +1,5 @@
+onixbyte:
+  simple-jwt:
+    algorithm: hs512
+    secret: a_sample_secret_with_64_characters_12345678901234567890123456789
+    issuer: "ClearLedger :: Server"
