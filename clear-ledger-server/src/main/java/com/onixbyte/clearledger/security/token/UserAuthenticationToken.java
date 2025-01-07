@@ -7,6 +7,7 @@ import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Data
@@ -82,5 +83,11 @@ public class UserAuthenticationToken implements Authentication, CredentialsConta
 
     public static UserAuthenticationToken authenticated(String principal, String credentials, List<GrantedAuthority> authorities) {
         return new UserAuthenticationToken(principal, credentials, authorities);
+    }
+
+    public static UserAuthenticationToken authenticated(UserDomain user) {
+        var authentication = new UserAuthenticationToken(user.username(), null, Collections.emptyList());
+        authentication.setDetails(user);
+        return authentication;
     }
 }

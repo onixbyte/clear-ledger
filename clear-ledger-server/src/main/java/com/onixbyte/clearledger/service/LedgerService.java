@@ -3,6 +3,7 @@ package com.onixbyte.clearledger.service;
 import com.onixbyte.clearledger.data.entity.Ledger;
 import com.onixbyte.clearledger.data.entity.UserLedger;
 import com.onixbyte.clearledger.data.entity.table.LedgerTableDef;
+import com.onixbyte.clearledger.data.entity.table.UserLedgerTableDef;
 import com.onixbyte.clearledger.exception.BizException;
 import com.onixbyte.clearledger.holder.UserHolder;
 import com.onixbyte.clearledger.repository.LedgerRepository;
@@ -46,6 +47,10 @@ public class LedgerService {
             throw new BizException(HttpStatus.CONFLICT, "Ledger name is taken.");
         }
 
+        if (countJoinedLedgers(currentUser.id()) >= 3) {
+            throw new BizException(HttpStatus.CONFLICT, "You can only join at most 3 ledgers.");
+        }
+
         ledgerRepository.insert(ledger);
         userLedgerRepository.insert(UserLedger.builder()
                 .userId(currentUser.id())
@@ -59,6 +64,10 @@ public class LedgerService {
 
     public boolean isNameTaken(String name) {
         return ledgerRepository.selectCountByCondition(LedgerTableDef.LEDGER.NAME.eq(name)) != 0;
+    }
+
+    public long countJoinedLedgers(Long userId) {
+        return userLedgerRepository.selectCountByCondition(UserLedgerTableDef.USER_LEDGER.USER_ID.eq(userId));
     }
 
 }

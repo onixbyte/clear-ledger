@@ -1,6 +1,6 @@
 package com.onixbyte.clearledger.data.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.onixbyte.clearledger.data.entity.User;
 import com.onixbyte.clearledger.data.view.UserView;
 import lombok.Builder;
 import org.springframework.security.core.GrantedAuthority;
@@ -37,6 +37,16 @@ public record UserDomain(
                 .id(String.valueOf(id))
                 .username(username)
                 .email(email)
+                .build();
+    }
+
+    public User toPersistent() {
+        return User.builder()
+                .id(id)
+                .username(username)
+                .password(password)
+                .email(email)
+                .createdAt(null)
                 .build();
     }
 

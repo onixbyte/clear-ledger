@@ -14,6 +14,7 @@ import com.onixbyte.guid.GuidCreator;
 import com.onixbyte.simplejwt.TokenResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,14 +36,19 @@ public class AuthController {
     private final TokenResolver<DecodedJWT> tokenResolver;
     private final GuidCreator<Long> userIdCreator;
     private final UserService userService;
+    private final RedisTemplate<String, User> userCache;
 
     @Autowired
     public AuthController(AuthenticationManager authenticationManager,
-                          TokenResolver<DecodedJWT> tokenResolver, GuidCreator<Long> userIdCreator, UserService userService) {
+                          TokenResolver<DecodedJWT> tokenResolver,
+                          GuidCreator<Long> userIdCreator,
+                          UserService userService,
+                          RedisTemplate<String, User> userCache) {
         this.authenticationManager = authenticationManager;
         this.tokenResolver = tokenResolver;
         this.userIdCreator = userIdCreator;
         this.userService = userService;
+        this.userCache = userCache;
     }
 
     /**
@@ -58,7 +64,12 @@ public class AuthController {
             var _auth = authenticationManager.authenticate(UserAuthenticationToken.unauthenticated(
                     request.username(), request.password()));
             if (_auth instanceof UserAuthenticationToken authentication) {
+                // create jwt
                 var jwt = tokenResolver.createToken(Duration.ofDays(1), authentication.getName(), "ClearLedger :: User");
+                // save data to cache server for 1 day
+                userCache.opsForValue().set("clear-ledger:app:user:%s".formatted(authentication.getName()),
+                        authentication.getDetails().toPersistent(), Duration.ofDays(1));
+                // compose response entity
                 return ResponseEntity.status(HttpStatus.OK)
                         .header("Authorization", jwt)
                         .body(authentication.getDetails().toView());

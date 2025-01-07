@@ -1,5 +1,6 @@
 package com.onixbyte.clearledger.config;
 
+import com.onixbyte.clearledger.filter.UserAuthenticationFilter;
 import com.onixbyte.clearledger.security.provider.UserDaoAuthenticationProvider;
 import com.onixbyte.clearledger.service.UserService;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
@@ -22,7 +24,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity,
                                                    CorsConfigurationSource corsConfigurationSource,
-                                                   UserDaoAuthenticationProvider userDaoAuthenticationProvider) throws Exception {
+                                                   UserDaoAuthenticationProvider userDaoAuthenticationProvider,
+                                                   UserAuthenticationFilter userAuthenticationFilter) throws Exception {
         return httpSecurity
                 .cors((customiser) -> customiser
                         .configurationSource(corsConfigurationSource))
@@ -34,7 +37,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/logout").authenticated()
                         .anyRequest().authenticated())
                 .authenticationProvider(userDaoAuthenticationProvider)
-                // .addFilterBefore(, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
