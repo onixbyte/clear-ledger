@@ -1,0 +1,18 @@
+meta {
+  name: Create Ledger
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/ledgers
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Sample Ledger",
+    "description": "This is a sample ledger."
+  }
+}

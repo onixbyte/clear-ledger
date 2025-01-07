@@ -16,7 +16,6 @@ java {
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
-    // options.compilerArgs.add("--enable-preview")
 }
 
 configurations {
@@ -40,11 +39,21 @@ dependencies {
     implementation("com.onixbyte:simple-jwt-facade:$devkitVersion")
     implementation("com.onixbyte:simple-jwt-authzero:$devkitVersion")
     implementation("com.onixbyte:simple-jwt-spring-boot-starter:$devkitVersion")
-    implementation("com.onixbyte:property-guard-spring-boot-starter:$devkitVersion")
+    implementation("com.auth0:java-jwt:4.4.0")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("com.mybatis-flex:mybatis-flex-spring-boot3-starter:1.10.4")
+    // annotationProcessor("com.mybatis-flex:mybatis-flex-processor:1.10.4")
+    implementation("com.zaxxer:HikariCP")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
+    testImplementation("org.springframework.security:spring-security-test")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
+    testCompileOnly("org.projectlombok:lombok")
+    testAnnotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
+    runtimeOnly("org.postgresql:postgresql")
 }
 
 tasks.withType<Test> {

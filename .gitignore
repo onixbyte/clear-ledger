@@ -37,7 +37,7 @@ out/
 .vscode/
 
 
-# Logs
+### Logs
 logs
 *.log
 npm-debug.log*
@@ -51,7 +51,7 @@ dist
 dist-ssr
 *.local
 
-# Editor directories and files
+### Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .DS_Store
@@ -60,3 +60,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+### User Defined
+**/config/*
+!**/config/*.yaml.default
+!**/config/*.java
