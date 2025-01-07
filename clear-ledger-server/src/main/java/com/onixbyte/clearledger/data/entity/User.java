@@ -5,6 +5,7 @@ import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.RelationManyToMany;
 import com.mybatisflex.annotation.Table;
 import com.onixbyte.clearledger.data.domain.UserDomain;
+import com.onixbyte.clearledger.data.view.UserView;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -36,9 +37,17 @@ public class User {
      */
     public UserDomain toDomain() {
         return UserDomain.builder()
-                .userId(getId())
+                .id(getId())
                 .username(getUsername())
                 .password(getPassword())
+                .email(getEmail())
+                .build();
+    }
+
+    public UserView toView() {
+        return UserView.builder()
+                .id(String.valueOf(getId()))
+                .username(getUsername())
                 .email(getEmail())
                 .build();
     }

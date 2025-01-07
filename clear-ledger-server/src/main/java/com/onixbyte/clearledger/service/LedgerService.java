@@ -46,16 +46,15 @@ public class LedgerService {
                 .name(name) // set ledger name
                 .description(description) // set ledger description
                 .createdAt(LocalDateTime.now())
-                .createdBy(1L)
                 .build();
 
-        CompletableFuture.runAsync(() -> ledgerRepository.insert(ledger));
-        CompletableFuture.runAsync(() -> userLedgerRepository.insert(UserLedger.builder()
-                .userId(currentUser.userId())
+        ledgerRepository.insert(ledger);
+        userLedgerRepository.insert(UserLedger.builder()
+                .userId(currentUser.id())
                 .ledgerId(ledger.getId())
                 .role("owner")
                 .joinedAt(LocalDateTime.now())
-                .build()));
+                .build());
 
         return ledger;
     }

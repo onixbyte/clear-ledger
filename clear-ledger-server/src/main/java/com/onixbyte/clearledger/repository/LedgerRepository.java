@@ -25,11 +25,11 @@ public interface LedgerRepository extends BaseMapper<Ledger> {
      * @return all the ledgers the user has joined or created
      */
     @Select("""
-            SELECT l.id, l.name, l.description, l.created_by, l.created_at, ul.role, ul.joined_at
+            SELECT l.id, l.name, l.description, l.created_at, ul.role, ul.joined_at
             FROM ledgers l
             JOIN user_ledgers ul ON l.id = ul.ledger_id
             WHERE ul.user_id = #{userId}
             """)
-    List<LedgerBizData> findLedgersByUserId(@Param("userId") Long userId);
+    List<LedgerBizData> findLedgersByUserId(@Param("id") Long userId);
 
 }

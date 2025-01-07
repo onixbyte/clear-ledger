@@ -22,8 +22,6 @@ public class Ledger {
 
     private String description;
 
-    private Long createdBy;
-
     private LocalDateTime createdAt;
 
 }

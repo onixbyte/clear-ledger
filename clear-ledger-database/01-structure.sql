@@ -12,7 +12,6 @@ CREATE TABLE ledgers
     id          BIGINT PRIMARY KEY,
     name        VARCHAR(100) NOT NULL,
     description TEXT,
-    created_by  BIGINT REFERENCES users (id),
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
