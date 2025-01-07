@@ -194,4 +194,18 @@ public class LedgerService {
         var currentUser = UserHolder.getCurrentUser();
         return "owner".equals(userLedgerRepository.selectRole(currentUser.id(), ledgerId));
     }
+
+    /**
+     * Update ledger, ignore null values.
+     *
+     * @param ledger the ledger that will be updated
+     */
+    public void updateLedger(Ledger ledger) {
+        if (!canEdit(ledger.getId())) {
+            throw new BizException(HttpStatus.FORBIDDEN, "You cannot edit this ledger.");
+        }
+
+        // perform update ledger
+        ledgerRepository.update(ledger, true);
+    }
 }

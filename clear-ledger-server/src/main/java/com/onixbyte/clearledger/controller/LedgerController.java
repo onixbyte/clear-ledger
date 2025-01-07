@@ -2,15 +2,19 @@ package com.onixbyte.clearledger.controller;
 
 import com.onixbyte.clearledger.data.request.CreateLedgerRequest;
 import com.onixbyte.clearledger.data.entity.Ledger;
+import com.onixbyte.clearledger.data.request.UpdateLedgerRequest;
 import com.onixbyte.clearledger.data.view.BizLedgerView;
 import com.onixbyte.clearledger.data.view.LedgerView;
+import com.onixbyte.clearledger.exception.BizException;
 import com.onixbyte.clearledger.service.LedgerService;
 import com.onixbyte.guid.GuidCreator;
 import org.apache.ibatis.annotations.Delete;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * Ledger entrypoint.
@@ -57,6 +61,22 @@ public class LedgerController {
     public ResponseEntity<Void> deleteLedger(@PathVariable Long ledgerId) {
         ledgerService.deleteLedger(ledgerId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping
+    public ResponseEntity<Void> updateLedger(@RequestBody UpdateLedgerRequest request) {
+        if (Objects.isNull(request.id())) {
+            throw new BizException(HttpStatus.BAD_REQUEST, "Missing parameter id.");
+        }
+
+        var ledger = Ledger.builder()
+                .id(request.id())
+                .name(request.name())
+                .description(request.description())
+                .build();
+
+        ledgerService.updateLedger(ledger);
+        return ResponseEntity.accepted().build();
     }
 
 }
