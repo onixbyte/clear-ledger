@@ -6,6 +6,8 @@ import com.onixbyte.clearledger.data.view.BizLedgerView;
 import com.onixbyte.clearledger.data.view.LedgerView;
 import com.onixbyte.clearledger.service.LedgerService;
 import com.onixbyte.guid.GuidCreator;
+import org.apache.ibatis.annotations.Delete;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -39,7 +41,7 @@ public class LedgerController {
         return ledgerService.saveLedger(ledger).toView();
     }
 
-    @PostMapping("/join/{ledgerId}")
+    @PostMapping("/join/{ledgerId:\\d+}")
     public BizLedgerView joinLedger(@PathVariable Long ledgerId) {
         var bizLedger = ledgerService.joinLedger(ledgerId);
         return BizLedgerView.builder()
@@ -49,6 +51,12 @@ public class LedgerController {
                 .role(bizLedger.role())
                 .joinedAt(bizLedger.joinedAt())
                 .build();
+    }
+
+    @DeleteMapping("/{ledgerId:\\d+}")
+    public ResponseEntity<Void> deleteLedger(@PathVariable Long ledgerId) {
+        ledgerService.deleteLedger(ledgerId);
+        return ResponseEntity.noContent().build();
     }
 
 }
