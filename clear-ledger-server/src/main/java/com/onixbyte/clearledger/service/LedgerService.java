@@ -51,7 +51,7 @@ public class LedgerService {
             throw new BizException(HttpStatus.CONFLICT, "Ledger name is taken.");
         }
 
-        if (!canCreateOrJoinLedger(currentUser.id())) {
+        if (!canCreateOrJoinLedger()) {
             throw new BizException(HttpStatus.CONFLICT, "You can only join at most 3 ledgers.");
         }
 
@@ -66,6 +66,12 @@ public class LedgerService {
         return ledger;
     }
 
+    /**
+     * Let the current user join the given ledger.
+     *
+     * @param ledgerId ledger id
+     * @return joined ledger and role data
+     */
     @Transactional
     public BizLedger joinLedger(Long ledgerId) {
         var currentUser = UserHolder.getCurrentUser();
@@ -76,7 +82,7 @@ public class LedgerService {
         }
 
         // validate user can create or join a ledger
-        if (!canCreateOrJoinLedger(currentUser.id())) {
+        if (!canCreateOrJoinLedger()) {
             throw new BizException(HttpStatus.CONFLICT, "You can only join at most 3 ledgers.");
         }
 
@@ -103,18 +109,41 @@ public class LedgerService {
                 .build();
     }
 
+    /**
+     * Check whether the ledger name has been taken.
+     *
+     * @param name name of the ledger
+     * @return {@code true} if the name has been taken, otherwise {@code false}
+     */
     public boolean isNameTaken(String name) {
         return ledgerRepository.selectCountByCondition(LedgerTableDef.LEDGER.NAME.eq(name)) != 0;
     }
 
-    public long countCreatedOrJoinedLedgers(Long userId) {
-        return userLedgerRepository.selectCountByCondition(UserLedgerTableDef.USER_LEDGER.USER_ID.eq(userId));
+    /**
+     * Count ledgers the user created or joined.
+     *
+     * @return the count of ledgers the current user created or joined
+     */
+    public long countCreatedOrJoinedLedgers() {
+        var currentUser = UserHolder.getCurrentUser();
+        return userLedgerRepository.selectCountByCondition(UserLedgerTableDef.USER_LEDGER.USER_ID.eq(currentUser.id()));
     }
 
-    public boolean canCreateOrJoinLedger(Long userId) {
-        return countCreatedOrJoinedLedgers(userId) < 3;
+    /**
+     * Check whether current user can create or join a ledger.
+     *
+     * @return {@code true} if current user can create or join a ledger, otherwise {@code false}
+     */
+    public boolean canCreateOrJoinLedger() {
+        return countCreatedOrJoinedLedgers() < 3;
     }
 
+    /**
+     * Check whether current user has joined the given ledger.
+     *
+     * @param ledgerId ledger id
+     * @return {@code true} if current user has joined the ledger
+     */
     public boolean isLedgerJoined(Long ledgerId) {
         var currentUser = UserHolder.getCurrentUser();
 
@@ -122,10 +151,21 @@ public class LedgerService {
                 .and(UserLedgerTableDef.USER_LEDGER.LEDGER_ID.eq(ledgerId))) == 1;
     }
 
+    /**
+     * Check whether the given ledger exists in database.
+     *
+     * @param ledgerId ledger id
+     * @return {@code true} if ledger exists, otherwise {@code false}
+     */
     public boolean hasLedger(Long ledgerId) {
         return ledgerRepository.selectCountByCondition(LedgerTableDef.LEDGER.ID.eq(ledgerId)) == 1;
     }
 
+    /**
+     * Delete the given ledger.
+     *
+     * @param ledgerId ledger id
+     */
     @Transactional
     public void deleteLedger(Long ledgerId) {
         // check whether the ledger exists
@@ -133,15 +173,23 @@ public class LedgerService {
             throw new BizException(HttpStatus.NOT_FOUND, "No ledger with given ledger id.");
         }
 
+        // check whether this ledger can be edited by current user
         if (!canEdit(ledgerId)) {
             throw new BizException(HttpStatus.FORBIDDEN, "You can't delete a ledger which is not created by you.");
         }
 
+        // perform deleting
         transactionRepository.deleteByCondition(TransactionTableDef.TRANSACTION.LEDGER_ID.eq(ledgerId));
         userLedgerRepository.deleteByCondition(UserLedgerTableDef.USER_LEDGER.LEDGER_ID.eq(ledgerId));
         ledgerRepository.deleteByCondition(LedgerTableDef.LEDGER.ID.eq(ledgerId));
     }
 
+    /**
+     * Check whether a user can edit or delete the given ledger.
+     *
+     * @param ledgerId ledger id
+     * @return {@code true} if user can edit this ledger, otherwise {@code false}
+     */
     public boolean canEdit(Long ledgerId) {
         var currentUser = UserHolder.getCurrentUser();
         return "owner".equals(userLedgerRepository.selectRole(currentUser.id(), ledgerId));
