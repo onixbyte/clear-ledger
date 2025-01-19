@@ -1,3 +1,4 @@
 app:
   concurrent:
+    # Maximum non-IO task thread count
     max-task-thread-count: 20
