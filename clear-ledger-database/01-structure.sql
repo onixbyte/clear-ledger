@@ -1,3 +1,5 @@
+create database clear_ledger;
+
 CREATE TABLE users
 (
     id         BIGINT PRIMARY KEY,

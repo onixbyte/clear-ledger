@@ -1,5 +1,12 @@
 onixbyte:
   simple-jwt:
+    # JSON Web Token Algorithm, only hs256, hs384, hs512, es256, es384 and es512 are supported
     algorithm: hs512
+    # For HMAC-SHA algorithms, please provide a secret with 32-character long secret for HS256,
+    # 48-character long secret fot HS384 or 64-character long secret for HS512.
     secret: a_sample_secret_with_64_characters_12345678901234567890123456789
+    # The issuer of this JSON Web Token
     issuer: "ClearLedger :: Server"
+    # If you are using a ECDSA based algorithm, please provide your public key and private key.
+    # public-key: your_public_key_text
+    # private-key: your_private_key_text
