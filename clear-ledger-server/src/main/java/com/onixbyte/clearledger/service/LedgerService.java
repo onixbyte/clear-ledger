@@ -200,6 +200,7 @@ public class LedgerService {
      *
      * @param ledger the ledger that will be updated
      */
+    @Transactional
     public void updateLedger(Ledger ledger) {
         if (!canEdit(ledger.getId())) {
             throw new BizException(HttpStatus.FORBIDDEN, "You cannot edit this ledger.");

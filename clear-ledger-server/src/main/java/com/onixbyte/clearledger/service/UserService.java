@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -43,6 +44,7 @@ public class UserService implements UserDetailsService {
         return userRepository.selectCountByCondition(UserTableDef.USER.EMAIL.eq(email)) != 0;
     }
 
+    @Transactional
     public int saveUser(User user) {
         // check user can be registered
         if (isUsernameTaken(user.getUsername())) {

@@ -7,7 +7,8 @@ app:
   cors:
     allow-credentials: true
     allowed-headers: "*"
-    allowed-methods: get, post, delete, put, patch
-    allowed-origins: "*"
+    allowed-methods: get, post, put, patch, delete
+    allowed-origins:
+      - http://your_ip:5173/
     exposed-headers: Authorization, X-ClearLedger-Authorisation
     max-age: 100
