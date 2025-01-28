@@ -26,6 +26,14 @@ const routes: RouteRecordRaw[] = [
       title: "登录",
     },
   },
+  {
+    path: "/register",
+    name: "Register",
+    component: () => import("@/pages/register/index.vue"),
+    meta: {
+      title: "注册"
+    }
+  }
 ]
 
 const index = createRouter({
@@ -41,7 +49,7 @@ index.beforeEach((to, from, next) => {
 
   const { isAuthenticated } = useUserStore()
 
-  if (to.name != "Login" && !isAuthenticated) {
+  if (to.name != "Login" && to.name != "Register" && !isAuthenticated) {
     next({ name: "Login" })
   } else {
     next()

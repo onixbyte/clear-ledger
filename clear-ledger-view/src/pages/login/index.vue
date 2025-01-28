@@ -9,6 +9,9 @@
         <el-input type="password" v-model="password" />
       </el-form-item>
       <div class="login-form-footer">
+        <router-link :to="{ name: `Register` }">
+          没有账号？立即注册！
+        </router-link>
         <el-button type="primary" @click="login(username, password)">
           登录
         </el-button>
@@ -21,7 +24,7 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import * as AuthApi from "@/api/auth"
-import { useUserStore } from "@/store/user-store.ts"
+import { useUserStore } from "@/store"
 
 const userStore = useUserStore()
 
@@ -64,6 +67,7 @@ const login = async (username: string, password: string) => {
     .login-form-footer {
       display: flex;
       justify-content: end;
+      align-items: baseline;
     }
   }
 }

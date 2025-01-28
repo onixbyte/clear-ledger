@@ -21,3 +21,9 @@ script:post-response {
   console.log(`User token is ${res.headers.authorization}`)
   bru.setEnvVar("user_token", res.headers.authorization)
 }
+
+docs {
+  # User Login
+  
+  This entrypoint is served for user login, which will retrieve the user's public information such as **username**, **email address** and **user id**, and also, a JSON Web Token that used to identify this user will be carried in **HTTP Response Headers** named `Authorization`.
+}
