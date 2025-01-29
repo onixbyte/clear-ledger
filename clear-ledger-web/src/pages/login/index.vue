@@ -42,7 +42,7 @@ const login = async (username: string, password: string) => {
   if (response.headers) {
     const _authorisation = response.headers.authorization as string
     if (_authorisation) {
-      userStore.authorisation = _authorisation
+      userStore.authorisation.value = _authorisation
     }
   }
 }
