@@ -65,3 +65,5 @@ dist-ssr
 **/config/*
 !**/config/*.yaml.default
 !**/config/*.java
+auto-imports.d.ts
+components.d.ts

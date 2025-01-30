@@ -25,6 +25,7 @@
 import { ref } from "vue"
 import * as AuthApi from "@/api/auth"
 import { useUserStore } from "@/store"
+import router from "@/router"
 
 const userStore = useUserStore()
 
@@ -42,8 +43,11 @@ const login = async (username: string, password: string) => {
   if (response.headers) {
     const _authorisation = response.headers.authorization as string
     if (_authorisation) {
-      userStore.authorisation.value = _authorisation
+      userStore.authorisation = _authorisation
     }
+  }
+  if (userStore.isAuthenticated) {
+    await router.push({ name: "Ledgers" })
   }
 }
 </script>
