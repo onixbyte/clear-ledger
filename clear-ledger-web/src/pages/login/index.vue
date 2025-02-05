@@ -40,11 +40,9 @@ const clearLoginForm = () => {
 
 const login = async (username: string, password: string) => {
   const response = await AuthApi.login(username, password)
-  if (response.headers) {
-    const _authorisation = response.headers.authorization as string
-    if (_authorisation) {
-      userStore.authorisation = _authorisation
-    }
+  if (response) {
+    userStore.authorisation = response.authorisation
+    userStore.user = response.user
   }
   if (userStore.isAuthenticated) {
     await router.push({ name: "Ledgers" })
