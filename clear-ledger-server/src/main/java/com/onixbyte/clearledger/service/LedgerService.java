@@ -1,12 +1,15 @@
 package com.onixbyte.clearledger.service;
 
+import com.mybatisflex.core.query.QueryWrapper;
 import com.onixbyte.clearledger.data.biz.BizLedger;
 import com.onixbyte.clearledger.data.entity.Ledger;
 import com.onixbyte.clearledger.data.entity.UserLedger;
 import com.onixbyte.clearledger.data.entity.table.LedgerTableDef;
 import com.onixbyte.clearledger.data.entity.table.TransactionTableDef;
 import com.onixbyte.clearledger.data.entity.table.UserLedgerTableDef;
+import com.onixbyte.clearledger.data.view.LedgerView;
 import com.onixbyte.clearledger.exception.BizException;
+import com.onixbyte.clearledger.exception.ServiceUnavailableException;
 import com.onixbyte.clearledger.holder.UserHolder;
 import com.onixbyte.clearledger.repository.LedgerRepository;
 import com.onixbyte.clearledger.repository.TransactionRepository;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Service class for managing ledgers.
@@ -208,5 +212,27 @@ public class LedgerService {
 
         // perform update ledger
         ledgerRepository.update(ledger, true);
+    }
+
+    /**
+     * Get ledgers you have joined.
+     *
+     * @return ledgers you joined
+     */
+    public List<BizLedger> getJoinedLedgers() {
+        // get user information
+        var user = UserHolder.getCurrentUser();
+
+        // query ledgers
+        return userLedgerRepository.selectJoinedLedgers(user.id());
+    }
+
+    /**
+     * Get ledgers user can join.
+     *
+     * @return ledgers user can join
+     */
+    public List<BizLedger> getLedgersCanJoin() {
+        throw new ServiceUnavailableException("该服务暂未实现，请耐心等候！");
     }
 }

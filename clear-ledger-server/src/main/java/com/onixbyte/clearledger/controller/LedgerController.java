@@ -1,5 +1,6 @@
 package com.onixbyte.clearledger.controller;
 
+import com.onixbyte.clearledger.data.biz.BizLedger;
 import com.onixbyte.clearledger.data.request.CreateLedgerRequest;
 import com.onixbyte.clearledger.data.entity.Ledger;
 import com.onixbyte.clearledger.data.request.UpdateLedgerRequest;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -77,6 +79,40 @@ public class LedgerController {
 
         ledgerService.updateLedger(ledger);
         return ResponseEntity.accepted().build();
+    }
+
+    /**
+     * Get ledgers.
+     *
+     * @param ledgerType ledger type flag, {@code 1} represents joined ledgers, {@code 2} represents
+     *                   ledgers could be joined
+     * @return a ledger list
+     */
+    @GetMapping
+    public List<BizLedgerView> getLedgers(@RequestParam(required = false) Integer ledgerType) {
+        if (Objects.isNull(ledgerType) || ledgerType == 1) {
+            return ledgerService.getJoinedLedgers()
+                    .stream()
+                    .map((ledger) -> BizLedgerView.builder()
+                            .id(String.valueOf(ledger.id()))
+                            .name(ledger.name())
+                            .description(ledger.description())
+                            .role(ledger.role())
+                            .joinedAt(ledger.joinedAt())
+                            .build())
+                    .toList();
+        } else {
+            return ledgerService.getLedgersCanJoin()
+                    .stream()
+                    .map((ledger) -> BizLedgerView.builder()
+                            .id(String.valueOf(ledger.id()))
+                            .name(ledger.name())
+                            .description(ledger.description())
+                            .role(ledger.role())
+                            .joinedAt(ledger.joinedAt())
+                            .build())
+                    .toList();
+        }
     }
 
 }
