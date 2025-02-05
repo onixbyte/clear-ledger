@@ -5,9 +5,20 @@
         <span class="header-title">Clear Ledger</span>
       </el-header>
       <el-container class="dashboard-content-wrapper">
-        <el-aside width="200px">
-          <el-menu>
-            <el-menu-item></el-menu-item>
+        <el-aside width="200px" class="dashboard-aside-wrapper">
+          <el-menu class="dashboard-aside-menu" @select="onMenuItemSelected">
+            <el-menu-item
+              v-for="ledger in ledgers"
+              :key="`ledger#${ledger.id}`"
+              :index="`ledger#${ledger.id}`">
+              {{ ledger.name }}
+            </el-menu-item>
+            <el-menu-item key="join-ledger" index="join-ledger">
+              加入账本
+            </el-menu-item>
+            <el-menu-item key="create-ledger" index="create-ledger">
+              创建账本
+            </el-menu-item>
           </el-menu>
         </el-aside>
         <el-main>Main</el-main>
@@ -17,14 +28,38 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue"
-import { useUserStore } from "@/store"
+import { onMounted, ref } from "vue"
+import { useLedgerStore, useUserStore } from "@/store"
 
+import * as LedgerApi from "@/api/ledger"
+import { Ledger } from "@/types"
 
-const userStore = useUserStore()
+const { isAuthenticated, user } = useUserStore()
+const ledgerStore = useLedgerStore()
+
+const ledgers = ref<Ledger[]>([])
+
+const onMenuItemSelected = (key: string) => {
+  if (key == "create-ledger") {
+
+  } else if (key == "join-ledger") {
+
+  } else {
+    const pattern = /^ledger#(?<ledgerId>\d+)$/
+    const match = key.match(pattern)
+    const ledgerId = match?.groups ? match.groups.ledgerId : ""
+    console.log(ledgerId)
+  }
+}
 
 onMounted(async () => {
+  if (ledgerStore.ledgers.length == 0) {
+    if (isAuthenticated) {
+      ledgerStore.ledgers = await LedgerApi.getLedgers()
+    }
+  }
 
+  ledgers.value = ledgerStore.ledgers
 })
 </script>
 
@@ -38,6 +73,16 @@ onMounted(async () => {
 
       .header-title {
         font-size: 18px;
+      }
+    }
+
+    .dashboard-content-wrapper {
+      height: calc(100vh - 60px);
+
+      .dashboard-aside-wrapper {
+        .dashboard-aside-menu {
+          height: 100%;
+        }
       }
     }
   }
