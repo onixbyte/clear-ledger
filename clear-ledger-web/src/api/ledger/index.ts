@@ -9,4 +9,9 @@ const getLedgers = async (): Promise<Ledger[]> => {
   return data
 }
 
-export { getLedgers }
+const joinLedger = async (ledgerId: string): Promise<Ledger> => {
+  const { data } = await webClient.post<Ledger>(`/ledgers/join/${ledgerId}`)
+  return data
+}
+
+export { getLedgers, joinLedger }
