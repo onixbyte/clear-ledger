@@ -52,11 +52,11 @@ public class LedgerService {
         var currentUser = UserHolder.getCurrentUser();
 
         if (isNameTaken(ledger.getName())) {
-            throw new BizException(HttpStatus.CONFLICT, "Ledger name is taken.");
+            throw new BizException(HttpStatus.CONFLICT, "账本名称已被使用");
         }
 
         if (!canCreateOrJoinLedger()) {
-            throw new BizException(HttpStatus.CONFLICT, "You can only join at most 3 ledgers.");
+            throw new BizException(HttpStatus.CONFLICT, "您最多可以加入三个账本");
         }
 
         ledgerRepository.insert(ledger);
@@ -82,17 +82,17 @@ public class LedgerService {
 
         // check whether the ledger exists
         if (!hasLedger(ledgerId)) {
-            throw new BizException(HttpStatus.NOT_FOUND, "No ledger with given ledger id.");
+            throw new BizException(HttpStatus.NOT_FOUND, "无法根据指定的 ID 找到账本信息");
         }
 
         // validate user can create or join a ledger
         if (!canCreateOrJoinLedger()) {
-            throw new BizException(HttpStatus.CONFLICT, "You can only join at most 3 ledgers.");
+            throw new BizException(HttpStatus.CONFLICT, "您最多只能加入 3 个账本");
         }
 
         // validate whether user is already join this ledger
         if (isLedgerJoined(ledgerId)) {
-            throw new BizException(HttpStatus.CONFLICT, "You have already joined this ledger.");
+            throw new BizException(HttpStatus.CONFLICT, "您已经加入了这个账本");
         }
 
         var joinedAt = LocalDateTime.now();
@@ -174,12 +174,12 @@ public class LedgerService {
     public void deleteLedger(Long ledgerId) {
         // check whether the ledger exists
         if (!hasLedger(ledgerId)) {
-            throw new BizException(HttpStatus.NOT_FOUND, "No ledger with given ledger id.");
+            throw new BizException(HttpStatus.NOT_FOUND, "无法根据指定的 ID 找到账本");
         }
 
         // check whether this ledger can be edited by current user
         if (!canEdit(ledgerId)) {
-            throw new BizException(HttpStatus.FORBIDDEN, "You can't delete a ledger which is not created by you.");
+            throw new BizException(HttpStatus.FORBIDDEN, "您不能删除一个不是您创建的账本");
         }
 
         // perform deleting
@@ -207,7 +207,7 @@ public class LedgerService {
     @Transactional
     public void updateLedger(Ledger ledger) {
         if (!canEdit(ledger.getId())) {
-            throw new BizException(HttpStatus.FORBIDDEN, "You cannot edit this ledger.");
+            throw new BizException(HttpStatus.FORBIDDEN, "您不能编辑这个账本");
         }
 
         // perform update ledger
