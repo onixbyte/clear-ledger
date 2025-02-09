@@ -16,4 +16,6 @@ export const useUserStore = defineStore("user-store", () => {
   })
 
   return { authorisation, isAuthenticated, user }
+}, {
+  persist: true
 })

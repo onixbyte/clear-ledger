@@ -5,3 +5,8 @@ export type Ledger = {
   role: string
   joinedAt: string
 }
+
+export type CreateLedgerRequest = {
+  name: string
+  description: string
+}

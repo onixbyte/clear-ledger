@@ -25,6 +25,7 @@
       </el-container>
     </el-container>
     <join-ledger-dialogue v-model="isJoinLedgerDialogueVisible" />
+    <create-ledger-dialogue v-model="isCreateLedgerDialogueVisible" />
   </div>
 </template>
 
@@ -35,6 +36,7 @@ import { useLedgerStore, useUserStore } from "@/store"
 import * as LedgerApi from "@/api/ledger"
 import { Ledger } from "@/types"
 import JoinLedgerDialogue from "@/components/join-ledger-dialogue.vue"
+import CreateLedgerDialogue from "@/components/create-ledger-dialogue.vue"
 
 const { isAuthenticated, user } = useUserStore()
 const ledgerStore = useLedgerStore()
@@ -42,10 +44,11 @@ const ledgerStore = useLedgerStore()
 const ledgers = ref<Ledger[]>([])
 
 const isJoinLedgerDialogueVisible = ref<boolean>(false)
+const isCreateLedgerDialogueVisible = ref<boolean>(false)
 
 const onMenuItemSelected = (key: string) => {
   if (key == "create-ledger") {
-
+    isCreateLedgerDialogueVisible.value = true
   } else if (key == "join-ledger") {
     isJoinLedgerDialogueVisible.value = true
   } else {
