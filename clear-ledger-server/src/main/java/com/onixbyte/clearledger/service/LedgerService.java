@@ -1,20 +1,19 @@
 package com.onixbyte.clearledger.service;
 
-import com.mybatisflex.core.query.QueryWrapper;
 import com.onixbyte.clearledger.data.biz.BizLedger;
 import com.onixbyte.clearledger.data.entity.Ledger;
 import com.onixbyte.clearledger.data.entity.UserLedger;
 import com.onixbyte.clearledger.data.entity.table.LedgerTableDef;
 import com.onixbyte.clearledger.data.entity.table.TransactionTableDef;
 import com.onixbyte.clearledger.data.entity.table.UserLedgerTableDef;
-import com.onixbyte.clearledger.data.view.LedgerView;
 import com.onixbyte.clearledger.exception.BizException;
 import com.onixbyte.clearledger.exception.ServiceUnavailableException;
 import com.onixbyte.clearledger.holder.UserHolder;
 import com.onixbyte.clearledger.repository.LedgerRepository;
 import com.onixbyte.clearledger.repository.TransactionRepository;
 import com.onixbyte.clearledger.repository.UserLedgerRepository;
-import org.springframework.context.ApplicationEventPublisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +28,8 @@ import java.util.List;
  */
 @Service
 public class LedgerService {
+
+    private static final Logger log = LoggerFactory.getLogger(LedgerService.class);
 
     private final LedgerRepository ledgerRepository;
     private final UserLedgerRepository userLedgerRepository;

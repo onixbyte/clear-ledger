@@ -1,7 +1,6 @@
 package com.onixbyte.clearledger.security.token;
 
 import com.onixbyte.clearledger.data.domain.UserDomain;
-import lombok.Data;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,7 +9,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-@Data
 public class UserAuthenticationToken implements Authentication, CredentialsContainer {
 
     private String principal;
@@ -22,6 +20,22 @@ public class UserAuthenticationToken implements Authentication, CredentialsConta
     private UserDomain details;
 
     private List<GrantedAuthority> authorities;
+
+    public void setPrincipal(String principal) {
+        this.principal = principal;
+    }
+
+    public void setCredentials(String credentials) {
+        this.credentials = credentials;
+    }
+
+    public void setDetails(UserDomain details) {
+        this.details = details;
+    }
+
+    public void setAuthorities(List<GrantedAuthority> authorities) {
+        this.authorities = authorities;
+    }
 
     @Override
     public Collection<GrantedAuthority> getAuthorities() {

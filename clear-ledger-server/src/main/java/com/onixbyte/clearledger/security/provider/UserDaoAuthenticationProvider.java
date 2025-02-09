@@ -3,17 +3,18 @@ package com.onixbyte.clearledger.security.provider;
 import com.onixbyte.clearledger.exception.UnauthenticatedException;
 import com.onixbyte.clearledger.security.token.UserAuthenticationToken;
 import com.onixbyte.clearledger.service.UserService;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-@Slf4j
 @Component
 public class UserDaoAuthenticationProvider extends DaoAuthenticationProvider {
+
+    private final static Logger log = LoggerFactory.getLogger(UserDaoAuthenticationProvider.class);
 
     private final UserService userService;
 

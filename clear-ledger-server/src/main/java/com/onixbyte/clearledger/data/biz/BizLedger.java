@@ -1,10 +1,7 @@
 package com.onixbyte.clearledger.data.biz;
 
-import lombok.Builder;
-
 import java.time.LocalDateTime;
 
-@Builder
 public record BizLedger(
         Long id,
         String name,
@@ -12,4 +9,48 @@ public record BizLedger(
         String role,
         LocalDateTime joinedAt
 ) {
+
+    public static BizLedgerBuilder builder() {
+        return new BizLedgerBuilder();
+    }
+
+    public static class BizLedgerBuilder {
+        private Long id;
+        private String name;
+        private String description;
+        private String role;
+        private LocalDateTime joinedAt;
+
+        public BizLedgerBuilder() {}
+
+        public BizLedgerBuilder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public BizLedgerBuilder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public BizLedgerBuilder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public BizLedgerBuilder role(String role) {
+            this.role = role;
+            return this;
+        }
+
+        public BizLedgerBuilder joinedAt(LocalDateTime joinedAt) {
+            this.joinedAt = joinedAt;
+            return this;
+        }
+
+        public BizLedger build() {
+            return new BizLedger(id, name, description, role, joinedAt);
+        }
+    }
 }
+

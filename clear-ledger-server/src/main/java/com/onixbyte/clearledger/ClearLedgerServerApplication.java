@@ -1,7 +1,8 @@
 package com.onixbyte.clearledger;
 
-import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -10,10 +11,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  * @author zihluwang
  */
-@Slf4j
 @MapperScan("com.onixbyte.clearledger.repository")
 @SpringBootApplication
 public class ClearLedgerServerApplication {
+
+    private static final Logger log = LoggerFactory.getLogger(ClearLedgerServerApplication.class);
 
     public static void main(String[] args) {
         SpringApplication.run(ClearLedgerServerApplication.class, args);

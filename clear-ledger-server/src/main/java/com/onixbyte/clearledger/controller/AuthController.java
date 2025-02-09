@@ -1,18 +1,15 @@
 package com.onixbyte.clearledger.controller;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.onixbyte.clearledger.data.domain.UserDomain;
 import com.onixbyte.clearledger.data.entity.User;
 import com.onixbyte.clearledger.data.request.UserLoginRequest;
 import com.onixbyte.clearledger.data.request.UserRegisterRequest;
 import com.onixbyte.clearledger.data.view.UserView;
-import com.onixbyte.clearledger.exception.BizException;
 import com.onixbyte.clearledger.exception.UnauthenticatedException;
 import com.onixbyte.clearledger.security.token.UserAuthenticationToken;
 import com.onixbyte.clearledger.service.UserService;
 import com.onixbyte.guid.GuidCreator;
 import com.onixbyte.simplejwt.TokenResolver;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
@@ -27,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-@Slf4j
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
