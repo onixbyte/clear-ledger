@@ -115,4 +115,10 @@ public class LedgerController {
         }
     }
 
+    @DeleteMapping("/exit/{ledgerId:\\d+}")
+    public ResponseEntity<Void> exitLedger(@PathVariable Long ledgerId) {
+        ledgerService.exitLedger(ledgerId);
+        return ResponseEntity.noContent().build();
+    }
+
 }

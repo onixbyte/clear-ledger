@@ -236,4 +236,14 @@ public class LedgerService {
     public List<BizLedger> getLedgersCanJoin() {
         throw new ServiceUnavailableException("该服务暂未实现，请耐心等候！");
     }
+
+    public void exitLedger(Long ledgerId) {
+        // get user information
+        var user = UserHolder.getCurrentUser();
+        var table = UserLedgerTableDef.USER_LEDGER;
+        var affectedRows = userLedgerRepository.deleteByCondition(table.USER_ID.eq(user.id()).and(table.LEDGER_ID.eq(ledgerId)).and(table.ROLE.ne("owner")));
+        if (affectedRows == 0) {
+            throw new BizException(HttpStatus.CONFLICT, "您不能退出自己创建的账本，如不需要该账本，请删除该账本");
+        }
+    }
 }
