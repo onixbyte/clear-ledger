@@ -1,0 +1,24 @@
+printWidth: 80
+tabWidth: 2
+useTabs: false
+semi: false
+singleQuote: false
+quoteProps: as-needed
+jsxSingleQuote: false
+trailingComma: es5
+bracketSpacing: true
+bracketSameLine: true
+arrowParens: always
+#rangeStart: 0
+#rangeEnd: n
+#parser:
+#filepath:
+#requirePragma: false
+#insertPragma: false
+#proseWrap: preserve
+htmlWhitespaceSensitivity: css
+#vueIndentScriptAndStyle: false
+endOfLine: lf
+#embeddedLanguageFormatting: auto
+# Enforce single attribute per line in HTML, Vue and JSX
+#singleAttributePerLine: false

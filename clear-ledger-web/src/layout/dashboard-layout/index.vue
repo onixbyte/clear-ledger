@@ -13,15 +13,23 @@
               :index="`ledger#${ledger.id}`">
               {{ ledger.name }}
             </el-menu-item>
-            <el-menu-item key="join-ledger" index="join-ledger" :disabled="ledgers.length >= 3">
+            <el-menu-item
+              key="join-ledger"
+              index="join-ledger"
+              :disabled="ledgers.length >= 3">
               加入账本
             </el-menu-item>
-            <el-menu-item key="create-ledger" index="create-ledger" :disabled="ledgers.length >= 3">
+            <el-menu-item
+              key="create-ledger"
+              index="create-ledger"
+              :disabled="ledgers.length >= 3">
               创建账本
             </el-menu-item>
           </el-menu>
         </el-aside>
-        <el-main>Main</el-main>
+        <el-main>
+          <router-view />
+        </el-main>
       </el-container>
     </el-container>
     <join-ledger-dialogue v-model="isJoinLedgerDialogueVisible" />
@@ -37,6 +45,9 @@ import * as LedgerApi from "@/api/ledger"
 import { Ledger } from "@/types"
 import JoinLedgerDialogue from "@/components/join-ledger-dialogue.vue"
 import CreateLedgerDialogue from "@/components/create-ledger-dialogue.vue"
+import { useRouter } from "vue-router"
+
+const router = useRouter()
 
 const { isAuthenticated, user } = useUserStore()
 const ledgerStore = useLedgerStore()
@@ -55,7 +66,7 @@ const onMenuItemSelected = (key: string) => {
     const pattern = /^ledger#(?<ledgerId>\d+)$/
     const match = key.match(pattern)
     const ledgerId = match?.groups ? match.groups.ledgerId : ""
-    console.log(ledgerId)
+    router.push({ name: "Ledgers", params: { ledgerId } })
   }
 }
 

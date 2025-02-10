@@ -33,7 +33,6 @@ const username = ref<string>("")
 const password = ref<string>("")
 
 const clearLoginForm = () => {
-  console.log("清空按钮 Clicked")
   username.value = ""
   password.value = ""
 }
@@ -45,7 +44,7 @@ const login = async (username: string, password: string) => {
     userStore.user = response.user
   }
   if (userStore.isAuthenticated) {
-    await router.push({ name: "Ledgers" })
+    await router.push({ name: "Home" })
   }
 }
 </script>

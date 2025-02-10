@@ -1,0 +1,15 @@
+meta {
+  name: Quit Ledger
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{BASE_URL}}/ledgers/quit/:ledgerId
+  body: none
+  auth: none
+}
+
+params:path {
+  ledgerId: 1338144875819831296
+}

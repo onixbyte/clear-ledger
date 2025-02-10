@@ -9,7 +9,7 @@ const routes: RouteRecordRaw[] = [
     component: () => import("@/layout/dashboard-layout/index.vue"),
     children: [
       {
-        path: "ledgers",
+        path: "ledgers/:ledgerId",
         name: "Ledgers",
         component: () => import("@/pages/ledgers/index.vue"),
         meta: {
