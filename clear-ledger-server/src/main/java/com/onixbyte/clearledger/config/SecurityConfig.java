@@ -2,7 +2,6 @@ package com.onixbyte.clearledger.config;
 
 import com.onixbyte.clearledger.filter.UserAuthenticationFilter;
 import com.onixbyte.clearledger.security.provider.UserDaoAuthenticationProvider;
-import com.onixbyte.clearledger.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,6 +32,7 @@ public class SecurityConfig {
                 .sessionManagement((customiser) -> customiser
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((customiser) -> customiser
+                        .requestMatchers("/error", "/error/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/auth/logout").authenticated()
                         .anyRequest().authenticated())
