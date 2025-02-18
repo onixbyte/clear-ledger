@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/auth")
@@ -84,7 +85,7 @@ public class AuthController {
      * @return created user information
      */
     @PostMapping("/register")
-    public UserView register(@RequestBody UserRegisterRequest request) {
+    public ResponseEntity<UserView> register(@RequestBody UserRegisterRequest request) {
         // build user
         var user = User.builder()
                 .id(userIdCreator.nextId())
@@ -95,8 +96,19 @@ public class AuthController {
                 .build();
 
         // ensure user can be created
-        userService.saveUser(user);
-        return user.toView();
+        var saveUserFuture = CompletableFuture.runAsync(() ->
+                userService.saveUser(user));
+
+        // create jwt
+        var jwt = tokenResolver.createToken(Duration.ofDays(1), user.getUsername(), "ClearLedger :: User");
+        // save data to cache server for 1 day
+        userCache.opsForValue().set("clear-ledger:app:user:%s".formatted(user.getUsername()),
+                user, Duration.ofDays(1));
+        // compose response entity
+        saveUserFuture.join();
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Authorization", jwt)
+                .body(user.toView());
     }
 
 }
