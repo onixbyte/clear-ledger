@@ -53,7 +53,14 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
             var username = Optional.ofNullable(resolvedToken.getAudience())
                     .filter((audience) -> !audience.isEmpty())
                     .map(List::getFirst)
-                    .orElseThrow(() -> new UnauthenticatedException("Please login to use this system."));
+                    .orElse(null);
+
+            if (Objects.isNull(username)) {
+                responseUtil.writeResponse(response, HttpStatus.UNAUTHORIZED, BizExceptionResponse.builder()
+                        .message("无法读取用户信息，请登录后再试")
+                        .build());
+                return;
+            }
 
             var user = userCache.opsForValue().get("clear-ledger:app:user:%s".formatted(username));
             if (Objects.isNull(user)){
