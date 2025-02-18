@@ -2,11 +2,10 @@ package com.onixbyte.clearledger.filter;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onixbyte.clearledger.data.entity.User;
 import com.onixbyte.clearledger.data.response.BizExceptionResponse;
-import com.onixbyte.clearledger.exception.UnauthenticatedException;
 import com.onixbyte.clearledger.security.token.UsernamePasswordToken;
-import com.onixbyte.clearledger.util.ResponseUtil;
 import com.onixbyte.simplejwt.TokenResolver;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -28,13 +27,14 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
 
     private final TokenResolver<DecodedJWT> tokenResolver;
     private final RedisTemplate<String, User> userCache;
-    private final ResponseUtil responseUtil;
+    private final ObjectMapper objectMapper;
 
     public UserAuthenticationFilter(TokenResolver<DecodedJWT> tokenResolver,
-                                    RedisTemplate<String, User> userCache, ResponseUtil responseUtil) {
+                                    RedisTemplate<String, User> userCache,
+                                    ObjectMapper objectMapper) {
         this.tokenResolver = tokenResolver;
         this.userCache = userCache;
-        this.responseUtil = responseUtil;
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
                     .orElse(null);
 
             if (Objects.isNull(username)) {
-                responseUtil.writeResponse(response, HttpStatus.UNAUTHORIZED, BizExceptionResponse.builder()
+                writeResponse(response, HttpStatus.UNAUTHORIZED, BizExceptionResponse.builder()
                         .message("无法读取用户信息，请登录后再试")
                         .build());
                 return;
@@ -64,7 +64,7 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
 
             var user = userCache.opsForValue().get("clear-ledger:app:user:%s".formatted(username));
             if (Objects.isNull(user)){
-                responseUtil.writeResponse(response, HttpStatus.UNAUTHORIZED, BizExceptionResponse.builder()
+                writeResponse(response, HttpStatus.UNAUTHORIZED, BizExceptionResponse.builder()
                         .message("无法读取用户信息，请登录后再试")
                         .build());
                 return;
@@ -72,10 +72,19 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(UsernamePasswordToken.authenticated(user.toDomain()));
             filterChain.doFilter(request, response);
         } catch (JWTVerificationException e) {
-            responseUtil.writeResponse(response, HttpStatus.UNAUTHORIZED, BizExceptionResponse.builder()
+            writeResponse(response, HttpStatus.UNAUTHORIZED, BizExceptionResponse.builder()
                     .message("身份信息读取失败，请重新登录后再试")
                     .build());
         }
+    }
+
+    private  <T> void writeResponse(HttpServletResponse response, HttpStatus status, T data)
+            throws IOException {
+        response.setStatus(status.value());
+        response.setContentType("application/json; charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(objectMapper.writeValueAsString(data));
+        response.getWriter().flush();
     }
 
 }
