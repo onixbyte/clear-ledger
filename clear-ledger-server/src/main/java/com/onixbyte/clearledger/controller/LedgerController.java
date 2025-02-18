@@ -8,6 +8,8 @@ import com.onixbyte.clearledger.data.view.LedgerView;
 import com.onixbyte.clearledger.exception.BizException;
 import com.onixbyte.clearledger.service.LedgerService;
 import com.onixbyte.guid.GuidCreator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,8 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/ledgers")
 public class LedgerController {
+
+    private static final Logger log = LoggerFactory.getLogger(LedgerController.class);
 
     private final GuidCreator<Long> ledgerIdCreator;
     private final LedgerService ledgerService;

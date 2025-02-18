@@ -1,8 +1,7 @@
 package com.onixbyte.clearledger.data.response;
 
-import com.onixbyte.clearledger.data.view.BizLedgerView;
-
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * A response object representing details of a business exception.
@@ -40,7 +39,9 @@ public record BizExceptionResponse(
         }
 
         public BizExceptionResponse build() {
-            return new BizExceptionResponse(timestamp, message);
+            var _timestamp = Optional.ofNullable(timestamp)
+                    .orElseGet(LocalDateTime::now);
+            return new BizExceptionResponse(_timestamp, message);
         }
     }
 

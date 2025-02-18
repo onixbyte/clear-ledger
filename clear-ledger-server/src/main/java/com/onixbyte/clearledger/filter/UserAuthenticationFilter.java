@@ -2,16 +2,18 @@ package com.onixbyte.clearledger.filter;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.onixbyte.clearledger.data.domain.UserDomain;
 import com.onixbyte.clearledger.data.entity.User;
+import com.onixbyte.clearledger.data.response.BizExceptionResponse;
 import com.onixbyte.clearledger.exception.UnauthenticatedException;
-import com.onixbyte.clearledger.security.token.UserAuthenticationToken;
+import com.onixbyte.clearledger.security.token.UsernamePasswordToken;
+import com.onixbyte.clearledger.util.ResponseUtil;
 import com.onixbyte.simplejwt.TokenResolver;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -26,11 +28,13 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
 
     private final TokenResolver<DecodedJWT> tokenResolver;
     private final RedisTemplate<String, User> userCache;
+    private final ResponseUtil responseUtil;
 
     public UserAuthenticationFilter(TokenResolver<DecodedJWT> tokenResolver,
-                                    RedisTemplate<String, User> userCache) {
+                                    RedisTemplate<String, User> userCache, ResponseUtil responseUtil) {
         this.tokenResolver = tokenResolver;
         this.userCache = userCache;
+        this.responseUtil = responseUtil;
     }
 
     @Override
@@ -53,12 +57,17 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
 
             var user = userCache.opsForValue().get("clear-ledger:app:user:%s".formatted(username));
             if (Objects.isNull(user)){
-                throw new UnauthenticatedException("Cannot load user information, please login again.");
+                responseUtil.writeResponse(response, HttpStatus.UNAUTHORIZED, BizExceptionResponse.builder()
+                        .message("无法读取用户信息，请登录后再试")
+                        .build());
+                return;
             }
-            SecurityContextHolder.getContext().setAuthentication(UserAuthenticationToken.authenticated(user.toDomain()));
+            SecurityContextHolder.getContext().setAuthentication(UsernamePasswordToken.authenticated(user.toDomain()));
             filterChain.doFilter(request, response);
         } catch (JWTVerificationException e) {
-            throw new UnauthenticatedException("Please login to use this system.");
+            responseUtil.writeResponse(response, HttpStatus.UNAUTHORIZED, BizExceptionResponse.builder()
+                    .message("身份信息读取失败，请重新登录后再试")
+                    .build());
         }
     }
 

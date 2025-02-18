@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class UserAuthenticationToken implements Authentication, CredentialsContainer {
+public class UsernamePasswordToken implements Authentication, CredentialsContainer {
 
     private String principal;
 
@@ -72,36 +72,36 @@ public class UserAuthenticationToken implements Authentication, CredentialsConta
         return principal;
     }
 
-    @Override
-    public void eraseCredentials() {
-        this.credentials = "";
-    }
-
-    public UserAuthenticationToken(String principal, String credentials) {
+    public UsernamePasswordToken(String principal, String credentials) {
         this.authenticated = false;
         this.principal = principal;
         this.credentials = credentials;
         this.authorities = null;
     }
 
-    public UserAuthenticationToken(String principal, String credentials, List<GrantedAuthority> authorities) {
+    public UsernamePasswordToken(String principal, String credentials, List<GrantedAuthority> authorities) {
         this.authenticated = true;
         this.principal = principal;
         this.credentials = credentials;
         this.authorities = authorities;
     }
 
-    public static UserAuthenticationToken unauthenticated(String principal, String credentials) {
-        return new UserAuthenticationToken(principal, credentials);
+    public static UsernamePasswordToken unauthenticated(String principal, String credentials) {
+        return new UsernamePasswordToken(principal, credentials);
     }
 
-    public static UserAuthenticationToken authenticated(String principal, String credentials, List<GrantedAuthority> authorities) {
-        return new UserAuthenticationToken(principal, credentials, authorities);
+    public static UsernamePasswordToken authenticated(String principal, String credentials, List<GrantedAuthority> authorities) {
+        return new UsernamePasswordToken(principal, credentials, authorities);
     }
 
-    public static UserAuthenticationToken authenticated(UserDomain user) {
-        var authentication = new UserAuthenticationToken(user.username(), null, Collections.emptyList());
+    public static UsernamePasswordToken authenticated(UserDomain user) {
+        var authentication = new UsernamePasswordToken(user.username(), null, Collections.emptyList());
         authentication.setDetails(user);
         return authentication;
+    }
+
+    @Override
+    public void eraseCredentials() {
+        this.credentials = "";
     }
 }

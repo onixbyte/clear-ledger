@@ -6,7 +6,7 @@ import com.onixbyte.clearledger.data.request.UserLoginRequest;
 import com.onixbyte.clearledger.data.request.UserRegisterRequest;
 import com.onixbyte.clearledger.data.view.UserView;
 import com.onixbyte.clearledger.exception.UnauthenticatedException;
-import com.onixbyte.clearledger.security.token.UserAuthenticationToken;
+import com.onixbyte.clearledger.security.token.UsernamePasswordToken;
 import com.onixbyte.clearledger.service.UserService;
 import com.onixbyte.guid.GuidCreator;
 import com.onixbyte.simplejwt.TokenResolver;
@@ -57,9 +57,9 @@ public class AuthController {
     public ResponseEntity<UserView> login(@RequestBody UserLoginRequest request) {
         try {
             // perform authentication
-            var _auth = authenticationManager.authenticate(UserAuthenticationToken.unauthenticated(
+            var _auth = authenticationManager.authenticate(UsernamePasswordToken.unauthenticated(
                     request.username(), request.password()));
-            if (_auth instanceof UserAuthenticationToken authentication) {
+            if (_auth instanceof UsernamePasswordToken authentication) {
                 // create jwt
                 var jwt = tokenResolver.createToken(Duration.ofDays(1), authentication.getName(), "ClearLedger :: User");
                 // save data to cache server for 1 day
