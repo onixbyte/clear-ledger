@@ -45,6 +45,7 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
                         .map((_request) -> _request.getHeader("authorization")))
                 .orElse(null);
 
+        // no token was found, let the request pass through
         if (Objects.isNull(jwt) || jwt.isBlank()) {
             filterChain.doFilter(request, response);
             return;
