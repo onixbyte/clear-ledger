@@ -39,8 +39,10 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        var jwt = Optional.ofNullable(request.getHeader("Authorization"))
-                .or(() -> Optional.ofNullable(request.getHeader("authorization")))
+        var jwt = Optional.of(request)
+                .map((_request) -> _request.getHeader("Authorization"))
+                .or(() -> Optional.of(request)
+                        .map((_request) -> _request.getHeader("authorization")))
                 .orElse(null);
 
         if (Objects.isNull(jwt) || jwt.isBlank()) {
@@ -63,7 +65,7 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
             }
 
             var user = userCache.opsForValue().get("clear-ledger:app:user:%s".formatted(username));
-            if (Objects.isNull(user)){
+            if (Objects.isNull(user)) {
                 writeResponse(response, HttpStatus.UNAUTHORIZED, BizExceptionResponse.builder()
                         .message("无法读取用户信息，请登录后再试")
                         .build());
@@ -78,7 +80,7 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
-    private  <T> void writeResponse(HttpServletResponse response, HttpStatus status, T data)
+    private <T> void writeResponse(HttpServletResponse response, HttpStatus status, T data)
             throws IOException {
         response.setStatus(status.value());
         response.setContentType("application/json; charset=UTF-8");
