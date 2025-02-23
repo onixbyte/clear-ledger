@@ -1,7 +1,5 @@
 package com.onixbyte.clearledger.data.view;
 
-import java.time.LocalDateTime;
-
 public record LedgerView(
         String id,
         String name,
