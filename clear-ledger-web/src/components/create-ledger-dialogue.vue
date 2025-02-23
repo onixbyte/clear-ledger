@@ -52,7 +52,7 @@ const clearData = () => {
 const onCreateLedger = (request: CreateLedgerRequest) => {
   LedgerApi.createLedger(request)
     .then((ledger) => {
-      ledgerStore.ledgers.push(ledger)
+      ledgerStore.ledgers[ledger.id] = ledger
       ElNotification.success({
         title: "账本创建成功！",
         message: `恭喜你成功创建账本 ${ledger.name}，ID 为 ${ledger.id} ，快邀请他人来加入吧！`,

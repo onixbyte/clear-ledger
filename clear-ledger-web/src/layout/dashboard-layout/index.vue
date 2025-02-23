@@ -16,13 +16,13 @@
             <el-menu-item
               key="join-ledger"
               index="join-ledger"
-              :disabled="ledgers.length >= 3">
+              :disabled="(Object.keys(ledgers)).length >= 3">
               加入账本
             </el-menu-item>
             <el-menu-item
               key="create-ledger"
               index="create-ledger"
-              :disabled="ledgers.length >= 3">
+              :disabled="(Object.keys(ledgers)).length >= 3">
               创建账本
             </el-menu-item>
           </el-menu>
@@ -52,7 +52,7 @@ const router = useRouter()
 const { isAuthenticated, user } = useUserStore()
 const ledgerStore = useLedgerStore()
 
-const ledgers = ref<Ledger[]>([])
+const ledgers = ref<Record<string, Ledger>>({})
 
 const isJoinLedgerDialogueVisible = ref<boolean>(false)
 const isCreateLedgerDialogueVisible = ref<boolean>(false)
@@ -71,9 +71,12 @@ const onMenuItemSelected = (key: string) => {
 }
 
 onMounted(async () => {
-  if (ledgerStore.ledgers.length == 0) {
+  if (Object.keys(ledgerStore.ledgers).length == 0) {
     if (isAuthenticated) {
-      ledgerStore.ledgers = await LedgerApi.getLedgers()
+      ledgerStore.ledgers = (await LedgerApi.getLedgers()).reduce((acc, item) => {
+        acc[item.id] = item
+        return acc
+      }, {} as Record<string, Ledger>)
     }
   }
 

@@ -1,4 +1,4 @@
-import { CreateLedgerRequest, Ledger } from "@/types"
+import { CreateLedgerRequest, EditLedgerRequest, Ledger } from "@/types"
 import webClient from "@/utils/web-client"
 
 /**
@@ -27,4 +27,8 @@ const createLedger = async (request: CreateLedgerRequest): Promise<Ledger> => {
   return data
 }
 
-export { getLedgers, joinLedger, createLedger }
+const editLedger = async (request: EditLedgerRequest) => {
+  await webClient.patch("/ledgers", request)
+}
+
+export { getLedgers, joinLedger, createLedger, editLedger }

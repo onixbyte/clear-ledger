@@ -45,7 +45,7 @@ const closeDialogue = () => {
 const onJoinLedger = (ledgerId: string) => {
   LedgerApi.joinLedger(ledgerId)
     .then((ledger) => {
-      ledgerStore.ledgers.push(ledger)
+      ledgerStore.ledgers[ledger.id] = ledger
       ElMessage.success(`恭喜您已成功加入账本 ${ledger.name}`)
     })
     .catch((error) => {
