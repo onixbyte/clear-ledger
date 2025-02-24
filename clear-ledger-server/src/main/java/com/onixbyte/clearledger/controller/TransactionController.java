@@ -1,7 +1,6 @@
 package com.onixbyte.clearledger.controller;
 
 import com.mybatisflex.core.paginate.Page;
-import com.onixbyte.clearledger.data.entity.Transaction;
 import com.onixbyte.clearledger.data.entity.ViewTransaction;
 import com.onixbyte.clearledger.data.response.TransactionResponse;
 import com.onixbyte.clearledger.service.TransactionService;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class TransactionController {
 
     private static final Logger log = LoggerFactory.getLogger(TransactionController.class);
+
     private final TransactionService transactionService;
 
     public TransactionController(TransactionService transactionService) {
