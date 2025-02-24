@@ -6,6 +6,7 @@ public record TransactionResponse(
         String id,
         String ledgerId,
         String userId,
+        String username,
         Integer amount,
         String description,
         LocalDateTime transactionDate
@@ -19,6 +20,7 @@ public record TransactionResponse(
         private String id;
         private String ledgerId;
         private String userId;
+        private String username;
         private Integer amount;
         private String description;
         private LocalDateTime transactionDate;
@@ -41,6 +43,11 @@ public record TransactionResponse(
             return this;
         }
 
+        public TransactionViewBuilder username(String username) {
+            this.username = username;
+            return this;
+        }
+
         public TransactionViewBuilder amount(Integer amount) {
             this.amount = amount;
             return this;
@@ -57,7 +64,7 @@ public record TransactionResponse(
         }
 
         public TransactionResponse build() {
-            return new TransactionResponse(id, ledgerId, userId, amount, description, transactionDate);
+            return new TransactionResponse(id, ledgerId, userId, username, amount, description, transactionDate);
         }
     }
 

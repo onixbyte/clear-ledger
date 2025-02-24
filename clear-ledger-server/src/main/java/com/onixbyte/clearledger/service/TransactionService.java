@@ -1,7 +1,7 @@
 package com.onixbyte.clearledger.service;
 
 import com.mybatisflex.core.paginate.Page;
-import com.onixbyte.clearledger.data.entity.Transaction;
+import com.onixbyte.clearledger.data.entity.ViewTransaction;
 import com.onixbyte.clearledger.data.entity.table.TransactionTableDef;
 import com.onixbyte.clearledger.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
@@ -15,8 +15,18 @@ public class TransactionService {
         this.transactionRepository = transactionRepository;
     }
 
-    public Page<Transaction> getTransactionPage(Long ledgerId, Integer pageNum, Integer pageSize) {
-        return transactionRepository.paginate(pageNum, pageSize, TransactionTableDef.TRANSACTION.LEDGER_ID.eq(ledgerId));
+    public Page<ViewTransaction> getTransactionPage(Long ledgerId, Long pageNum, Long size) {
+        var offset = (pageNum - 1) * size;
+        var transactions = transactionRepository.selectPaginateViewTransactions(ledgerId, offset, size);
+
+        var result = new Page<ViewTransaction>(pageNum, size);
+        result.setRecords(transactions);
+
+        var count = transactionRepository.selectCountByCondition(TransactionTableDef.TRANSACTION
+                .LEDGER_ID.eq(ledgerId));
+        result.setTotalRow(count);
+
+        return result;
     }
 
 }
