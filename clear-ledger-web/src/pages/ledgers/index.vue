@@ -22,6 +22,10 @@
       </template>
     </el-page-header>
 
+    <div class="transaction-table-wrapper">
+      <transaction-table :ledger-id="ledgerId" />
+    </div>
+
     <edit-ledger-dialogue
       v-model="isEditLedgerDialogueVisible"
       :ledger="ledger" />
@@ -33,6 +37,7 @@ import { computed, onMounted, ref, watch } from "vue"
 import { useRoute } from "vue-router"
 import { useLedgerStore } from "@/store"
 import EditLedgerDialogue from "@/components/edit-ledger-dialogue.vue"
+import TransactionTable from "@/components/transaction-table.vue"
 
 const route = useRoute()
 
@@ -57,6 +62,10 @@ const editLedger = () => {
     .ledger-header-content {
       font-size: 14px;
     }
+  }
+
+  .transaction-table-wrapper {
+    margin-top: 20px;
   }
 }
 </style>

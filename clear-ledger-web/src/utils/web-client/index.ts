@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import moment from "moment"
 import { useUserStore } from "@/store"
 
@@ -22,6 +22,9 @@ webClient.interceptors.request.use((request) => {
 webClient.interceptors.response.use((response) => {
   return response
 }, (response) => {
+  // const errorResponse = response as AxiosError
+  // if (errorResponse.status == 401) {
+  // }
   return Promise.reject(response)
 })
 
