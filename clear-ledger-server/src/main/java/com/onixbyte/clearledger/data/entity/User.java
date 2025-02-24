@@ -4,7 +4,7 @@ import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.Table;
 import com.onixbyte.clearledger.data.domain.UserDomain;
-import com.onixbyte.clearledger.data.view.UserView;
+import com.onixbyte.clearledger.data.response.UserResponse;
 
 import java.time.LocalDateTime;
 
@@ -131,8 +131,8 @@ public class User {
                 .build();
     }
 
-    public UserView toView() {
-        return UserView.builder()
+    public UserResponse toView() {
+        return UserResponse.builder()
                 .id(String.valueOf(getId()))
                 .username(getUsername())
                 .email(getEmail())

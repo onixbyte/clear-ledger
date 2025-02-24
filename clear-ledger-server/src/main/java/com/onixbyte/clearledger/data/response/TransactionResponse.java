@@ -1,8 +1,8 @@
-package com.onixbyte.clearledger.data.view;
+package com.onixbyte.clearledger.data.response;
 
 import java.time.LocalDateTime;
 
-public record TransactionView(
+public record TransactionResponse(
         String id,
         String ledgerId,
         String userId,
@@ -56,8 +56,8 @@ public record TransactionView(
             return this;
         }
 
-        public TransactionView build() {
-            return new TransactionView(id, ledgerId, userId, amount, description, transactionDate);
+        public TransactionResponse build() {
+            return new TransactionResponse(id, ledgerId, userId, amount, description, transactionDate);
         }
     }
 

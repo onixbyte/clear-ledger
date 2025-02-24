@@ -3,8 +3,7 @@ package com.onixbyte.clearledger.controller;
 import com.onixbyte.clearledger.data.request.CreateLedgerRequest;
 import com.onixbyte.clearledger.data.entity.Ledger;
 import com.onixbyte.clearledger.data.request.UpdateLedgerRequest;
-import com.onixbyte.clearledger.data.view.BizLedgerView;
-import com.onixbyte.clearledger.data.view.LedgerView;
+import com.onixbyte.clearledger.data.response.BizLedgerResponse;
 import com.onixbyte.clearledger.exception.BizException;
 import com.onixbyte.clearledger.service.LedgerService;
 import com.onixbyte.guid.GuidCreator;
@@ -38,7 +37,7 @@ public class LedgerController {
     }
 
     @PostMapping
-    public LedgerView createLedger(@RequestBody CreateLedgerRequest request) {
+    public BizLedgerResponse createLedger(@RequestBody CreateLedgerRequest request) {
         var ledger = Ledger.builder()
                 .id(ledgerIdCreator.nextId())
                 .name(request.name())
@@ -46,13 +45,13 @@ public class LedgerController {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        return ledgerService.saveLedger(ledger).toView();
+        return ledgerService.saveLedger(ledger).toResponse();
     }
 
     @PostMapping("/join/{ledgerId:\\d+}")
-    public BizLedgerView joinLedger(@PathVariable Long ledgerId) {
+    public BizLedgerResponse joinLedger(@PathVariable Long ledgerId) {
         var bizLedger = ledgerService.joinLedger(ledgerId);
-        return BizLedgerView.builder()
+        return BizLedgerResponse.builder()
                 .id(String.valueOf(bizLedger.id()))
                 .name(bizLedger.name())
                 .description(bizLedger.description())
@@ -91,11 +90,11 @@ public class LedgerController {
      * @return a ledger list
      */
     @GetMapping
-    public List<BizLedgerView> getLedgers(@RequestParam(required = false) Integer ledgerType) {
+    public List<BizLedgerResponse> getLedgers(@RequestParam(required = false) Integer ledgerType) {
         if (Objects.isNull(ledgerType) || ledgerType == 1) {
             return ledgerService.getJoinedLedgers()
                     .stream()
-                    .map((ledger) -> BizLedgerView.builder()
+                    .map((ledger) -> BizLedgerResponse.builder()
                             .id(String.valueOf(ledger.id()))
                             .name(ledger.name())
                             .description(ledger.description())
@@ -106,7 +105,7 @@ public class LedgerController {
         } else {
             return ledgerService.getLedgersCanJoin()
                     .stream()
-                    .map((ledger) -> BizLedgerView.builder()
+                    .map((ledger) -> BizLedgerResponse.builder()
                             .id(String.valueOf(ledger.id()))
                             .name(ledger.name())
                             .description(ledger.description())

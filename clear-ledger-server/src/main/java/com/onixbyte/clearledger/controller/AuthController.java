@@ -4,7 +4,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.onixbyte.clearledger.data.entity.User;
 import com.onixbyte.clearledger.data.request.UserLoginRequest;
 import com.onixbyte.clearledger.data.request.UserRegisterRequest;
-import com.onixbyte.clearledger.data.view.UserView;
+import com.onixbyte.clearledger.data.response.UserResponse;
 import com.onixbyte.clearledger.exception.UnauthenticatedException;
 import com.onixbyte.clearledger.security.token.UsernamePasswordToken;
 import com.onixbyte.clearledger.service.UserService;
@@ -55,7 +55,7 @@ public class AuthController {
      * @return user information
      */
     @PostMapping("/login")
-    public ResponseEntity<UserView> login(@RequestBody UserLoginRequest request) {
+    public ResponseEntity<UserResponse> login(@RequestBody UserLoginRequest request) {
         try {
             // perform authentication
             var _auth = authenticationManager.authenticate(UsernamePasswordToken.unauthenticated(
@@ -85,7 +85,7 @@ public class AuthController {
      * @return created user information
      */
     @PostMapping("/register")
-    public ResponseEntity<UserView> register(@RequestBody UserRegisterRequest request) {
+    public ResponseEntity<UserResponse> register(@RequestBody UserRegisterRequest request) {
         // build user
         var user = User.builder()
                 .id(userIdCreator.nextId())

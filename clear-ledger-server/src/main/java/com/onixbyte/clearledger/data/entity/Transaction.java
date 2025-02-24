@@ -3,7 +3,7 @@ package com.onixbyte.clearledger.data.entity;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.Table;
-import com.onixbyte.clearledger.data.view.TransactionView;
+import com.onixbyte.clearledger.data.response.TransactionResponse;
 
 import java.time.LocalDateTime;
 
@@ -149,8 +149,8 @@ public class Transaction {
         }
     }
 
-    public TransactionView toView() {
-        return TransactionView.builder()
+    public TransactionResponse toView() {
+        return TransactionResponse.builder()
                 .id(String.valueOf(id))
                 .ledgerId(String.valueOf(ledgerId))
                 .userId(String.valueOf(userId))

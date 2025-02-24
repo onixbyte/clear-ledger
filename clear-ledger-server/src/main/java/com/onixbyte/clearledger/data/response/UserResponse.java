@@ -1,6 +1,6 @@
-package com.onixbyte.clearledger.data.view;
+package com.onixbyte.clearledger.data.response;
 
-public record UserView(
+public record UserResponse(
         String id,
         String username,
         String email
@@ -32,8 +32,8 @@ public record UserView(
             return this;
         }
 
-        public UserView build() {
-            return new UserView(id, username, email);
+        public UserResponse build() {
+            return new UserResponse(id, username, email);
         }
     }
 }

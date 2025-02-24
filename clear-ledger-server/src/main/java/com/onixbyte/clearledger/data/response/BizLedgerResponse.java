@@ -1,8 +1,8 @@
-package com.onixbyte.clearledger.data.view;
+package com.onixbyte.clearledger.data.response;
 
 import java.time.LocalDateTime;
 
-public record BizLedgerView(
+public record BizLedgerResponse(
         String id,
         String name,
         String description,
@@ -49,8 +49,8 @@ public record BizLedgerView(
             return this;
         }
 
-        public BizLedgerView build() {
-            return new BizLedgerView(id, name, description, role, joinedAt);
+        public BizLedgerResponse build() {
+            return new BizLedgerResponse(id, name, description, role, joinedAt);
         }
     }
 

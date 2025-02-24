@@ -1,7 +1,7 @@
 package com.onixbyte.clearledger.data.domain;
 
 import com.onixbyte.clearledger.data.entity.User;
-import com.onixbyte.clearledger.data.view.UserView;
+import com.onixbyte.clearledger.data.response.UserResponse;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -68,8 +68,8 @@ public record UserDomain(
         return username;
     }
 
-    public UserView toView() {
-        return UserView.builder()
+    public UserResponse toView() {
+        return UserResponse.builder()
                 .id(String.valueOf(id))
                 .username(username)
                 .email(email)

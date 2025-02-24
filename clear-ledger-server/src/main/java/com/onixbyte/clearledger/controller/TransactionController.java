@@ -2,7 +2,7 @@ package com.onixbyte.clearledger.controller;
 
 import com.mybatisflex.core.paginate.Page;
 import com.onixbyte.clearledger.data.entity.Transaction;
-import com.onixbyte.clearledger.data.view.TransactionView;
+import com.onixbyte.clearledger.data.response.TransactionResponse;
 import com.onixbyte.clearledger.service.TransactionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,9 +25,9 @@ public class TransactionController {
     }
 
     @GetMapping("/{ledgerId:\\d+}")
-    public Page<TransactionView> getTransactions(@PathVariable Long ledgerId,
-                                                 @RequestParam(required = false, defaultValue = "1") Integer pageNum,
-                                                 @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
+    public Page<TransactionResponse> getTransactions(@PathVariable Long ledgerId,
+                                                     @RequestParam(required = false, defaultValue = "1") Integer pageNum,
+                                                     @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
         return transactionService.getTransactionPage(ledgerId, pageNum, pageSize)
                 .map(Transaction::toView);
     }
