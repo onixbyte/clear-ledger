@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { Button, Form, Input, message } from "antd"
 import { useAppDispatch } from "@/hooks/store"
 import * as AuthApi from "@/api/auth"
@@ -16,6 +16,10 @@ export const LoginPage = () => {
   const [form] = Form.useForm<UserLoginForm>()
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+  const location = useLocation()
+
+  const from = (location.state as { from?: { pathname: string } })?.from?.pathname || "/"
+
   const [loading, setLoading] = useState(false)
 
   const onFinish = async (values: UserLoginForm) => {
@@ -24,7 +28,7 @@ export const LoginPage = () => {
       const response = await AuthApi.login(values.username, values.password)
       dispatch(setUser({ user: response.user, token: response.authorisation }))
       message.success("登录成功")
-      navigate("/")
+      navigate(from, { replace: true })
     } catch (error) {
       if (error instanceof AxiosError) {
         message.error(error.response?.data.message)

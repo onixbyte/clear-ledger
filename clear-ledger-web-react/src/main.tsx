@@ -8,13 +8,16 @@ import { DashboardLayout } from "@/layout/dashboard-layout"
 import { EmptyLayout } from "@/layout/empty-layout"
 import { LoginPage } from "@/pages/login-page"
 import { RegisterPage } from "@/pages/register-page"
+import { ProtectedRoute } from "@/components/ProtectedRoute.tsx"
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<DashboardLayout />}>
+          <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<DashboardLayout />}>
+            </Route>
           </Route>
           <Route path="/login" element={<EmptyLayout />}>
             <Route index element={<LoginPage />} />
