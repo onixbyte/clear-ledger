@@ -1,4 +1,6 @@
-# Vue3 TypeScript Vite Template
+# Clear Ledger Web (Vue)
+
+> This edition of web page has been archived, please consider transfer to React edition.
 
 ## Basic information
 
