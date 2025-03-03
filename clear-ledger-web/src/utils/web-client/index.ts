@@ -1,31 +1,21 @@
-import axios, { AxiosError } from "axios"
+import axios from "axios"
 import moment from "moment"
-import { useUserStore } from "@/store"
+import { store } from "@/store"
 
 const webClient = axios.create({
-  baseURL: import.meta.env.VITE_SERVER_BASE_URL,
-  timeout: moment.duration({
-    seconds: 10
-  }).asMilliseconds()
+  baseURL: import.meta.env.VITE_BASE_URL,
+  timeout: moment.duration({ seconds: 10 }).asMilliseconds()
 })
 
-webClient.interceptors.request.use((request) => {
-  const { isAuthenticated, authorisation } = useUserStore()
-  if (isAuthenticated) {
-    request.headers.Authorization = authorisation
-  }
-  return request
-}, (request) => {
-  return Promise.reject(request)
-})
-
-webClient.interceptors.response.use((response) => {
-  return response
-}, (response) => {
-  // const errorResponse = response as AxiosError
-  // if (errorResponse.status == 401) {
-  // }
-  return Promise.reject(response)
-})
+webClient.interceptors.request.use(
+  (config) => {
+    const token = store.getState().auth.token
+    if (token) {
+      config.headers.Authorization = token
+    }
+    return config
+  },
+  (error) => Promise.reject(error)
+)
 
 export default webClient

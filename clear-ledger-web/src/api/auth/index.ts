@@ -32,13 +32,16 @@ const register = async (
   username: string,
   email: string,
   password: string
-): Promise<User> => {
-  const { data } = await webClient.post<User>("/auth/register", {
+): Promise<UserLoginResponse> => {
+  const { data, headers } = await webClient.post<User>("/auth/register", {
     username,
     email,
     password,
   })
-  return data
+  return {
+    user: data,
+    authorisation: headers["authorization"] as string
+  }
 }
 
 export { login, register }
