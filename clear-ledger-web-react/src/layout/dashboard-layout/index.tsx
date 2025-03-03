@@ -11,6 +11,7 @@ import "./index.scss"
 import staticMenuItems from "./menu-item.ts"
 import { setLedgers } from "@/store/ledger-slice.ts"
 import { MenuItem } from "@/types"
+import { AxiosError } from "axios"
 
 export const DashboardLayout = () => {
   const dispatch = useAppDispatch()
@@ -31,7 +32,12 @@ export const DashboardLayout = () => {
         const ledgerData = await LedgerApi.getLedgers()
         dispatch(setLedgers(ledgerData))
       } catch (error) {
-        console.error("获取账本失败:", error)
+        // console.error("获取账本失败:", error)
+        if (error instanceof AxiosError) {
+          message.error(error.response?.data.message)
+        } else {
+          message.error("获取账本失败")
+        }
       }
     })()
   }, [dispatch])
