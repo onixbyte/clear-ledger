@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { Button, Layout, Menu, message } from "antd"
 import { Content, Header } from "antd/es/layout/layout"
 import Sidebar from "antd/es/layout/Sider"
+import { AxiosError } from "axios"
 import { useAppDispatch, useAppSelector } from "@/hooks/store"
 import { logout } from "@/store/auth-slice"
 import * as LedgerApi from "@/api/ledger"
@@ -11,7 +12,6 @@ import "./index.scss"
 import staticMenuItems from "./menu-item.ts"
 import { setLedgers } from "@/store/ledger-slice.ts"
 import { MenuItem } from "@/types"
-import { AxiosError } from "axios"
 
 export const DashboardLayout = () => {
   const dispatch = useAppDispatch()
@@ -42,13 +42,18 @@ export const DashboardLayout = () => {
     })()
   }, [dispatch])
 
+  // 当加入或创建的账本多于3个时禁用加入和创建账本功能
+  const isLimitReached = ledgers.length >= 3
   // 动态生成菜单项：静态项 + 账本项
   const menuItems = [
     ...ledgers.map((ledger) => ({
       key: `ledger#${ledger.id}`,
-      label: ledger.name
+      label: ledger.name,
     }) as MenuItem),
-    ...staticMenuItems,
+    ...staticMenuItems.map((item) => ({
+      ...item,
+      disabled: isLimitReached && (["join-ledger", "create-ledger"].includes(item!.key as string)),
+    }) as MenuItem),
   ]
 
   return (
@@ -59,7 +64,7 @@ export const DashboardLayout = () => {
       </Header>
       <Layout className="dashboard-content-wrapper">
         <Sidebar className="dashboard-sidebar-wrapper">
-          <Menu items={menuItems} className="sidebar-menu"/>
+          <Menu items={menuItems} className="sidebar-menu" />
         </Sidebar>
         <Content className="dashboard-content">
           <Outlet />
