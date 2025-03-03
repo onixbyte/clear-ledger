@@ -1,11 +1,12 @@
 import { useState } from "react"
+import { NavLink } from "react-router"
 import { useLocation, useNavigate } from "react-router-dom"
 import { Button, Form, Input, message } from "antd"
+import { AxiosError } from "axios"
 import { useAppDispatch } from "@/hooks/store"
 import * as AuthApi from "@/api/auth"
 import { setUser } from "@/store/auth-slice"
 import "./index.scss"
-import { AxiosError } from "axios"
 
 type UserLoginForm = {
   username: string
@@ -18,7 +19,8 @@ export const LoginPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const from = (location.state as { from?: { pathname: string } })?.from?.pathname || "/"
+  const from =
+    (location.state as { from?: { pathname: string } })?.from?.pathname || "/"
 
   const [loading, setLoading] = useState(false)
 
@@ -60,6 +62,7 @@ export const LoginPage = () => {
           <Input.Password />
         </Form.Item>
         <div className="login-controls-wrapper">
+          <NavLink to="/register">还没有账号？立即注册</NavLink>
           <Button htmlType="reset">重置</Button>
           <Button type="primary" htmlType="submit" loading={loading}>
             登录

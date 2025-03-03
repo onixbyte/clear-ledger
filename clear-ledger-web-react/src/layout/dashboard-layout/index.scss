@@ -1,4 +1,5 @@
 .dashboard-wrapper {
+
   .dashboard-header {
     background-color: #888888;
     padding: 0 20px;
@@ -6,11 +7,18 @@
     line-height: 60px;
     color: #231547;
     font-size: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
   }
 
   .dashboard-content-wrapper {
-    .dashboard-sidebar {
 
+    .dashboard-sidebar-wrapper {
+
+      .sidebar-menu {
+
+      }
     }
 
     .dashboard-content {

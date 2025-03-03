@@ -5,6 +5,9 @@ logging:
 spring:
   application:
     name: clear-ledger-server
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
 
 mybatis-flex:
   configuration:
