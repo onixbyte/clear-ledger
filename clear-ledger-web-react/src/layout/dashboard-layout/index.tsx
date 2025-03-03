@@ -26,7 +26,7 @@ export const DashboardLayout = () => {
       </Header>
       <Layout className="dashboard-content-wrapper">
         <Sidebar className="dashboard-sidebar-wrapper">
-          <Menu items={menuItems} />
+          <Menu items={menuItems} className="sidebar-menu"/>
         </Sidebar>
         <Content className="dashboard-content">
           <Outlet />
