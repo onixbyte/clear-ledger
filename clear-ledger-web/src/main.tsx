@@ -9,7 +9,7 @@ import { DashboardLayout } from "@/layout/dashboard-layout"
 import { EmptyLayout } from "@/layout/empty-layout"
 import { LoginPage } from "@/pages/login-page"
 import { RegisterPage } from "@/pages/register-page"
-import { ProtectedRoute } from "@/components/ProtectedRoute.tsx"
+import { ProtectedRoute } from "@/components/protected-route"
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
