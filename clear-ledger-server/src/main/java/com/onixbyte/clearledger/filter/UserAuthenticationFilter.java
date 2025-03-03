@@ -3,6 +3,7 @@ package com.onixbyte.clearledger.filter;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.onixbyte.clearledger.data.biz.BizUser;
 import com.onixbyte.clearledger.data.entity.User;
 import com.onixbyte.clearledger.data.response.BizExceptionResponse;
 import com.onixbyte.clearledger.security.token.UsernamePasswordToken;
@@ -26,11 +27,11 @@ import java.util.Optional;
 public class UserAuthenticationFilter extends OncePerRequestFilter {
 
     private final TokenResolver<DecodedJWT> tokenResolver;
-    private final RedisTemplate<String, User> userCache;
+    private final RedisTemplate<String, BizUser> userCache;
     private final ObjectMapper objectMapper;
 
     public UserAuthenticationFilter(TokenResolver<DecodedJWT> tokenResolver,
-                                    RedisTemplate<String, User> userCache,
+                                    RedisTemplate<String, BizUser> userCache,
                                     ObjectMapper objectMapper) {
         this.tokenResolver = tokenResolver;
         this.userCache = userCache;

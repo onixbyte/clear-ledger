@@ -3,6 +3,7 @@ package com.onixbyte.clearledger.data.entity;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.Table;
+import com.onixbyte.clearledger.data.biz.BizUser;
 import com.onixbyte.clearledger.data.domain.UserDomain;
 import com.onixbyte.clearledger.data.response.UserResponse;
 
@@ -131,11 +132,19 @@ public class User {
                 .build();
     }
 
-    public UserResponse toView() {
+    public UserResponse toResponse() {
         return UserResponse.builder()
                 .id(String.valueOf(getId()))
                 .username(getUsername())
                 .email(getEmail())
+                .build();
+    }
+
+    public BizUser toBiz() {
+        return BizUser.builder()
+                .id(id)
+                .username(username)
+                .email(email)
                 .build();
     }
 

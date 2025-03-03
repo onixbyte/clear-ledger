@@ -149,7 +149,7 @@ public class Transaction {
         }
     }
 
-    public TransactionResponse toView() {
+    public TransactionResponse toResponse() {
         return TransactionResponse.builder()
                 .id(String.valueOf(id))
                 .ledgerId(String.valueOf(ledgerId))

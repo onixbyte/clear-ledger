@@ -1,5 +1,7 @@
 package com.onixbyte.clearledger.config;
 
+import com.onixbyte.clearledger.data.biz.BizUser;
+import com.onixbyte.clearledger.data.domain.UserDomain;
 import com.onixbyte.clearledger.data.entity.User;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,13 +14,12 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 public class CacheConfig {
 
     @Bean
-    public RedisTemplate<String, User> userCache(RedisConnectionFactory redisConnectionFactory) {
-        var userCache = new RedisTemplate<String, User>();
+    public RedisTemplate<String, BizUser> userCache(RedisConnectionFactory redisConnectionFactory) {
+        var userCache = new RedisTemplate<String, BizUser>();
         userCache.setConnectionFactory(redisConnectionFactory);
         userCache.setKeySerializer(RedisSerializer.string());
 
-        var serializer = new Jackson2JsonRedisSerializer<>(User.class);
-        userCache.setValueSerializer(serializer);
+        userCache.setValueSerializer(new Jackson2JsonRedisSerializer<>(BizUser.class));
 
         userCache.afterPropertiesSet();
         return userCache;
