@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit"
-import authReducer from "@/store/auth-slice"
+import authReducer from "./auth-slice"
+import ledgerReducer from "./ledger-slice"
 
 const preloadedState = {
   auth: {
@@ -12,6 +13,7 @@ const preloadedState = {
 export const store = configureStore({
   reducer: {
     auth: authReducer,
+    ledger: ledgerReducer
   },
   preloadedState,
 })

@@ -1,7 +1,7 @@
 .dashboard-wrapper {
-  height: 100vh; // 确保整个布局撑满视窗
-  width: 100vw; // 撑满宽度
-  margin: 0; // 移除默认外边距
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
 
   .dashboard-header {
     background-color: #888888;
@@ -16,21 +16,21 @@
   }
 
   .dashboard-content-wrapper {
-    height: calc(100vh - 60px); // 剩余高度 = 视窗高度 - Header 高度
+    height: calc(100vh - 60px);
 
     .dashboard-sidebar-wrapper {
-      height: 100%; // 撑满父容器高度
-      background: #f0f2f5; // 可选：添加背景色以区分区域
+      height: 100%;
+      background: #f0f2f5;
 
       .sidebar-menu {
-        height: 100%; // 菜单撑满 Sider
-        border-right: 0; // 可选：移除 Ant Design 默认边框
+        height: 100%;
+        border-right: 0;
       }
     }
 
     .dashboard-content {
-      padding: 16px; // 内容区域内边距
-      overflow: auto; // 内容溢出时可滚动
+      padding: 16px;
+      overflow: auto;
     }
   }
 }
