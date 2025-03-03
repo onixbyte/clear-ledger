@@ -19,7 +19,8 @@ export const LoginPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const from = (location.state as { from?: { pathname: string } })?.from?.pathname || "/"
+  const from =
+    (location.state as { from?: { pathname: string } })?.from?.pathname || "/"
 
   const [loading, setLoading] = useState(false)
 
