@@ -6,6 +6,7 @@ import * as AuthApi from "@/api/auth"
 import { setUser } from "@/store/auth-slice"
 import "./index.scss"
 import { AxiosError } from "axios"
+import { NavLink } from "react-router"
 
 type UserLoginForm = {
   username: string
@@ -60,6 +61,7 @@ export const LoginPage = () => {
           <Input.Password />
         </Form.Item>
         <div className="login-controls-wrapper">
+          <NavLink to="/register">还没有账号？立即注册</NavLink>
           <Button htmlType="reset">重置</Button>
           <Button type="primary" htmlType="submit" loading={loading}>
             登录
