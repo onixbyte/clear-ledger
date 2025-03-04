@@ -6,7 +6,7 @@ import { AxiosError } from "axios"
 import { useAppDispatch } from "@/hooks/store"
 import * as AuthApi from "@/api/auth"
 import { setUser } from "@/store/auth-slice"
-import "./index.scss"
+import "./index.css"
 
 type UserLoginForm = {
   username: string

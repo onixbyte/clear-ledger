@@ -3,7 +3,7 @@ import { Button, Form, Input, message, Modal } from "antd"
 import * as LedgerApi from "@/api/ledger"
 import { useAppDispatch } from "@/hooks/store"
 import { setLedgers } from "@/store/ledger-slice"
-import "./index.scss"
+import "./index.css"
 
 type JoinLedgerForm = {
   ledgerId: string

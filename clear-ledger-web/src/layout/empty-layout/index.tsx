@@ -1,5 +1,5 @@
 import { Outlet } from "react-router"
-import "./index.scss"
+import "./index.css"
 
 export const EmptyLayout = () => {
   return (

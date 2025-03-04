@@ -4,7 +4,7 @@ import { useAppDispatch } from "@/hooks/store"
 import * as LedgerApi from "@/api/ledger"
 import { setLedgers } from "@/store/ledger-slice"
 import { CreateLedgerRequest } from "@/types"
-import "./index.scss"
+import "./index.css"
 
 interface CreateLedgerDialogueProps {
   open: boolean

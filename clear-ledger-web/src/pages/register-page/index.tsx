@@ -6,7 +6,7 @@ import { Button, Form, Input, message } from "antd"
 import { useAppDispatch } from "@/hooks/store"
 import * as AuthApi from "@/api/auth"
 import { setUser } from "@/store/auth-slice.ts"
-import "./index.scss"
+import "./index.css"
 
 type UserRegisterForm = {
   username: string
