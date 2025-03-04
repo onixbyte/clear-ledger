@@ -1,5 +1,8 @@
 import "./index.scss"
+import { useParams } from "react-router"
 
 export const LedgerPage = () => {
-  return (<div></div>)
+  const { ledgerId } = useParams<{ ledgerId: string }>()
+
+  return <div>Ledger ID = {ledgerId}</div>
 }

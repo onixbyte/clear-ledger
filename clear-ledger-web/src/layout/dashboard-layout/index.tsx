@@ -78,8 +78,7 @@ export const DashboardLayout = () => {
             setIsCreateLedgerDialogueOpen(true)
         } else if (key.startsWith("ledger#")) {
             const ledgerId = key.split("#")[1]
-            // navigate(`/ledgers/${ledgerId}`)
-            console.log(ledgerId)
+            navigate(`/ledgers/${ledgerId}`)
         }
     }
 

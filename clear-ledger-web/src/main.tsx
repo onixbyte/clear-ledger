@@ -10,6 +10,7 @@ import { EmptyLayout } from "@/layout/empty-layout"
 import { LoginPage } from "@/pages/login-page"
 import { RegisterPage } from "@/pages/register-page"
 import { ProtectedRoute } from "@/components/protected-route"
+import { LedgerPage } from "@/pages/ledger-page"
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -17,7 +18,9 @@ createRoot(document.getElementById("root")!).render(
       <BrowserRouter>
         <Routes>
           <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<DashboardLayout />}></Route>
+            <Route path="/" element={<DashboardLayout />}>
+              <Route path="ledgers/:ledgerId" element={<LedgerPage />} />
+            </Route>
           </Route>
           <Route path="/login" element={<EmptyLayout />}>
             <Route index element={<LoginPage />} />
