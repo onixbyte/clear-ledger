@@ -1,4 +1,3 @@
-import "./index.css"
 import { useParams } from "react-router"
 
 export const LedgerPage = () => {

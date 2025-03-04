@@ -6,7 +6,6 @@ import { AxiosError } from "axios"
 import { useAppDispatch } from "@/hooks/store"
 import * as AuthApi from "@/api/auth"
 import { setUser } from "@/store/auth-slice"
-import "./index.css"
 
 type UserLoginForm = {
   username: string
@@ -43,7 +42,7 @@ export const LoginPage = () => {
   }
 
   return (
-    <div className="login-page-wrapper">
+    <div className="w-[480px]">
       <Form<UserLoginForm>
         form={form}
         labelCol={{ span: 4 }}
@@ -61,7 +60,7 @@ export const LoginPage = () => {
           rules={[{ required: true, message: "请输入密码!" }]}>
           <Input.Password />
         </Form.Item>
-        <div className="login-controls-wrapper">
+        <div className="flex justify-end items-baseline gap-[10px]">
           <NavLink to="/register">还没有账号？立即注册</NavLink>
           <Button htmlType="reset">重置</Button>
           <Button type="primary" htmlType="submit" loading={loading}>

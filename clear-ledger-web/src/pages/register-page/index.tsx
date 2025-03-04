@@ -6,7 +6,6 @@ import { Button, Form, Input, message } from "antd"
 import { useAppDispatch } from "@/hooks/store"
 import * as AuthApi from "@/api/auth"
 import { setUser } from "@/store/auth-slice.ts"
-import "./index.css"
 
 type UserRegisterForm = {
   username: string
@@ -48,7 +47,7 @@ export const RegisterPage = () => {
   }
 
   return (
-    <div className="register-page-wrapper">
+    <div className="w-[480px]">
       <Form<UserRegisterForm>
         form={form}
         labelCol={{ span: 4 }}
@@ -78,7 +77,7 @@ export const RegisterPage = () => {
           rules={[{ required: true, message: "请输入密码!" }]}>
           <Input.Password />
         </Form.Item>
-        <div className="register-controls-wrapper">
+        <div className="flex justify-end items-baseline gap-[10px]">
           <NavLink to="/login">已有账号？立即登录</NavLink>
           <Button htmlType="reset">重置</Button>
           <Button type="primary" htmlType="submit" loading={loading}>

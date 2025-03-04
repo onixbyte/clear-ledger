@@ -4,7 +4,6 @@ import { useAppDispatch } from "@/hooks/store"
 import * as LedgerApi from "@/api/ledger"
 import { setLedgers } from "@/store/ledger-slice"
 import { CreateLedgerRequest } from "@/types"
-import "./index.css"
 
 interface CreateLedgerDialogueProps {
   open: boolean
@@ -50,7 +49,7 @@ export const CreateLedgerDialogue = ({
         <Form.Item<CreateLedgerRequest> name="description" label="账本描述">
           <Input.TextArea />
         </Form.Item>
-        <div className="create-ledger-controls">
+        <div className="flex gap-[8px] justify-end">
           <Button onClick={onClose}>
             取消
           </Button>

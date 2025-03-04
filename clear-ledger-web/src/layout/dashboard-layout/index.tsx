@@ -8,7 +8,6 @@ import { AxiosError } from "axios"
 import { useAppDispatch, useAppSelector } from "@/hooks/store"
 import { logout } from "@/store/auth-slice"
 import * as LedgerApi from "@/api/ledger"
-import "./index.css"
 import staticMenuItems from "./menu-item.ts"
 import { setLedgers } from "@/store/ledger-slice.ts"
 import { MenuItem } from "@/types"
@@ -83,22 +82,22 @@ export const DashboardLayout = () => {
     }
 
   return (
-    <Layout className="dashboard-wrapper">
-      <Header className="dashboard-header">
+    <Layout className="h-[100vh] w-[100vw] m-0">
+      <Header className="bg-[#888888] px-5 h-[60px] leading-[60px] text-[#231547] text-[18px] flex justify-between items-baseline">
         Clear Ledger
         <Button type="text" onClick={_logout}>
           注销
         </Button>
       </Header>
-      <Layout className="dashboard-content-wrapper">
-        <Sidebar className="dashboard-sidebar-wrapper">
+      <Layout className="h-[calc(100vh-60px)]">
+        <Sidebar className="h-[100%] bg-[#f0f2f5]">
           <Menu
             items={menuItems}
-            className="sidebar-menu"
+            className="h-[100%] border-r-0"
             onClick={onMenuItemClicked}
           />
         </Sidebar>
-        <Content className="dashboard-content">
+        <Content className="p-[16px] overflow-auto">
           <Outlet />
         </Content>
       </Layout>

@@ -3,7 +3,6 @@ import { Button, Form, Input, message, Modal } from "antd"
 import * as LedgerApi from "@/api/ledger"
 import { useAppDispatch } from "@/hooks/store"
 import { setLedgers } from "@/store/ledger-slice"
-import "./index.css"
 
 type JoinLedgerForm = {
   ledgerId: string
@@ -47,7 +46,7 @@ export const JoinLedgerDialogue = ({ open, onClose }: JoinLedgerModalProps) => {
           rules={[{ required: true, message: "请输入账本 ID" }]}>
           <Input />
         </Form.Item>
-        <div className="join-ledger-controls">
+        <div className="flex gap-[8px] justify-end">
           <Button onClick={onClose}>
             取消
           </Button>
