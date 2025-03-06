@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.lang.model.element.NestingKind;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -78,7 +79,7 @@ public class LedgerService {
      * @return joined ledger and role data
      */
     @Transactional
-    public BizLedger joinLedger(Long ledgerId) {
+    public BizLedger joinLedger(String ledgerId) {
         var currentUser = UserHolder.getCurrentUser();
 
         // check whether the ledger exists
@@ -149,7 +150,7 @@ public class LedgerService {
      * @param ledgerId ledger id
      * @return {@code true} if current user has joined the ledger
      */
-    public boolean isLedgerJoined(Long ledgerId) {
+    public boolean isLedgerJoined(String ledgerId) {
         var currentUser = UserHolder.getCurrentUser();
 
         return userLedgerRepository.selectCountByCondition(UserLedgerTableDef.USER_LEDGER.USER_ID.eq(currentUser.id())
@@ -162,7 +163,7 @@ public class LedgerService {
      * @param ledgerId ledger id
      * @return {@code true} if ledger exists, otherwise {@code false}
      */
-    public boolean hasLedger(Long ledgerId) {
+    public boolean hasLedger(String ledgerId) {
         return ledgerRepository.selectCountByCondition(LedgerTableDef.LEDGER.ID.eq(ledgerId)) == 1;
     }
 
@@ -172,7 +173,7 @@ public class LedgerService {
      * @param ledgerId ledger id
      */
     @Transactional
-    public void deleteLedger(Long ledgerId) {
+    public void deleteLedger(String ledgerId) {
         // check whether the ledger exists
         if (!hasLedger(ledgerId)) {
             throw new BizException(HttpStatus.NOT_FOUND, "无法根据指定的 ID 找到账本");
@@ -195,7 +196,7 @@ public class LedgerService {
      * @param ledgerId ledger id
      * @return {@code true} if user can edit this ledger, otherwise {@code false}
      */
-    public boolean canEdit(Long ledgerId) {
+    public boolean canEdit(String ledgerId) {
         var currentUser = UserHolder.getCurrentUser();
         return "owner".equals(userLedgerRepository.selectRole(currentUser.id(), ledgerId));
     }

@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 public record UserDomain(
-        Long id,
+        String id,
         String username,
         String password,
         String email
@@ -21,7 +21,7 @@ public record UserDomain(
     }
 
     public static class UserDomainBuilder {
-        private Long id;
+        private String id;
         private String username;
         private String password;
         private String email;
@@ -29,7 +29,7 @@ public record UserDomain(
         private UserDomainBuilder() {
         }
 
-        public UserDomainBuilder id(Long id) {
+        public UserDomainBuilder id(String id) {
             this.id = id;
             return this;
         }

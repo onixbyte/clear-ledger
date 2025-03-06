@@ -9,11 +9,11 @@ import java.time.LocalDateTime;
 public class ViewTransaction {
 
     @Id(keyType = KeyType.None)
-    private Long id;
+    private String id;
 
-    private Long ledgerId;
+    private String ledgerId;
 
-    private Long userId;
+    private String userId;
 
     private String username;
 
@@ -28,7 +28,7 @@ public class ViewTransaction {
     public ViewTransaction() {
     }
 
-    public ViewTransaction(Long id, Long ledgerId, Long userId, String username, Integer amount, String description, LocalDateTime transactionDate, LocalDateTime createdAt) {
+    public ViewTransaction(String id, String ledgerId, String userId, String username, Integer amount, String description, LocalDateTime transactionDate, LocalDateTime createdAt) {
         this.id = id;
         this.ledgerId = ledgerId;
         this.userId = userId;
@@ -39,27 +39,27 @@ public class ViewTransaction {
         this.createdAt = createdAt;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Long getLedgerId() {
+    public String getLedgerId() {
         return ledgerId;
     }
 
-    public void setLedgerId(Long ledgerId) {
+    public void setLedgerId(String ledgerId) {
         this.ledgerId = ledgerId;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

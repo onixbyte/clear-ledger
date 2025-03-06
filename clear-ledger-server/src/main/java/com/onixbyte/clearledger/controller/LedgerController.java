@@ -28,10 +28,11 @@ public class LedgerController {
 
     private static final Logger log = LoggerFactory.getLogger(LedgerController.class);
 
-    private final GuidCreator<Long> ledgerIdCreator;
+    private final GuidCreator<String> ledgerIdCreator;
     private final LedgerService ledgerService;
 
-    public LedgerController(GuidCreator<Long> ledgerIdCreator, LedgerService ledgerService) {
+    public LedgerController(GuidCreator<String> ledgerIdCreator,
+                            LedgerService ledgerService) {
         this.ledgerIdCreator = ledgerIdCreator;
         this.ledgerService = ledgerService;
     }
@@ -49,7 +50,7 @@ public class LedgerController {
     }
 
     @PostMapping("/join/{ledgerId:\\d+}")
-    public BizLedgerResponse joinLedger(@PathVariable Long ledgerId) {
+    public BizLedgerResponse joinLedger(@PathVariable String ledgerId) {
         var bizLedger = ledgerService.joinLedger(ledgerId);
         return BizLedgerResponse.builder()
                 .id(String.valueOf(bizLedger.id()))
@@ -61,7 +62,7 @@ public class LedgerController {
     }
 
     @DeleteMapping("/{ledgerId:\\d+}")
-    public ResponseEntity<Void> deleteLedger(@PathVariable Long ledgerId) {
+    public ResponseEntity<Void> deleteLedger(@PathVariable String ledgerId) {
         ledgerService.deleteLedger(ledgerId);
         return ResponseEntity.noContent().build();
     }

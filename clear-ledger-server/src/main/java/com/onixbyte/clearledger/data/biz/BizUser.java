@@ -11,7 +11,7 @@ import com.onixbyte.clearledger.data.response.UserResponse;
  * @param email    user's email address
  */
 public record BizUser(
-        Long id,
+        String id,
         String username,
         String email
 ) {
@@ -21,14 +21,14 @@ public record BizUser(
     }
 
     public static class BizUserBuilder {
-        private Long id;
+        private String id;
         private String username;
         private String email;
 
         private BizUserBuilder() {
         }
 
-        public BizUserBuilder id(Long id) {
+        public BizUserBuilder id(String id) {
             this.id = id;
             return this;
         }

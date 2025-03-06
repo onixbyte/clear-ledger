@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 public class Transaction {
 
     @Id(keyType = KeyType.None)
-    private Long id;
+    private String id;
 
-    private Long ledgerId;
+    private String ledgerId;
 
-    private Long userId;
+    private String userId;
 
     private Integer amount;
 
@@ -28,7 +28,7 @@ public class Transaction {
     public Transaction() {
     }
 
-    public Transaction(Long id, Long ledgerId, Long userId, Integer amount, String description, LocalDateTime transactionDate, LocalDateTime createdAt) {
+    public Transaction(String id, String ledgerId, String userId, Integer amount, String description, LocalDateTime transactionDate, LocalDateTime createdAt) {
         this.id = id;
         this.ledgerId = ledgerId;
         this.userId = userId;
@@ -38,27 +38,27 @@ public class Transaction {
         this.createdAt = createdAt;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Long getLedgerId() {
+    public String getLedgerId() {
         return ledgerId;
     }
 
-    public void setLedgerId(Long ledgerId) {
+    public void setLedgerId(String ledgerId) {
         this.ledgerId = ledgerId;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -99,9 +99,9 @@ public class Transaction {
     }
 
     public static class TransactionBuilder {
-        private Long id;
-        private Long ledgerId;
-        private Long userId;
+        private String id;
+        private String ledgerId;
+        private String userId;
         private Integer amount;
         private String description;
         private LocalDateTime transactionDate;
@@ -109,17 +109,17 @@ public class Transaction {
 
         private TransactionBuilder() {}
 
-        public TransactionBuilder id(Long id) {
+        public TransactionBuilder id(String id) {
             this.id = id;
             return this;
         }
 
-        public TransactionBuilder ledgerId(Long ledgerId) {
+        public TransactionBuilder ledgerId(String ledgerId) {
             this.ledgerId = ledgerId;
             return this;
         }
 
-        public TransactionBuilder userId(Long userId) {
+        public TransactionBuilder userId(String userId) {
             this.userId = userId;
             return this;
         }

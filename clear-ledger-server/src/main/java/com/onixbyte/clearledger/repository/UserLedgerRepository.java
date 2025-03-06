@@ -18,7 +18,7 @@ public interface UserLedgerRepository extends BaseMapper<UserLedger> {
              where user_id = #{userId}
                and ledger_id = #{ledgerId}
             """)
-    String selectRole(@Param("userId") Long userId, @Param("ledgerId") Long ledgerId);
+    String selectRole(@Param("userId") String userId, @Param("ledgerId") String ledgerId);
 
     @Select("""
             select l.id, l.name, l.description, ul.role, ul.joined_at
@@ -26,6 +26,6 @@ public interface UserLedgerRepository extends BaseMapper<UserLedger> {
             left join ledgers l on ul.ledger_id = l.id
             where ul.user_id = #{userId}
             """)
-    List<BizLedger> selectJoinedLedgers(@Param("userId") Long userId);
+    List<BizLedger> selectJoinedLedgers(@Param("userId") String userId);
 
 }
