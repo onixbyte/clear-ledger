@@ -103,6 +103,68 @@ public class ViewTransaction {
         this.createdAt = createdAt;
     }
 
+    public static ViewTransactionBuilder builder() {
+        return new ViewTransactionBuilder();
+    }
+
+    public static class ViewTransactionBuilder {
+        private String id;
+        private String ledgerId;
+        private String userId;
+        private String username;
+        private Integer amount;
+        private String description;
+        private LocalDateTime transactionDate;
+        private LocalDateTime createdAt;
+
+        private ViewTransactionBuilder() {
+        }
+
+        public ViewTransactionBuilder id(String id) {
+            this.id = id;
+            return this;
+        }
+
+        public ViewTransactionBuilder ledgerId(String ledgerId) {
+            this.ledgerId = ledgerId;
+            return this;
+        }
+
+        public ViewTransactionBuilder userId(String userId) {
+            this.userId = userId;
+            return this;
+        }
+
+        public ViewTransactionBuilder username(String username) {
+            this.username = username;
+            return this;
+        }
+
+        public ViewTransactionBuilder amount(Integer amount) {
+            this.amount = amount;
+            return this;
+        }
+
+        public ViewTransactionBuilder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public ViewTransactionBuilder transactionDate(LocalDateTime transactionDate) {
+            this.transactionDate = transactionDate;
+            return this;
+        }
+
+        public ViewTransactionBuilder createdAt(LocalDateTime createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public ViewTransaction build() {
+            return new ViewTransaction(id, ledgerId, userId, username, amount, description, transactionDate, createdAt);
+        }
+    }
+
     public TransactionResponse toResponse() {
         return TransactionResponse.builder()
                 .id(String.valueOf(id))

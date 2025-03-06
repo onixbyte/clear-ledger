@@ -16,7 +16,6 @@ public class CacheConfig {
         var userCache = new RedisTemplate<String, BizUser>();
         userCache.setConnectionFactory(redisConnectionFactory);
         userCache.setKeySerializer(RedisSerializer.string());
-
         userCache.setValueSerializer(new Jackson2JsonRedisSerializer<>(BizUser.class));
 
         userCache.afterPropertiesSet();
@@ -28,7 +27,6 @@ public class CacheConfig {
         var serialCache = new RedisTemplate<String, Long>();
         serialCache.setConnectionFactory(redisConnectionFactory);
         serialCache.setKeySerializer(RedisSerializer.string());
-
         serialCache.setValueSerializer(new Jackson2JsonRedisSerializer<>(Long.class));
 
         serialCache.afterPropertiesSet();

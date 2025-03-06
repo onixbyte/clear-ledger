@@ -28,4 +28,13 @@ public interface UserLedgerRepository extends BaseMapper<UserLedger> {
             """)
     List<BizLedger> selectJoinedLedgers(@Param("userId") String userId);
 
+    @Select("""
+            select count(*)
+            from user_ledgers
+            where user_id = #{userId}
+            and ledger_id = #{ledgerId}
+            """)
+    boolean canWriteTransaction(@Param("userId") String userId,
+                                @Param("ledgerId") String ledgerId);
+
 }

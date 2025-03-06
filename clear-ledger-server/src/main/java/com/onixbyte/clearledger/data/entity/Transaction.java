@@ -149,14 +149,16 @@ public class Transaction {
         }
     }
 
-    public TransactionResponse toResponse() {
-        return TransactionResponse.builder()
-                .id(String.valueOf(id))
-                .ledgerId(String.valueOf(ledgerId))
-                .userId(String.valueOf(userId))
+    public ViewTransaction toView(String username) {
+        return ViewTransaction.builder()
+                .id(id)
+                .userId(userId)
+                .username(username)
+                .ledgerId(ledgerId)
                 .amount(amount)
                 .description(description)
                 .transactionDate(transactionDate)
+                .createdAt(createdAt)
                 .build();
     }
 }

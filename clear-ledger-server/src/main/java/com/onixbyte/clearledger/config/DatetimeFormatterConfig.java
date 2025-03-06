@@ -13,4 +13,9 @@ public class DatetimeFormatterConfig {
         return DateTimeFormatter.ofPattern("yyMMdd");
     }
 
+    @Bean
+    public DateTimeFormatter datetimeFormatter() {
+        return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    }
+
 }

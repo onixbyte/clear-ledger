@@ -50,7 +50,7 @@ public class LedgerService {
      * @return the created ledger
      */
     @Transactional
-    public Ledger saveLedger(Ledger ledger) {
+    public BizLedger saveLedger(Ledger ledger) {
         var currentUser = UserHolder.getCurrentUser();
 
         if (isNameTaken(ledger.getName())) {
@@ -61,15 +61,17 @@ public class LedgerService {
             throw new BizException(HttpStatus.CONFLICT, "您最多可以加入三个账本");
         }
 
-        ledgerRepository.insert(ledger);
-        userLedgerRepository.insert(UserLedger.builder()
+        var userLedger = UserLedger.builder()
                 .userId(currentUser.id())
                 .ledgerId(ledger.getId())
                 .role("owner")
                 .joinedAt(LocalDateTime.now())
-                .build());
+                .build();
 
-        return ledger;
+        ledgerRepository.insert(ledger);
+        userLedgerRepository.insert(userLedger);
+
+        return ledger.toBiz(userLedger.getRole(), userLedger.getJoinedAt());
     }
 
     /**
@@ -98,19 +100,20 @@ public class LedgerService {
         }
 
         var joinedAt = LocalDateTime.now();
-        userLedgerRepository.insert(UserLedger.builder()
+        var userLedger = UserLedger.builder()
                 .userId(currentUser.id())
                 .ledgerId(ledgerId)
                 .role("member")
                 .joinedAt(joinedAt)
-                .build());
+                .build();
+        userLedgerRepository.insert(userLedger);
 
         var ledger = ledgerRepository.selectOneByCondition(LedgerTableDef.LEDGER.ID.eq(ledgerId));
         return BizLedger.builder()
                 .id(ledgerId)
                 .name(ledger.getName())
                 .description(ledger.getDescription())
-                .role("member")
+                .role(userLedger.getRole())
                 .joinedAt(joinedAt)
                 .build();
     }

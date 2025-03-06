@@ -3,7 +3,7 @@ package com.onixbyte.clearledger.data.entity;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.Table;
-import com.onixbyte.clearledger.data.response.BizLedgerResponse;
+import com.onixbyte.clearledger.data.biz.BizLedger;
 
 import java.time.LocalDateTime;
 
@@ -102,11 +102,13 @@ public class Ledger {
         }
     }
 
-    public BizLedgerResponse toResponse() {
-        return BizLedgerResponse.builder()
+    public BizLedger toBiz(String role, LocalDateTime joinedAt) {
+        return BizLedger.builder()
                 .id(String.valueOf(id))
                 .name(name)
                 .description(description)
+                .role(role)
+                .joinedAt(joinedAt)
                 .build();
     }
 }

@@ -1,9 +1,9 @@
 package com.onixbyte.clearledger.controller;
 
+import com.onixbyte.clearledger.data.biz.BizLedger;
 import com.onixbyte.clearledger.data.request.CreateLedgerRequest;
 import com.onixbyte.clearledger.data.entity.Ledger;
 import com.onixbyte.clearledger.data.request.UpdateLedgerRequest;
-import com.onixbyte.clearledger.data.response.BizLedgerResponse;
 import com.onixbyte.clearledger.exception.BizException;
 import com.onixbyte.clearledger.service.LedgerService;
 import com.onixbyte.guid.GuidCreator;
@@ -38,7 +38,7 @@ public class LedgerController {
     }
 
     @PostMapping
-    public BizLedgerResponse createLedger(@RequestBody CreateLedgerRequest request) {
+    public BizLedger createLedger(@RequestBody CreateLedgerRequest request) {
         var ledger = Ledger.builder()
                 .id(ledgerIdCreator.nextId())
                 .name(request.name())
@@ -46,19 +46,12 @@ public class LedgerController {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        return ledgerService.saveLedger(ledger).toResponse();
+        return ledgerService.saveLedger(ledger);
     }
 
     @PostMapping("/join/{ledgerId:\\d+}")
-    public BizLedgerResponse joinLedger(@PathVariable String ledgerId) {
-        var bizLedger = ledgerService.joinLedger(ledgerId);
-        return BizLedgerResponse.builder()
-                .id(String.valueOf(bizLedger.id()))
-                .name(bizLedger.name())
-                .description(bizLedger.description())
-                .role(bizLedger.role())
-                .joinedAt(bizLedger.joinedAt())
-                .build();
+    public BizLedger joinLedger(@PathVariable String ledgerId) {
+        return ledgerService.joinLedger(ledgerId);
     }
 
     @DeleteMapping("/{ledgerId:\\d+}")
@@ -84,37 +77,13 @@ public class LedgerController {
     }
 
     /**
-     * Get ledgers.
+     * Get joined ledgers.
      *
-     * @param ledgerType ledger type flag, {@code 1} represents joined ledgers, {@code 2} represents
-     *                   ledgers could be joined
      * @return a ledger list
      */
     @GetMapping
-    public List<BizLedgerResponse> getLedgers(@RequestParam(required = false) Integer ledgerType) {
-        if (Objects.isNull(ledgerType) || ledgerType == 1) {
-            return ledgerService.getJoinedLedgers()
-                    .stream()
-                    .map((ledger) -> BizLedgerResponse.builder()
-                            .id(String.valueOf(ledger.id()))
-                            .name(ledger.name())
-                            .description(ledger.description())
-                            .role(ledger.role())
-                            .joinedAt(ledger.joinedAt())
-                            .build())
-                    .toList();
-        } else {
-            return ledgerService.getLedgersCanJoin()
-                    .stream()
-                    .map((ledger) -> BizLedgerResponse.builder()
-                            .id(String.valueOf(ledger.id()))
-                            .name(ledger.name())
-                            .description(ledger.description())
-                            .role(ledger.role())
-                            .joinedAt(ledger.joinedAt())
-                            .build())
-                    .toList();
-        }
+    public List<BizLedger> getLedgers() {
+        return ledgerService.getJoinedLedgers();
     }
 
     @DeleteMapping("/exit/{ledgerId:\\d+}")
