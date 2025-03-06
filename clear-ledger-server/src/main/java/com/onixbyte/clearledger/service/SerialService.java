@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,16 +26,8 @@ public class SerialService {
         return serialCache.opsForValue().increment(composeKey(tag));
     }
 
-    @Scheduled(cron = "0 0 0 * * ?")
-    public void reset() {
-        log.info("Resetting serial value.");
-
-        var keys = serialCache.keys(composeKey("*"));
-        keys.forEach((key) -> {
-            serialCache.opsForValue().set(key, 0L);
-        });
-
-        log.info("All serial has been reset.");
+    public void resetSerial(String tag) {
+        serialCache.opsForValue().set(composeKey(tag), 0L);
     }
 
 }

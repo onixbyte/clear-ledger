@@ -14,7 +14,9 @@ import com.onixbyte.clearledger.repository.TransactionRepository;
 import com.onixbyte.clearledger.repository.UserLedgerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,16 +34,20 @@ public class LedgerService {
 
     private static final Logger log = LoggerFactory.getLogger(LedgerService.class);
 
+    private final String cacheTag = "ledger";
+
     private final LedgerRepository ledgerRepository;
     private final UserLedgerRepository userLedgerRepository;
     private final TransactionRepository transactionRepository;
+    private final SerialService serialService;
 
     public LedgerService(LedgerRepository ledgerRepository,
                          UserLedgerRepository userLedgerRepository,
-                         TransactionRepository transactionRepository) {
+                         TransactionRepository transactionRepository, SerialService serialService) {
         this.ledgerRepository = ledgerRepository;
         this.userLedgerRepository = userLedgerRepository;
         this.transactionRepository = transactionRepository;
+        this.serialService = serialService;
     }
 
     /**
@@ -249,5 +255,12 @@ public class LedgerService {
         if (affectedRows == 0) {
             throw new BizException(HttpStatus.CONFLICT, "您不能退出自己创建的账本，如不需要该账本，请删除该账本");
         }
+    }
+
+    @Scheduled(cron = "0 0 0 * * *")
+    public void resetSerial() {
+        log.info("Resetting ledger serial.");
+        serialService.resetSerial(cacheTag);
+        log.info("Ledger serial has been reset to 0.");
     }
 }
