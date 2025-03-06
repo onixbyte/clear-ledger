@@ -14,10 +14,13 @@ import com.onixbyte.clearledger.repository.TransactionRepository;
 import com.onixbyte.clearledger.repository.UserLedgerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.lang.model.element.NestingKind;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -31,16 +34,20 @@ public class LedgerService {
 
     private static final Logger log = LoggerFactory.getLogger(LedgerService.class);
 
+    private final String cacheTag = "ledger";
+
     private final LedgerRepository ledgerRepository;
     private final UserLedgerRepository userLedgerRepository;
     private final TransactionRepository transactionRepository;
+    private final SerialService serialService;
 
     public LedgerService(LedgerRepository ledgerRepository,
                          UserLedgerRepository userLedgerRepository,
-                         TransactionRepository transactionRepository) {
+                         TransactionRepository transactionRepository, SerialService serialService) {
         this.ledgerRepository = ledgerRepository;
         this.userLedgerRepository = userLedgerRepository;
         this.transactionRepository = transactionRepository;
+        this.serialService = serialService;
     }
 
     /**
@@ -49,7 +56,7 @@ public class LedgerService {
      * @return the created ledger
      */
     @Transactional
-    public Ledger saveLedger(Ledger ledger) {
+    public BizLedger saveLedger(Ledger ledger) {
         var currentUser = UserHolder.getCurrentUser();
 
         if (isNameTaken(ledger.getName())) {
@@ -60,15 +67,17 @@ public class LedgerService {
             throw new BizException(HttpStatus.CONFLICT, "您最多可以加入三个账本");
         }
 
-        ledgerRepository.insert(ledger);
-        userLedgerRepository.insert(UserLedger.builder()
+        var userLedger = UserLedger.builder()
                 .userId(currentUser.id())
                 .ledgerId(ledger.getId())
                 .role("owner")
                 .joinedAt(LocalDateTime.now())
-                .build());
+                .build();
 
-        return ledger;
+        ledgerRepository.insert(ledger);
+        userLedgerRepository.insert(userLedger);
+
+        return ledger.toBiz(userLedger.getRole(), userLedger.getJoinedAt());
     }
 
     /**
@@ -78,7 +87,7 @@ public class LedgerService {
      * @return joined ledger and role data
      */
     @Transactional
-    public BizLedger joinLedger(Long ledgerId) {
+    public BizLedger joinLedger(String ledgerId) {
         var currentUser = UserHolder.getCurrentUser();
 
         // check whether the ledger exists
@@ -97,19 +106,20 @@ public class LedgerService {
         }
 
         var joinedAt = LocalDateTime.now();
-        userLedgerRepository.insert(UserLedger.builder()
+        var userLedger = UserLedger.builder()
                 .userId(currentUser.id())
                 .ledgerId(ledgerId)
                 .role("member")
                 .joinedAt(joinedAt)
-                .build());
+                .build();
+        userLedgerRepository.insert(userLedger);
 
         var ledger = ledgerRepository.selectOneByCondition(LedgerTableDef.LEDGER.ID.eq(ledgerId));
         return BizLedger.builder()
                 .id(ledgerId)
                 .name(ledger.getName())
                 .description(ledger.getDescription())
-                .role("member")
+                .role(userLedger.getRole())
                 .joinedAt(joinedAt)
                 .build();
     }
@@ -149,7 +159,7 @@ public class LedgerService {
      * @param ledgerId ledger id
      * @return {@code true} if current user has joined the ledger
      */
-    public boolean isLedgerJoined(Long ledgerId) {
+    public boolean isLedgerJoined(String ledgerId) {
         var currentUser = UserHolder.getCurrentUser();
 
         return userLedgerRepository.selectCountByCondition(UserLedgerTableDef.USER_LEDGER.USER_ID.eq(currentUser.id())
@@ -162,7 +172,7 @@ public class LedgerService {
      * @param ledgerId ledger id
      * @return {@code true} if ledger exists, otherwise {@code false}
      */
-    public boolean hasLedger(Long ledgerId) {
+    public boolean hasLedger(String ledgerId) {
         return ledgerRepository.selectCountByCondition(LedgerTableDef.LEDGER.ID.eq(ledgerId)) == 1;
     }
 
@@ -172,7 +182,7 @@ public class LedgerService {
      * @param ledgerId ledger id
      */
     @Transactional
-    public void deleteLedger(Long ledgerId) {
+    public void deleteLedger(String ledgerId) {
         // check whether the ledger exists
         if (!hasLedger(ledgerId)) {
             throw new BizException(HttpStatus.NOT_FOUND, "无法根据指定的 ID 找到账本");
@@ -195,7 +205,7 @@ public class LedgerService {
      * @param ledgerId ledger id
      * @return {@code true} if user can edit this ledger, otherwise {@code false}
      */
-    public boolean canEdit(Long ledgerId) {
+    public boolean canEdit(String ledgerId) {
         var currentUser = UserHolder.getCurrentUser();
         return "owner".equals(userLedgerRepository.selectRole(currentUser.id(), ledgerId));
     }
@@ -245,5 +255,12 @@ public class LedgerService {
         if (affectedRows == 0) {
             throw new BizException(HttpStatus.CONFLICT, "您不能退出自己创建的账本，如不需要该账本，请删除该账本");
         }
+    }
+
+    @Scheduled(cron = "0 0 0 * * *")
+    public void resetSerial() {
+        log.info("Resetting ledger serial.");
+        serialService.resetSerial(cacheTag);
+        log.info("Ledger serial has been reset to 0.");
     }
 }

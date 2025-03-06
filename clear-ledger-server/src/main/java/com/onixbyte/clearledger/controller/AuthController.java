@@ -24,12 +24,12 @@ import java.time.LocalDateTime;
 public class AuthController {
 
     private final TokenResolver<DecodedJWT> tokenResolver;
-    private final GuidCreator<Long> userIdCreator;
+    private final GuidCreator<String> userIdCreator;
     private final AuthService authService;
 
     @Autowired
     public AuthController(TokenResolver<DecodedJWT> tokenResolver,
-                          GuidCreator<Long> userIdCreator,
+                          GuidCreator<String> userIdCreator,
                           AuthService authService) {
         this.tokenResolver = tokenResolver;
         this.userIdCreator = userIdCreator;

@@ -1,6 +1,6 @@
 package com.onixbyte.clearledger.security.token;
 
-import com.onixbyte.clearledger.data.domain.UserDomain;
+import com.onixbyte.clearledger.data.biz.BizUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,7 +17,7 @@ public class UsernamePasswordToken implements Authentication, CredentialsContain
 
     private boolean authenticated;
 
-    private UserDomain details;
+    private BizUser details;
 
     private List<GrantedAuthority> authorities;
 
@@ -29,7 +29,7 @@ public class UsernamePasswordToken implements Authentication, CredentialsContain
         this.credentials = credentials;
     }
 
-    public void setDetails(UserDomain details) {
+    public void setDetails(BizUser details) {
         this.details = details;
     }
 
@@ -48,7 +48,7 @@ public class UsernamePasswordToken implements Authentication, CredentialsContain
     }
 
     @Override
-    public UserDomain getDetails() {
+    public BizUser getDetails() {
         return details;
     }
 
@@ -94,7 +94,7 @@ public class UsernamePasswordToken implements Authentication, CredentialsContain
         return new UsernamePasswordToken(principal, credentials, authorities);
     }
 
-    public static UsernamePasswordToken authenticated(UserDomain user) {
+    public static UsernamePasswordToken authenticated(BizUser user) {
         var authentication = new UsernamePasswordToken(user.username(), null, Collections.emptyList());
         authentication.setDetails(user);
         return authentication;

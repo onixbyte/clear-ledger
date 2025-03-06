@@ -4,7 +4,6 @@ import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.Table;
 import com.onixbyte.clearledger.data.biz.BizUser;
-import com.onixbyte.clearledger.data.domain.UserDomain;
 import com.onixbyte.clearledger.data.response.UserResponse;
 
 import java.time.LocalDateTime;
@@ -13,7 +12,7 @@ import java.time.LocalDateTime;
 public class User {
 
     @Id(keyType = KeyType.None)
-    private Long id;
+    private String id;
 
     private String username;
 
@@ -26,7 +25,7 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String username, String password, String email, LocalDateTime createdAt) {
+    public User(String id, String username, String password, String email, LocalDateTime createdAt) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -34,11 +33,11 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -79,7 +78,7 @@ public class User {
     }
 
     public static class UserBuilder {
-        private Long id;
+        private String id;
         private String username;
         private String password;
         private String email;
@@ -88,7 +87,7 @@ public class User {
         private UserBuilder() {
         }
 
-        public UserBuilder id(Long id) {
+        public UserBuilder id(String id) {
             this.id = id;
             return this;
         }
@@ -116,20 +115,6 @@ public class User {
         public User build() {
             return new User(id, username, password, email, createdAt);
         }
-    }
-
-    /**
-     * Convert object to domain object.
-     *
-     * @return the domain object
-     */
-    public UserDomain toDomain() {
-        return UserDomain.builder()
-                .id(getId())
-                .username(getUsername())
-                .password(getPassword())
-                .email(getEmail())
-                .build();
     }
 
     public UserResponse toResponse() {

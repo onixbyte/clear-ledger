@@ -3,7 +3,7 @@ package com.onixbyte.clearledger.data.entity;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.Table;
-import com.onixbyte.clearledger.data.response.BizLedgerResponse;
+import com.onixbyte.clearledger.data.biz.BizLedger;
 
 import java.time.LocalDateTime;
 
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class Ledger {
 
     @Id(keyType = KeyType.None)
-    private Long id;
+    private String id;
 
     private String name;
 
@@ -22,18 +22,18 @@ public class Ledger {
     public Ledger() {
     }
 
-    public Ledger(Long id, String name, String description, LocalDateTime createdAt) {
+    public Ledger(String id, String name, String description, LocalDateTime createdAt) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.createdAt = createdAt;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -69,7 +69,7 @@ public class Ledger {
         private LedgerBuilder() {
         }
 
-        private Long id;
+        private String id;
 
         private String name;
 
@@ -77,7 +77,7 @@ public class Ledger {
 
         private LocalDateTime createdAt;
 
-        public LedgerBuilder id(Long id) {
+        public LedgerBuilder id(String id) {
             this.id = id;
             return this;
         }
@@ -102,11 +102,13 @@ public class Ledger {
         }
     }
 
-    public BizLedgerResponse toResponse() {
-        return BizLedgerResponse.builder()
+    public BizLedger toBiz(String role, LocalDateTime joinedAt) {
+        return BizLedger.builder()
                 .id(String.valueOf(id))
                 .name(name)
                 .description(description)
+                .role(role)
+                .joinedAt(joinedAt)
                 .build();
     }
 }

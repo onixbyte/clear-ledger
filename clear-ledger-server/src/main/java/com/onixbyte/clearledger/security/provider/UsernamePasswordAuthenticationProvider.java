@@ -8,8 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class UsernamePasswordAuthenticationProvider implements AuthenticationProvider {
@@ -38,10 +41,11 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
 
             var userDetails = userService.loadUserByUsername(usernamePasswordToken.getPrincipal());
             if (passwordEncoder.matches(usernamePasswordToken.getCredentials(), userDetails.getPassword())) {
+                var bizUser = userDetails.toBiz();
                 usernamePasswordToken.eraseCredentials();
                 usernamePasswordToken.setAuthenticated(true);
-                usernamePasswordToken.setDetails(userDetails);
-                usernamePasswordToken.setAuthorities(userDetails.getAuthorities());
+                usernamePasswordToken.setDetails(bizUser);
+                usernamePasswordToken.setAuthorities(List.of(new SimpleGrantedAuthority("user")));
                 return usernamePasswordToken;
             }
 

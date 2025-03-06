@@ -7,9 +7,9 @@ import java.time.LocalDateTime;
 @Table("user_ledgers")
 public class UserLedger {
 
-    private Long userId;
+    private String userId;
 
-    private Long ledgerId;
+    private String ledgerId;
 
     private String role;
 
@@ -18,26 +18,26 @@ public class UserLedger {
     public UserLedger() {
     }
 
-    public UserLedger(Long userId, Long ledgerId, String role, LocalDateTime joinedAt) {
+    public UserLedger(String userId, String ledgerId, String role, LocalDateTime joinedAt) {
         this.userId = userId;
         this.ledgerId = ledgerId;
         this.role = role;
         this.joinedAt = joinedAt;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
-    public Long getLedgerId() {
+    public String getLedgerId() {
         return ledgerId;
     }
 
-    public void setLedgerId(Long ledgerId) {
+    public void setLedgerId(String ledgerId) {
         this.ledgerId = ledgerId;
     }
 
@@ -62,20 +62,20 @@ public class UserLedger {
     }
 
     public static class UserLedgerBuilder {
-        private Long userId;
-        private Long ledgerId;
+        private String userId;
+        private String ledgerId;
         private String role;
         private LocalDateTime joinedAt;
 
         private UserLedgerBuilder() {
         }
 
-        public UserLedgerBuilder userId(Long userId) {
+        public UserLedgerBuilder userId(String userId) {
             this.userId = userId;
             return this;
         }
 
-        public UserLedgerBuilder ledgerId(Long ledgerId) {
+        public UserLedgerBuilder ledgerId(String ledgerId) {
             this.ledgerId = ledgerId;
             return this;
         }

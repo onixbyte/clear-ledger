@@ -3,7 +3,7 @@ package com.onixbyte.clearledger.data.biz;
 import java.time.LocalDateTime;
 
 public record BizLedger(
-        Long id,
+        String id,
         String name,
         String description,
         String role,
@@ -15,7 +15,7 @@ public record BizLedger(
     }
 
     public static class BizLedgerBuilder {
-        private Long id;
+        private String id;
         private String name;
         private String description;
         private String role;
@@ -23,7 +23,7 @@ public record BizLedger(
 
         public BizLedgerBuilder() {}
 
-        public BizLedgerBuilder id(Long id) {
+        public BizLedgerBuilder id(String id) {
             this.id = id;
             return this;
         }

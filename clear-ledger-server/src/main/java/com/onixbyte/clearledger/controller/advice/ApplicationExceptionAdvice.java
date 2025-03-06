@@ -2,7 +2,6 @@ package com.onixbyte.clearledger.controller.advice;
 
 import com.onixbyte.clearledger.data.response.BizExceptionResponse;
 import com.onixbyte.clearledger.exception.BizException;
-import com.onixbyte.clearledger.exception.UnauthenticatedException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

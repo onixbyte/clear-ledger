@@ -9,11 +9,11 @@ import java.time.LocalDateTime;
 public class ViewTransaction {
 
     @Id(keyType = KeyType.None)
-    private Long id;
+    private String id;
 
-    private Long ledgerId;
+    private String ledgerId;
 
-    private Long userId;
+    private String userId;
 
     private String username;
 
@@ -28,7 +28,7 @@ public class ViewTransaction {
     public ViewTransaction() {
     }
 
-    public ViewTransaction(Long id, Long ledgerId, Long userId, String username, Integer amount, String description, LocalDateTime transactionDate, LocalDateTime createdAt) {
+    public ViewTransaction(String id, String ledgerId, String userId, String username, Integer amount, String description, LocalDateTime transactionDate, LocalDateTime createdAt) {
         this.id = id;
         this.ledgerId = ledgerId;
         this.userId = userId;
@@ -39,27 +39,27 @@ public class ViewTransaction {
         this.createdAt = createdAt;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Long getLedgerId() {
+    public String getLedgerId() {
         return ledgerId;
     }
 
-    public void setLedgerId(Long ledgerId) {
+    public void setLedgerId(String ledgerId) {
         this.ledgerId = ledgerId;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -101,6 +101,68 @@ public class ViewTransaction {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public static ViewTransactionBuilder builder() {
+        return new ViewTransactionBuilder();
+    }
+
+    public static class ViewTransactionBuilder {
+        private String id;
+        private String ledgerId;
+        private String userId;
+        private String username;
+        private Integer amount;
+        private String description;
+        private LocalDateTime transactionDate;
+        private LocalDateTime createdAt;
+
+        private ViewTransactionBuilder() {
+        }
+
+        public ViewTransactionBuilder id(String id) {
+            this.id = id;
+            return this;
+        }
+
+        public ViewTransactionBuilder ledgerId(String ledgerId) {
+            this.ledgerId = ledgerId;
+            return this;
+        }
+
+        public ViewTransactionBuilder userId(String userId) {
+            this.userId = userId;
+            return this;
+        }
+
+        public ViewTransactionBuilder username(String username) {
+            this.username = username;
+            return this;
+        }
+
+        public ViewTransactionBuilder amount(Integer amount) {
+            this.amount = amount;
+            return this;
+        }
+
+        public ViewTransactionBuilder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public ViewTransactionBuilder transactionDate(LocalDateTime transactionDate) {
+            this.transactionDate = transactionDate;
+            return this;
+        }
+
+        public ViewTransactionBuilder createdAt(LocalDateTime createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public ViewTransaction build() {
+            return new ViewTransaction(id, ledgerId, userId, username, amount, description, transactionDate, createdAt);
+        }
     }
 
     public TransactionResponse toResponse() {
