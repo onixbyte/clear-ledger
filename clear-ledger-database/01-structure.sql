@@ -1,5 +1,4 @@
-CREATE DATABASE clear_ledger;
-
+DROP VIEW IF EXISTS view_transaction;
 DROP TABLE IF EXISTS transactions;
 DROP TABLE IF EXISTS user_ledgers;
 DROP TABLE IF EXISTS ledgers;
@@ -36,7 +35,7 @@ CREATE TABLE IF NOT EXISTS transactions
     id               CHAR(10) PRIMARY KEY,
     ledger_id        CHAR(10) REFERENCES ledgers (id),
     user_id          CHAR(10) REFERENCES users (id),
-    amount           DECIMAL(10, 2) NOT NULL,
+    amount           INTEGER NOT NULL,
     description      TEXT,
     transaction_date TIMESTAMP      NOT NULL,
     created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
