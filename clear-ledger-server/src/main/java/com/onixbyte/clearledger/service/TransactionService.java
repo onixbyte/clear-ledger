@@ -5,6 +5,7 @@ import com.onixbyte.clearledger.data.entity.Transaction;
 import com.onixbyte.clearledger.data.entity.ViewTransaction;
 import com.onixbyte.clearledger.data.entity.table.TransactionTableDef;
 import com.onixbyte.clearledger.data.request.CreateTransactionRequest;
+import com.onixbyte.clearledger.data.request.UpdateTransactionRequest;
 import com.onixbyte.clearledger.exception.BizException;
 import com.onixbyte.clearledger.holder.UserHolder;
 import com.onixbyte.clearledger.repository.LedgerRepository;
@@ -38,6 +39,16 @@ public class TransactionService {
         this.userLedgerRepository = userLedgerRepository;
     }
 
+    private void preValidate(String userId, String ledgerId) {
+        if (!ledgerRepository.hasLedger(ledgerId)) {
+            throw new BizException(HttpStatus.NOT_FOUND, "账本不存在");
+        }
+
+        if (!userLedgerRepository.canWriteTransaction(userId, ledgerId)) {
+            throw new BizException(HttpStatus.FORBIDDEN, "您没有对该账本的操作权限");
+        }
+    }
+
     public Page<ViewTransaction> getTransactionPage(Long ledgerId, Long pageNum, Long size) {
         var offset = (pageNum - 1) * size;
         var transactions = transactionRepository.selectPaginateViewTransactions(ledgerId, offset, size);
@@ -52,17 +63,9 @@ public class TransactionService {
         return result;
     }
 
-    @Transactional
     public ViewTransaction createTransaction(CreateTransactionRequest request) {
         var currentUser = UserHolder.getCurrentUser();
-
-        if (!ledgerRepository.hasLedger(request.ledgerId())) {
-            throw new BizException(HttpStatus.NOT_FOUND, "账本不存在");
-        }
-
-        if (!userLedgerRepository.canWriteTransaction(currentUser.id(), request.ledgerId())) {
-            throw new BizException(HttpStatus.FORBIDDEN, "您没有对该账本的操作权限");
-        }
+        preValidate(currentUser.id(), request.ledgerId());
 
         var transaction = Transaction.builder()
                 .id(transactionIdCreator.nextId())
@@ -76,4 +79,19 @@ public class TransactionService {
         return transaction.toView(currentUser.username());
     }
 
+    public ViewTransaction updateTransaction(UpdateTransactionRequest request) {
+        var currentUser = UserHolder.getCurrentUser();
+        preValidate(currentUser.id(), request.ledgerId());
+
+        var transaction = Transaction.builder()
+                .id(request.id())
+                .ledgerId(request.ledgerId())
+                .userId(currentUser.id())
+                .transactionDate(LocalDateTime.parse(request.transactionDate(), datetimeFormatter))
+                .description(request.description())
+                .build();
+        // the default behaviour of `update(T)` method from `BaseMapper` will ignore null values
+        transactionRepository.update(transaction);
+        return transaction.toView(currentUser.username());
+    }
 }
