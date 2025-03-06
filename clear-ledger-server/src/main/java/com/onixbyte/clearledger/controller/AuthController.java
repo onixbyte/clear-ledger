@@ -5,6 +5,7 @@ import com.onixbyte.clearledger.data.entity.User;
 import com.onixbyte.clearledger.data.request.UserLoginRequest;
 import com.onixbyte.clearledger.data.request.UserRegisterRequest;
 import com.onixbyte.clearledger.data.response.UserResponse;
+import com.onixbyte.clearledger.exception.BizException;
 import com.onixbyte.clearledger.service.AuthService;
 import com.onixbyte.guid.GuidCreator;
 import com.onixbyte.simplejwt.TokenResolver;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/auth")
@@ -59,6 +61,18 @@ public class AuthController {
      */
     @PostMapping("/register")
     public ResponseEntity<UserResponse> register(@RequestBody UserRegisterRequest request) {
+        if (Objects.isNull(request.username()) || request.username().isBlank()) {
+            throw new BizException(HttpStatus.BAD_REQUEST, "用户名不能为空");
+        }
+
+        if (Objects.isNull(request.password()) || request.password().isBlank()) {
+            throw new BizException(HttpStatus.BAD_REQUEST, "用户密码不能为空");
+        }
+
+        if (Objects.isNull(request.email()) || request.email().isBlank()) {
+            throw new BizException(HttpStatus.BAD_REQUEST, "用户邮箱不能为空");
+        }
+
         // build user
         var user = User.builder()
                 .id(userIdCreator.nextId())
