@@ -71,7 +71,7 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
                         .build());
                 return;
             }
-            SecurityContextHolder.getContext().setAuthentication(UsernamePasswordToken.authenticated(user.toDomain()));
+            SecurityContextHolder.getContext().setAuthentication(UsernamePasswordToken.authenticated(user));
             filterChain.doFilter(request, response);
         } catch (JWTVerificationException e) {
             writeResponse(response, HttpStatus.UNAUTHORIZED, BizExceptionResponse.builder()

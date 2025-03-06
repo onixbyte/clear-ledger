@@ -20,16 +20,13 @@ public class AuthService {
 
     private static final Logger log = LoggerFactory.getLogger(AuthService.class);
 
-    private final String appName;
     private final UserService userService;
     private final RedisTemplate<String, BizUser> userCache;
     private final AuthenticationManager authenticationManager;
 
-    public AuthService(@Value("${spring.application.name}") String appName,
-                       UserService userService,
+    public AuthService(UserService userService,
                        RedisTemplate<String, BizUser> userCache,
                        AuthenticationManager authenticationManager) {
-        this.appName = appName;
         this.userService = userService;
         this.userCache = userCache;
         this.authenticationManager = authenticationManager;
@@ -41,7 +38,7 @@ public class AuthService {
             var _auth = authenticationManager.authenticate(UsernamePasswordToken.unauthenticated(
                     username, password));
             if (_auth instanceof UsernamePasswordToken authentication) {
-                var bizUser = authentication.getDetails().toBiz();
+                var bizUser = authentication.getDetails();
                 // save data to cache server for 1 day
                 userCache.opsForValue().set(userService.composeKey(bizUser.username()), bizUser, Duration.ofDays(1));
                 // compose response entity

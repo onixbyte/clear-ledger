@@ -1,7 +1,6 @@
 package com.onixbyte.clearledger.service;
 
 import com.onixbyte.clearledger.data.biz.BizUser;
-import com.onixbyte.clearledger.data.domain.UserDomain;
 import com.onixbyte.clearledger.data.entity.User;
 import com.onixbyte.clearledger.data.entity.table.UserTableDef;
 import com.onixbyte.clearledger.exception.BizException;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -41,9 +39,8 @@ public class UserService {
         this.userCache = userCache;
     }
 
-    public UserDomain loadUserByUsername(String username) throws UsernameNotFoundException {
+    public User loadUserByUsername(String username) throws UsernameNotFoundException {
         return Optional.ofNullable(userRepository.selectOneByCondition(UserTableDef.USER.USERNAME.eq(username)))
-                .map(User::toDomain)
                 .orElseThrow(() -> new UsernameNotFoundException("Cannot find user with given username."));
     }
 

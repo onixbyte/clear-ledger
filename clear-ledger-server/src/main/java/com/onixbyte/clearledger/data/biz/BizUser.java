@@ -1,6 +1,5 @@
 package com.onixbyte.clearledger.data.biz;
 
-import com.onixbyte.clearledger.data.domain.UserDomain;
 import com.onixbyte.clearledger.data.response.UserResponse;
 
 /**
@@ -53,15 +52,6 @@ public record BizUser(
                 .id(String.valueOf(id))
                 .email(email)
                 .username(username)
-                .build();
-    }
-
-    public UserDomain toDomain() {
-        return UserDomain.builder()
-                .id(id)
-                .email(email)
-                .username(username)
-                .password("")
                 .build();
     }
 

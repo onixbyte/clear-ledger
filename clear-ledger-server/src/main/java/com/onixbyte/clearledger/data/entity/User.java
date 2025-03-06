@@ -4,7 +4,6 @@ import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.Table;
 import com.onixbyte.clearledger.data.biz.BizUser;
-import com.onixbyte.clearledger.data.domain.UserDomain;
 import com.onixbyte.clearledger.data.response.UserResponse;
 
 import java.time.LocalDateTime;
@@ -116,20 +115,6 @@ public class User {
         public User build() {
             return new User(id, username, password, email, createdAt);
         }
-    }
-
-    /**
-     * Convert object to domain object.
-     *
-     * @return the domain object
-     */
-    public UserDomain toDomain() {
-        return UserDomain.builder()
-                .id(getId())
-                .username(getUsername())
-                .password(getPassword())
-                .email(getEmail())
-                .build();
     }
 
     public UserResponse toResponse() {
