@@ -1,14 +1,21 @@
 import axios from "axios"
 import moment from "moment"
+import { store } from "@/store"
 
-/**
- * Web client provides the ability to send requests to backend server, which
- * enabled to exchange data between server and client. All requests will time
- * out after 10 seconds of being sent.
- */
 const webClient = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_BASE_URL,
-  timeout: moment.duration({ seconds: 10 }).asMilliseconds(),
+  baseURL: import.meta.env.VITE_BASE_URL,
+  timeout: moment.duration({ seconds: 10 }).asMilliseconds()
 })
+
+webClient.interceptors.request.use(
+  (config) => {
+    const token = store.getState().auth.token
+    if (token) {
+      config.headers.Authorization = token
+    }
+    return config
+  },
+  (error) => Promise.reject(error)
+)
 
 export default webClient

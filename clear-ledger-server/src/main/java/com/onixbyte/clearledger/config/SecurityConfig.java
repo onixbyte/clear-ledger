@@ -1,12 +1,11 @@
 package com.onixbyte.clearledger.config;
 
 import com.onixbyte.clearledger.filter.UserAuthenticationFilter;
-import com.onixbyte.clearledger.security.provider.UserDaoAuthenticationProvider;
-import com.onixbyte.clearledger.service.UserService;
+import com.onixbyte.clearledger.security.provider.UsernamePasswordAuthenticationProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -24,7 +23,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity,
                                                    CorsConfigurationSource corsConfigurationSource,
-                                                   UserDaoAuthenticationProvider userDaoAuthenticationProvider,
                                                    UserAuthenticationFilter userAuthenticationFilter) throws Exception {
         return httpSecurity
                 .cors((customiser) -> customiser
@@ -33,10 +31,10 @@ public class SecurityConfig {
                 .sessionManagement((customiser) -> customiser
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((customiser) -> customiser
+                        .requestMatchers("/error", "/error/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/auth/logout").authenticated()
                         .anyRequest().authenticated())
-                .authenticationProvider(userDaoAuthenticationProvider)
                 .addFilterBefore(userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
@@ -47,8 +45,11 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(HttpSecurity httpSecurity,
+                                                       UsernamePasswordAuthenticationProvider usernamePasswordAuthenticationProvider) throws Exception {
+        var authenticationManagerBuilder = httpSecurity.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.authenticationProvider(usernamePasswordAuthenticationProvider);
+        return authenticationManagerBuilder.build();
     }
 
 }

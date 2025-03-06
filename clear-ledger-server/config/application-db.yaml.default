@@ -1,6 +1,10 @@
 spring:
   datasource:
+    # Database URL
     url: jdbc:postgresql://localhost:5432/clear_ledger
+    # Database username
     username: postgres
+    # Database password
     password: postgres
+    # Database driver class
     driver-class-name: org.postgresql.Driver

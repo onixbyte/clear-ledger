@@ -14,7 +14,7 @@ public class UnauthenticatedException extends BizException {
     }
 
     public UnauthenticatedException() {
-        super(HttpStatus.UNAUTHORIZED, "You haven't login yet.");
+        super(HttpStatus.UNAUTHORIZED, "您还没有登录，请登录后再试");
     }
 
 }

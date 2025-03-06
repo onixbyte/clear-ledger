@@ -1,3 +1,14 @@
 app:
+  # Concurrent configurations
   concurrent:
+    # Maximum non-IO task thread count
     max-task-thread-count: 20
+  # Cross-Origin configurations, the detailed information please refer to MDN Cross Origin.
+  cors:
+    allow-credentials: true
+    allowed-headers: "*"
+    allowed-methods: get, post, put, patch, delete
+    allowed-origins:
+      - http://your_ip:5173/
+    exposed-headers: Authorization, X-ClearLedger-Authorisation
+    max-age: 100

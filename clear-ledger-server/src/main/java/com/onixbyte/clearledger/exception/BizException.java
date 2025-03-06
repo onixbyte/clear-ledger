@@ -1,7 +1,6 @@
 package com.onixbyte.clearledger.exception;
 
 import com.onixbyte.clearledger.data.response.BizExceptionResponse;
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -15,7 +14,6 @@ import java.time.LocalDateTime;
  *
  * @author zihluwang
  */
-@Getter
 public class BizException extends RuntimeException {
 
     /**
@@ -223,4 +221,11 @@ public class BizException extends RuntimeException {
         return new BizException(HttpStatus.GATEWAY_TIMEOUT, message);
     }
 
+    public HttpStatus getStatus() {
+        return status;
+    }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
 }

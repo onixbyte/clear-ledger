@@ -1,16 +1,16 @@
 package com.onixbyte.clearledger.holder;
 
-import com.onixbyte.clearledger.data.domain.UserDomain;
+import com.onixbyte.clearledger.data.biz.BizUser;
 
 public class UserHolder {
 
-    private static final ThreadLocal<UserDomain> userHolder = new InheritableThreadLocal<>();
+    private static final ThreadLocal<BizUser> userHolder = new InheritableThreadLocal<>();
 
-    public static UserDomain getCurrentUser() {
+    public static BizUser getCurrentUser() {
         return userHolder.get();
     }
 
-    public static void setCurrentUser(UserDomain currentUser) {
+    public static void setCurrentUser(BizUser currentUser) {
         userHolder.set(currentUser);
     }
 
