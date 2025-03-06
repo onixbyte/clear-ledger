@@ -27,7 +27,7 @@ public class SerialService {
         return serialCache.opsForValue().increment(composeKey(tag));
     }
 
-    @Scheduled(cron = "0 0 0 1 * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     public void reset() {
         log.info("Resetting serial value.");
 

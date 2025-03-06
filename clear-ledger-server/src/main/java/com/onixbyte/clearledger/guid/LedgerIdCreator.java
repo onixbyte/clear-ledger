@@ -22,6 +22,6 @@ public class LedgerIdCreator implements GuidCreator<String> {
     @Override
     public String nextId() {
         var date = LocalDate.now().format(dateFormatter);
-        return "%s%s%2d".formatted(IdType.LEDGER.getCode(), date, serialService.nextSerial("user"));
+        return "%s%s%02d".formatted(IdType.LEDGER.getCode(), date, serialService.nextSerial("user"));
     }
 }
