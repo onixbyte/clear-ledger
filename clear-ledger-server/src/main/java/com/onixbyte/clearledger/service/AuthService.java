@@ -6,7 +6,6 @@ import com.onixbyte.clearledger.exception.UnauthenticatedException;
 import com.onixbyte.clearledger.security.token.UsernamePasswordToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.AuthenticationException;
