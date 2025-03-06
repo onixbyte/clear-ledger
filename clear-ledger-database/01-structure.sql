@@ -1,6 +1,11 @@
-create database clear_ledger;
+CREATE DATABASE clear_ledger;
 
-CREATE TABLE users
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS transactions;
+DROP TABLE IF EXISTS user_ledgers;
+DROP TABLE IF EXISTS ledgers;
+
+CREATE TABLE IF NOT EXISTS users
 (
     id         CHAR(10) PRIMARY KEY,
     username   VARCHAR(50) UNIQUE  NOT NULL,
@@ -9,7 +14,7 @@ CREATE TABLE users
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE ledgers
+CREATE TABLE IF NOT EXISTS ledgers
 (
     id          CHAR(10) PRIMARY KEY,
     name        VARCHAR(100) NOT NULL,
@@ -17,7 +22,7 @@ CREATE TABLE ledgers
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE user_ledgers
+CREATE TABLE IF NOT EXISTS user_ledgers
 (
     user_id   CHAR(10) REFERENCES users (id),
     ledger_id CHAR(10) REFERENCES ledgers (id),
@@ -26,7 +31,7 @@ CREATE TABLE user_ledgers
     PRIMARY KEY (user_id, ledger_id)
 );
 
-CREATE TABLE transactions
+CREATE TABLE IF NOT EXISTS transactions
 (
     id               CHAR(10) PRIMARY KEY,
     ledger_id        CHAR(10) REFERENCES ledgers (id),
@@ -36,3 +41,15 @@ CREATE TABLE transactions
     transaction_date TIMESTAMP      NOT NULL,
     created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE VIEW view_transaction AS
+SELECT t.id,
+       t.ledger_id,
+       t.user_id,
+       u.username,
+       t.amount,
+       t.description,
+       t.transaction_date,
+       t.created_at
+FROM transactions t
+         LEFT JOIN users u on t.user_id = u.id;
