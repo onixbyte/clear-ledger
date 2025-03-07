@@ -1,4 +1,4 @@
-package com.onixbyte.clearledger.config;
+package com.onixbyte.clearledger.config.property;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.web.bind.annotation.RequestMethod;
