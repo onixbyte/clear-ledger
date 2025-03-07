@@ -22,7 +22,7 @@ public class UserIdCreator implements GuidCreator<String> {
     @Override
     public String nextId() {
         var date = LocalDate.now().format(dateFormatter);
-        return "%s%s%02d".formatted(IdType.USER.getCode(), date, serialService.nextSerial("user"));
+        return "%s%s%04d".formatted(IdType.USER.getCode(), date, serialService.nextSerial("user"));
     }
 
 }

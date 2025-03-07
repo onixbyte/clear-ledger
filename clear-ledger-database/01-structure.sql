@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS users;
 
 CREATE TABLE IF NOT EXISTS users
 (
-    id         CHAR(10) PRIMARY KEY,
+    id         CHAR(12) PRIMARY KEY,
     username   VARCHAR(50) UNIQUE  NOT NULL,
     password   VARCHAR(255)        NOT NULL,
     email      VARCHAR(100) UNIQUE NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS users
 
 CREATE TABLE IF NOT EXISTS ledgers
 (
-    id          CHAR(10) PRIMARY KEY,
+    id          CHAR(12) PRIMARY KEY,
     name        VARCHAR(100) NOT NULL,
     description TEXT,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS ledgers
 
 CREATE TABLE IF NOT EXISTS user_ledgers
 (
-    user_id   CHAR(10) REFERENCES users (id),
+    user_id   CHAR(12) REFERENCES users (id),
     ledger_id CHAR(10) REFERENCES ledgers (id),
     role      VARCHAR(50) NOT NULL, -- e.g., 'owner', 'member'
     joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -32,9 +32,9 @@ CREATE TABLE IF NOT EXISTS user_ledgers
 
 CREATE TABLE IF NOT EXISTS transactions
 (
-    id               CHAR(10) PRIMARY KEY,
-    ledger_id        CHAR(10) REFERENCES ledgers (id),
-    user_id          CHAR(10) REFERENCES users (id),
+    id               CHAR(12) PRIMARY KEY,
+    ledger_id        CHAR(12) REFERENCES ledgers (id),
+    user_id          CHAR(12) REFERENCES users (id),
     amount           INTEGER NOT NULL,
     description      TEXT,
     transaction_date TIMESTAMP      NOT NULL,

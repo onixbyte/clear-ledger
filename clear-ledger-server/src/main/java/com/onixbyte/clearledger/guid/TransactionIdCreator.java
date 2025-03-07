@@ -22,6 +22,6 @@ public class TransactionIdCreator implements GuidCreator<String> {
     @Override
     public String nextId() {
         var date = LocalDate.now().format(dateFormatter);
-        return "%s%s%02d".formatted(IdType.TRANSACTION.getCode(), date, serialService.nextSerial("tx"));
+        return "%s%s%04d".formatted(IdType.TRANSACTION.getCode(), date, serialService.nextSerial("tx"));
     }
 }

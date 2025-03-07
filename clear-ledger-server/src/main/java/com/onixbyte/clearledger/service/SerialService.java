@@ -1,10 +1,14 @@
 package com.onixbyte.clearledger.service;
 
+import com.onixbyte.clearledger.exception.BizException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class SerialService {
@@ -23,7 +27,13 @@ public class SerialService {
     }
 
     public Long nextSerial(String tag) {
-        return serialCache.opsForValue().increment(composeKey(tag));
+        var serial = Optional.ofNullable(serialCache.opsForValue().increment(composeKey(tag)))
+                .orElse(1L);
+        if (serial < 10_000L) {
+            return serial;
+        } else {
+            throw new BizException(HttpStatus.SERVICE_UNAVAILABLE, "当前序号已超过当日最大上限，请明天再试");
+        }
     }
 
     public void resetSerial(String tag) {
