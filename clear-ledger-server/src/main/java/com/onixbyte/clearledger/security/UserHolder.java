@@ -1,6 +1,6 @@
 package com.onixbyte.clearledger.security;
 
-import com.onixbyte.clearledger.data.biz.BizUser;
+import com.onixbyte.clearledger.data.dto.BizUser;
 
 public class UserHolder {
 

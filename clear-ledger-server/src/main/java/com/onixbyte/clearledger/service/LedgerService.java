@@ -1,6 +1,6 @@
 package com.onixbyte.clearledger.service;
 
-import com.onixbyte.clearledger.data.biz.BizLedger;
+import com.onixbyte.clearledger.data.dto.BizLedger;
 import com.onixbyte.clearledger.data.entity.Ledger;
 import com.onixbyte.clearledger.data.entity.UserLedger;
 import com.onixbyte.clearledger.data.entity.table.LedgerTableDef;

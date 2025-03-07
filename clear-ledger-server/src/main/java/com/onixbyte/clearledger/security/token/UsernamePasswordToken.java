@@ -1,6 +1,6 @@
 package com.onixbyte.clearledger.security.token;
 
-import com.onixbyte.clearledger.data.biz.BizUser;
+import com.onixbyte.clearledger.data.dto.BizUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;

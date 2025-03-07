@@ -1,4 +1,4 @@
-package com.onixbyte.clearledger.data.biz;
+package com.onixbyte.clearledger.data.dto;
 
 import com.onixbyte.clearledger.data.response.UserResponse;
 

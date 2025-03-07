@@ -1,6 +1,6 @@
 package com.onixbyte.clearledger.config;
 
-import com.onixbyte.clearledger.filter.UserAuthenticationFilter;
+import com.onixbyte.clearledger.security.UserAuthenticationFilter;
 import com.onixbyte.clearledger.security.UsernamePasswordAuthenticationProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

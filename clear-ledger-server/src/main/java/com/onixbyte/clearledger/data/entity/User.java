@@ -3,7 +3,7 @@ package com.onixbyte.clearledger.data.entity;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.Table;
-import com.onixbyte.clearledger.data.biz.BizUser;
+import com.onixbyte.clearledger.data.dto.BizUser;
 import com.onixbyte.clearledger.data.response.UserResponse;
 
 import java.time.LocalDateTime;

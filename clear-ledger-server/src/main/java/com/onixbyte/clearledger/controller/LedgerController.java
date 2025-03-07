@@ -1,6 +1,6 @@
 package com.onixbyte.clearledger.controller;
 
-import com.onixbyte.clearledger.data.biz.BizLedger;
+import com.onixbyte.clearledger.data.dto.BizLedger;
 import com.onixbyte.clearledger.data.request.CreateLedgerRequest;
 import com.onixbyte.clearledger.data.entity.Ledger;
 import com.onixbyte.clearledger.data.request.UpdateLedgerRequest;
