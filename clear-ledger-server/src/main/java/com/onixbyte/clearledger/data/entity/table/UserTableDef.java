@@ -19,12 +19,12 @@ public class UserTableDef extends TableDef {
     public final QueryColumn CREATED_AT = new QueryColumn(this, "created_at");
 
     /**
-     * 所有字段。
+     * All fields.
      */
     public final QueryColumn ALL_COLUMNS = new QueryColumn(this, "*");
 
     /**
-     * 默认字段，不包含逻辑删除或者 large 等字段。
+     * Default fields, except fields like logic-delete and large, etc.
      */
     public final QueryColumn[] DEFAULT_COLUMNS = new QueryColumn[]{ID, EMAIL, PASSWORD, USERNAME, CREATED_AT};
 

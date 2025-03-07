@@ -23,12 +23,12 @@ public class TransactionTableDef extends TableDef {
     public final QueryColumn TRANSACTION_DATE = new QueryColumn(this, "transaction_date");
 
     /**
-     * 所有字段。
+     * All fields.
      */
     public final QueryColumn ALL_COLUMNS = new QueryColumn(this, "*");
 
     /**
-     * 默认字段，不包含逻辑删除或者 large 等字段。
+     * Default fields, except fields like logic-delete and large, etc.
      */
     public final QueryColumn[] DEFAULT_COLUMNS = new QueryColumn[]{ID, AMOUNT, USER_ID, LEDGER_ID, CREATED_AT, DESCRIPTION, TRANSACTION_DATE};
 

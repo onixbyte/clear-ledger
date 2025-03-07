@@ -17,12 +17,12 @@ public class LedgerTableDef extends TableDef {
     public final QueryColumn DESCRIPTION = new QueryColumn(this, "description");
 
     /**
-     * 所有字段。
+     * All fields.
      */
     public final QueryColumn ALL_COLUMNS = new QueryColumn(this, "*");
 
     /**
-     * 默认字段，不包含逻辑删除或者 large 等字段。
+     * Default fields, except fields like logic-delete and large, etc.
      */
     public final QueryColumn[] DEFAULT_COLUMNS = new QueryColumn[]{ID, NAME, CREATED_AT, DESCRIPTION};
 

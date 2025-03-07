@@ -17,12 +17,12 @@ public class UserLedgerTableDef extends TableDef {
     public final QueryColumn LEDGER_ID = new QueryColumn(this, "ledger_id");
 
     /**
-     * 所有字段。
+     * All fields.
      */
     public final QueryColumn ALL_COLUMNS = new QueryColumn(this, "*");
 
     /**
-     * 默认字段，不包含逻辑删除或者 large 等字段。
+     * Default fields, except fields like logic-delete and large, etc.
      */
     public final QueryColumn[] DEFAULT_COLUMNS = new QueryColumn[]{ROLE, USER_ID, JOINED_AT, LEDGER_ID};
 
