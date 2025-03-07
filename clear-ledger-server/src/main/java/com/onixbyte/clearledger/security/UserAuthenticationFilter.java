@@ -1,4 +1,4 @@
-package com.onixbyte.clearledger.filter;
+package com.onixbyte.clearledger.security;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;

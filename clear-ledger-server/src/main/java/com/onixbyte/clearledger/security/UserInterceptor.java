@@ -1,7 +1,6 @@
-package com.onixbyte.clearledger.interceptor;
+package com.onixbyte.clearledger.security;
 
-import com.onixbyte.clearledger.data.biz.BizUser;
-import com.onixbyte.clearledger.holder.UserHolder;
+import com.onixbyte.clearledger.data.dto.BizUser;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.context.SecurityContextHolder;

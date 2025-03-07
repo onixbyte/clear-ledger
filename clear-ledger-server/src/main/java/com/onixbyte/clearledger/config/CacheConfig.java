@@ -1,6 +1,6 @@
 package com.onixbyte.clearledger.config;
 
-import com.onixbyte.clearledger.data.biz.BizUser;
+import com.onixbyte.clearledger.data.dto.BizUser;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;

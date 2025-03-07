@@ -1,6 +1,6 @@
 package com.onixbyte.clearledger.service;
 
-import com.onixbyte.clearledger.data.biz.BizLedger;
+import com.onixbyte.clearledger.data.dto.BizLedger;
 import com.onixbyte.clearledger.data.entity.Ledger;
 import com.onixbyte.clearledger.data.entity.UserLedger;
 import com.onixbyte.clearledger.data.entity.table.LedgerTableDef;
@@ -8,19 +8,17 @@ import com.onixbyte.clearledger.data.entity.table.TransactionTableDef;
 import com.onixbyte.clearledger.data.entity.table.UserLedgerTableDef;
 import com.onixbyte.clearledger.exception.BizException;
 import com.onixbyte.clearledger.exception.ServiceUnavailableException;
-import com.onixbyte.clearledger.holder.UserHolder;
+import com.onixbyte.clearledger.security.UserHolder;
 import com.onixbyte.clearledger.repository.LedgerRepository;
 import com.onixbyte.clearledger.repository.TransactionRepository;
 import com.onixbyte.clearledger.repository.UserLedgerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.lang.model.element.NestingKind;
 import java.time.LocalDateTime;
 import java.util.List;
 

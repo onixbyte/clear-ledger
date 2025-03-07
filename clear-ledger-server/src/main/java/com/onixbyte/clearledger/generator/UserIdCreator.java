@@ -1,28 +1,28 @@
-package com.onixbyte.clearledger.guid;
+package com.onixbyte.clearledger.generator;
 
 import com.onixbyte.clearledger.constant.IdType;
 import com.onixbyte.clearledger.service.SerialService;
+import com.onixbyte.clearledger.common.Formatters;
 import com.onixbyte.guid.GuidCreator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 @Component
 public class UserIdCreator implements GuidCreator<String> {
 
-    private final DateTimeFormatter dateFormatter;
     private final SerialService serialService;
 
-    public UserIdCreator(DateTimeFormatter dateFormatter, SerialService serialService) {
-        this.dateFormatter = dateFormatter;
+    @Autowired
+    public UserIdCreator(SerialService serialService) {
         this.serialService = serialService;
     }
 
     @Override
     public String nextId() {
-        var date = LocalDate.now().format(dateFormatter);
-        return "%s%s%02d".formatted(IdType.USER.getCode(), date, serialService.nextSerial("user"));
+        var date = LocalDate.now().format(Formatters.SHORTENED_DATE_FORMATTER);
+        return "%s%s%04d".formatted(IdType.USER.getCode(), date, serialService.nextSerial("user"));
     }
 
 }

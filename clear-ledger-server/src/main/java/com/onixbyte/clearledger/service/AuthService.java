@@ -1,6 +1,6 @@
 package com.onixbyte.clearledger.service;
 
-import com.onixbyte.clearledger.data.biz.BizUser;
+import com.onixbyte.clearledger.data.dto.BizUser;
 import com.onixbyte.clearledger.data.entity.User;
 import com.onixbyte.clearledger.exception.UnauthenticatedException;
 import com.onixbyte.clearledger.security.token.UsernamePasswordToken;

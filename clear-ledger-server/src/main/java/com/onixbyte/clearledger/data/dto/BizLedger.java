@@ -1,4 +1,4 @@
-package com.onixbyte.clearledger.data.biz;
+package com.onixbyte.clearledger.data.dto;
 
 import java.time.LocalDateTime;
 

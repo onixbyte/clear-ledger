@@ -1,7 +1,7 @@
 package com.onixbyte.clearledger.repository;
 
 import com.mybatisflex.core.BaseMapper;
-import com.onixbyte.clearledger.data.biz.BizLedger;
+import com.onixbyte.clearledger.data.dto.BizLedger;
 import com.onixbyte.clearledger.data.entity.UserLedger;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
