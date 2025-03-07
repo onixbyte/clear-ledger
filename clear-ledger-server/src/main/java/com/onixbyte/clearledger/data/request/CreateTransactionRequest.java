@@ -1,9 +1,11 @@
 package com.onixbyte.clearledger.data.request;
 
+import java.time.LocalDateTime;
+
 public record CreateTransactionRequest(
         String ledgerId,
         Integer amount,
         String description,
-        String transactionDate
+        LocalDateTime transactionDate
 ) {
 }

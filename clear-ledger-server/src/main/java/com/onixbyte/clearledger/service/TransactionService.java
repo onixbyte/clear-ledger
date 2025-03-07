@@ -1,6 +1,7 @@
 package com.onixbyte.clearledger.service;
 
 import com.mybatisflex.core.paginate.Page;
+import com.onixbyte.clearledger.common.Formatters;
 import com.onixbyte.clearledger.data.entity.Transaction;
 import com.onixbyte.clearledger.data.entity.ViewTransaction;
 import com.onixbyte.clearledger.data.entity.table.TransactionTableDef;
@@ -30,18 +31,17 @@ public class TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final GuidCreator<String> transactionIdCreator;
-    private final DateTimeFormatter datetimeFormatter;
     private final LedgerRepository ledgerRepository;
     private final UserLedgerRepository userLedgerRepository;
     private final SerialService serialService;
 
     public TransactionService(TransactionRepository transactionRepository,
                               GuidCreator<String> transactionIdCreator,
-                              DateTimeFormatter datetimeFormatter,
-                              LedgerRepository ledgerRepository, UserLedgerRepository userLedgerRepository, SerialService serialService) {
+                              LedgerRepository ledgerRepository,
+                              UserLedgerRepository userLedgerRepository,
+                              SerialService serialService) {
         this.transactionRepository = transactionRepository;
         this.transactionIdCreator = transactionIdCreator;
-        this.datetimeFormatter = datetimeFormatter;
         this.ledgerRepository = ledgerRepository;
         this.userLedgerRepository = userLedgerRepository;
         this.serialService = serialService;
@@ -79,7 +79,7 @@ public class TransactionService {
                 .id(transactionIdCreator.nextId())
                 .ledgerId(request.ledgerId())
                 .userId(currentUser.id())
-                .transactionDate(LocalDateTime.parse(request.transactionDate(), datetimeFormatter))
+                .transactionDate(request.transactionDate())
                 .description(request.description())
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -95,7 +95,7 @@ public class TransactionService {
                 .id(request.id())
                 .ledgerId(request.ledgerId())
                 .userId(currentUser.id())
-                .transactionDate(LocalDateTime.parse(request.transactionDate(), datetimeFormatter))
+                .transactionDate(request.transactionDate())
                 .description(request.description())
                 .build();
         // the default behaviour of `update(T)` method from `BaseMapper` will ignore null values
