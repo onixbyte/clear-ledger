@@ -1,4 +1,4 @@
-package com.onixbyte.clearledger.security.provider;
+package com.onixbyte.clearledger.security;
 
 import com.onixbyte.clearledger.exception.UnauthenticatedException;
 import com.onixbyte.clearledger.security.token.UsernamePasswordToken;

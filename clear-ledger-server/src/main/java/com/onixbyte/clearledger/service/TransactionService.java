@@ -7,7 +7,7 @@ import com.onixbyte.clearledger.data.entity.table.TransactionTableDef;
 import com.onixbyte.clearledger.data.request.CreateTransactionRequest;
 import com.onixbyte.clearledger.data.request.UpdateTransactionRequest;
 import com.onixbyte.clearledger.exception.BizException;
-import com.onixbyte.clearledger.holder.UserHolder;
+import com.onixbyte.clearledger.security.UserHolder;
 import com.onixbyte.clearledger.repository.LedgerRepository;
 import com.onixbyte.clearledger.repository.TransactionRepository;
 import com.onixbyte.clearledger.repository.UserLedgerRepository;

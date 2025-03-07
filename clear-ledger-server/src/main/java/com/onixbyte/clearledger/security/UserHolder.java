@@ -1,4 +1,4 @@
-package com.onixbyte.clearledger.holder;
+package com.onixbyte.clearledger.security;
 
 import com.onixbyte.clearledger.data.biz.BizUser;
 

@@ -1,6 +1,6 @@
 package com.onixbyte.clearledger.config;
 
-import com.onixbyte.clearledger.interceptor.UserInterceptor;
+import com.onixbyte.clearledger.security.UserInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

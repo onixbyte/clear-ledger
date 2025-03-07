@@ -1,8 +1,8 @@
-package com.onixbyte.clearledger.guid;
+package com.onixbyte.clearledger.generator;
 
 import com.onixbyte.clearledger.constant.IdType;
 import com.onixbyte.clearledger.service.SerialService;
-import com.onixbyte.clearledger.utils.Formatters;
+import com.onixbyte.clearledger.common.Formatters;
 import com.onixbyte.guid.GuidCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

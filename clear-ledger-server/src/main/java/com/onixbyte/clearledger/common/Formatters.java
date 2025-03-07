@@ -1,4 +1,4 @@
-package com.onixbyte.clearledger.utils;
+package com.onixbyte.clearledger.common;
 
 import java.time.format.DateTimeFormatter;
 
