@@ -21,8 +21,8 @@ public interface TransactionRepository extends BaseMapper<Transaction> {
             order by t.id
             offset #{offset} limit #{pageSize}
             """)
-    List<ViewTransaction> selectPaginateViewTransactions(@Param("ledgerId") Long ledgerId,
+    List<ViewTransaction> selectPaginateViewTransactions(@Param("ledgerId") String ledgerId,
                                                          @Param("offset") Long offset,
-                                                         @Param("size") Long pageSize);
+                                                         @Param("pageSize") Long pageSize);
 
 }

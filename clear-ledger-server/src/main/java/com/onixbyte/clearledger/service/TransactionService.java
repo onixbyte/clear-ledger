@@ -57,11 +57,11 @@ public class TransactionService {
         }
     }
 
-    public Page<ViewTransaction> getTransactionPage(Long ledgerId, Long pageNum, Long size) {
-        var offset = (pageNum - 1) * size;
-        var transactions = transactionRepository.selectPaginateViewTransactions(ledgerId, offset, size);
+    public Page<ViewTransaction> getTransactionPage(String ledgerId, Long pageNum, Long pageSize) {
+        var offset = (pageNum - 1) * pageSize;
+        var transactions = transactionRepository.selectPaginateViewTransactions(ledgerId, offset, pageSize);
 
-        var result = new Page<ViewTransaction>(pageNum, size);
+        var result = new Page<ViewTransaction>(pageNum, pageSize);
         result.setRecords(transactions);
 
         var count = transactionRepository.selectCountByCondition(TransactionTableDef.TRANSACTION

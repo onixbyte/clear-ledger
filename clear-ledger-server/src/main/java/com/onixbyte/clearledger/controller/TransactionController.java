@@ -28,7 +28,7 @@ public class TransactionController {
     }
 
     @GetMapping("/{ledgerId:\\d+}")
-    public Page<TransactionResponse> getTransactions(@PathVariable Long ledgerId,
+    public Page<TransactionResponse> getTransactions(@PathVariable String ledgerId,
                                                      @RequestParam(required = false, defaultValue = "1") Long pageNum,
                                                      @RequestParam(required = false, defaultValue = "10") Long pageSize) {
         return transactionService.getTransactionPage(ledgerId, pageNum, pageSize)
