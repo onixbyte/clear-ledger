@@ -36,11 +36,11 @@ export const RegisterPage = () => {
       message.success("登录成功")
       navigate(from, { replace: true })
     } catch (error) {
-      if (error instanceof AxiosError) {
-        message.error(error.response?.data.message)
-      } else {
-        message.error("登录失败，请检查用户名或密码")
-      }
+      message.error(
+        error instanceof AxiosError
+          ? error.response?.data.message
+          : "登录失败，请检查用户名或密码"
+      )
     } finally {
       setLoading(false)
     }

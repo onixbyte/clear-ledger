@@ -7,3 +7,7 @@ export type { Ledger, CreateLedgerRequest } from "./ledger.ts"
 export type { CommonErrorResponse } from "./error-response.ts"
 
 export type { MenuItem } from "./menu-item.ts"
+
+export type { Transaction } from "./transaction.ts"
+
+export type { Pagination } from "./pagination.ts"

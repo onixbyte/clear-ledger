@@ -38,12 +38,11 @@ export const DashboardLayout = () => {
         const ledgerData = await LedgerApi.getLedgers()
         dispatch(setLedgers(ledgerData))
       } catch (error) {
-        // console.error("获取账本失败:", error)
-        if (error instanceof AxiosError) {
-          message.error(error.response?.data.message)
-        } else {
-          message.error("获取账本失败")
-        }
+        message.error(
+          error instanceof AxiosError
+            ? error.response?.data.message
+            : "获取账本失败"
+        )
       }
     })()
   }, [dispatch])
@@ -70,16 +69,16 @@ export const DashboardLayout = () => {
     ),
   ]
 
-    const onMenuItemClicked = ({ key }: { key: string }) => {
-        if (key === "join-ledger") {
-            setIsJoinLedgerDialogueOpen(true)
-        } else if (key === "create-ledger") {
-            setIsCreateLedgerDialogueOpen(true)
-        } else if (key.startsWith("ledger#")) {
-            const ledgerId = key.split("#")[1]
-            navigate(`/ledgers/${ledgerId}`)
-        }
+  const onMenuItemClicked = ({ key }: { key: string }) => {
+    if (key === "join-ledger") {
+      setIsJoinLedgerDialogueOpen(true)
+    } else if (key === "create-ledger") {
+      setIsCreateLedgerDialogueOpen(true)
+    } else if (key.startsWith("ledger#")) {
+      const ledgerId = key.split("#")[1]
+      navigate(`/ledgers/${ledgerId}`)
     }
+  }
 
   return (
     <Layout className="h-[100vh] w-[100vw] m-0">
