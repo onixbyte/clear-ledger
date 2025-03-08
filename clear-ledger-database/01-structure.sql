@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS ledgers
 CREATE TABLE IF NOT EXISTS user_ledgers
 (
     user_id   CHAR(12) REFERENCES users (id),
-    ledger_id CHAR(10) REFERENCES ledgers (id),
+    ledger_id CHAR(12) REFERENCES ledgers (id),
     role      VARCHAR(50) NOT NULL, -- e.g., 'owner', 'member'
     joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (user_id, ledger_id)
@@ -35,9 +35,9 @@ CREATE TABLE IF NOT EXISTS transactions
     id               CHAR(12) PRIMARY KEY,
     ledger_id        CHAR(12) REFERENCES ledgers (id),
     user_id          CHAR(12) REFERENCES users (id),
-    amount           INTEGER NOT NULL,
+    amount           INTEGER   NOT NULL,
     description      TEXT,
-    transaction_date TIMESTAMP      NOT NULL,
+    transaction_date TIMESTAMP NOT NULL,
     created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
