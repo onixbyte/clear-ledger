@@ -89,6 +89,7 @@ export const LedgerPage = () => {
         <Table.Column<Transaction>
           title="交易时间"
           dataIndex="transactionDate"
+          key="transactionDate"
         />
       </Table>
     </div>
