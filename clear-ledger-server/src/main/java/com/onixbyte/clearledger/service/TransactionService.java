@@ -77,6 +77,7 @@ public class TransactionService {
                 .id(transactionIdCreator.nextId())
                 .ledgerId(request.ledgerId())
                 .userId(currentUser.id())
+                .amount(request.amount())
                 .transactionDate(request.transactionDate())
                 .description(request.description())
                 .createdAt(LocalDateTime.now())

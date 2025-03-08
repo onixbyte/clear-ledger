@@ -5,7 +5,7 @@ import * as LedgerApi from "@/api/ledger"
 import { setLedgers } from "@/store/ledger-slice"
 import { CreateLedgerRequest } from "@/types"
 
-interface CreateLedgerDialogueProps {
+type CreateLedgerDialogueProps = {
   open: boolean
   onClose: () => void
 }

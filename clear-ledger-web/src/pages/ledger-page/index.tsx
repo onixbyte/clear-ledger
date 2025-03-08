@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useParams } from "react-router"
+import { Button, Card, message, Table } from "antd"
+import { AxiosError } from "axios"
 import { Transaction } from "@/types"
 import * as TransactionApi from "@/api/transaction"
-import { message, Table } from "antd"
-import { AxiosError } from "axios"
+import { CreateTransactionDialogue } from "@/components/create-transaction-dialogue"
+import { currencyFormatter } from "@/utils/formatter"
 
 type PaginationParams = {
   pageNumber: number
@@ -22,6 +24,8 @@ export const LedgerPage = () => {
     totalPage: 0,
     totalRow: 0,
   })
+  const [isCreateTransactionDialogueOpen, setIsCreateTransactionDialogueOpen] =
+    useState<boolean>(false)
 
   const onPageChange = (pageNum: number, pageSize: number) => {
     setPaginationParams((prev) => ({
@@ -31,37 +35,45 @@ export const LedgerPage = () => {
     }))
   }
 
-  useEffect(() => {
-    ;(async () => {
-      if (!ledgerId) return
+  const fetchTransactions = useCallback(async () => {
+    if (!ledgerId) return
 
-      try {
-        const response = await TransactionApi.getTransactions(
-          ledgerId,
-          paginationParam.pageNumber,
-          paginationParam.pageSize
-        )
+    try {
+      const response = await TransactionApi.getTransactions(
+        ledgerId,
+        paginationParam.pageNumber,
+        paginationParam.pageSize
+      )
 
-        setTransactions(response.records)
-        setPaginationParams((prev) => ({
-          ...prev,
-          totalRow: response.totalRow,
-          totalPage: response.totalPage,
-        }))
-      } catch (error) {
-        message.error(
-          error instanceof AxiosError
-            ? error.response?.data.message
-            : "创建账本失败"
-        )
-      }
-    })()
+      setTransactions(response.records)
+      setPaginationParams((prev) => ({
+        ...prev,
+        totalRow: response.totalRow,
+        totalPage: response.totalPage,
+      }))
+    } catch (error) {
+      message.error(
+        error instanceof AxiosError
+          ? error.response?.data.message
+          : "创建账本失败"
+      )
+    }
   }, [ledgerId, paginationParam.pageNumber, paginationParam.pageSize])
+
+  useEffect(() => {
+    fetchTransactions().then()
+  }, [fetchTransactions])
 
   return (
     <div>
+      <Card>
+        <Button onClick={() => {
+          setIsCreateTransactionDialogueOpen(true)
+        }} type="primary">添加账单</Button>
+      </Card>
       <Table<Transaction>
         dataSource={transactions}
+        rowKey="id"
         pagination={{
           pageSize: paginationParam.pageSize,
           current: paginationParam.pageNumber,
@@ -78,7 +90,7 @@ export const LedgerPage = () => {
           title="金额"
           key="amount"
           render={(value: Transaction) => {
-            return `¥ ${value.amount / 100}`
+            return currencyFormatter.format(value.amount / 100);
           }}
         />
         <Table.Column<Transaction>
@@ -92,6 +104,15 @@ export const LedgerPage = () => {
           key="transactionDate"
         />
       </Table>
+
+      <CreateTransactionDialogue
+        open={isCreateTransactionDialogueOpen}
+        onClose={() => {
+          setIsCreateTransactionDialogueOpen(false)
+        }}
+        ledgerId={ledgerId!}
+        onSuccess={fetchTransactions}
+      />
     </div>
   )
 }

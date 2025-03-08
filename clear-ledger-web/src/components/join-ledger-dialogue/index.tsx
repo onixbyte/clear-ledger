@@ -8,7 +8,7 @@ type JoinLedgerForm = {
   ledgerId: string
 }
 
-interface JoinLedgerModalProps {
+type JoinLedgerModalProps = {
   open: boolean
   onClose: () => void
 }

@@ -1,5 +1,5 @@
 import webClient from "@/utils/web-client"
-import { Pagination, Transaction } from "@/types"
+import { CreateTransactionRequest, Pagination, Transaction } from "@/types"
 
 const getTransactions = async (
   ledgerId: string,
@@ -26,4 +26,11 @@ const getTransactions = async (
   return data
 }
 
-export { getTransactions }
+const createTransaction = async (
+  request: CreateTransactionRequest
+): Promise<Transaction> => {
+  const { data } = await webClient.post<Transaction>("/transactions", request)
+  return data
+}
+
+export { getTransactions, createTransaction }

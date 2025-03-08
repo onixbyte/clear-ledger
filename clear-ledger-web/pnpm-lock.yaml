@@ -26,9 +26,6 @@ importers:
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
-      duration:
-        specifier: link:dayjs/plugin/duration
-        version: link:dayjs/plugin/duration
       react:
         specifier: ^19.0.0
         version: 19.0.0
