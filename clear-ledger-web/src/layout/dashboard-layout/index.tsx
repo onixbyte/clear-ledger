@@ -83,7 +83,7 @@ export const DashboardLayout = () => {
 
   return (
     <Layout className="h-[100vh] w-[100vw] m-0">
-      <Header className="bg-[#888888] !px-5 !h-[60px] leading-[60px] text-[#231547] text-[18px] flex justify-between items-baseline">
+      <Header className="!bg-gray-100 !px-5 !h-[60px] !leading-[60px] text-gray-800 text-[18px] flex justify-between items-center border-b border-gray-300">
         Clear Ledger
         <Button type="text" onClick={_logout}>
           注销
