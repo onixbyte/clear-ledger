@@ -23,9 +23,12 @@ importers:
       axios:
         specifier: ^1.8.1
         version: 1.8.1
-      moment:
-        specifier: ^2.30.1
-        version: 2.30.1
+      dayjs:
+        specifier: ^1.11.13
+        version: 1.11.13
+      duration:
+        specifier: link:dayjs/plugin/duration
+        version: link:dayjs/plugin/duration
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -3196,7 +3199,8 @@ snapshots:
     dependencies:
       brace-expansion: 2.0.1
 
-  moment@2.30.1: {}
+  moment@2.30.1:
+    optional: true
 
   ms@2.1.3: {}
 

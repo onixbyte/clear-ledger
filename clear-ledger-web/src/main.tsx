@@ -2,6 +2,8 @@ import React from "react"
 import { createRoot } from "react-dom/client"
 import { BrowserRouter, Route, Routes } from "react-router"
 import { Provider } from "react-redux"
+import dayjs from "dayjs"
+import duration from "dayjs/plugin/duration"
 import "@ant-design/v5-patch-for-react-19"
 import "./index.css"
 import { store } from "@/store"
@@ -11,6 +13,8 @@ import { LoginPage } from "@/pages/login-page"
 import { RegisterPage } from "@/pages/register-page"
 import { ProtectedRoute } from "@/components/protected-route"
 import { LedgerPage } from "@/pages/ledger-page"
+
+dayjs.extend(duration)
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

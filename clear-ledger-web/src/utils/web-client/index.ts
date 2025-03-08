@@ -1,10 +1,10 @@
 import axios from "axios"
-import moment from "moment"
+import dayjs from "dayjs"
 import { store } from "@/store"
 
 const webClient = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
-  timeout: moment.duration({ seconds: 10 }).asMilliseconds()
+  timeout: dayjs.duration({ seconds: 10 }).asMilliseconds()
 })
 
 webClient.interceptors.request.use(
