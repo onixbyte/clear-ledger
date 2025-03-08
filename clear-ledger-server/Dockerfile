@@ -1,7 +1,7 @@
-ARG APP_VERSION=''
-
 # Use a minimal base image for the final stage
-FROM amazoncorretto:21-apline
+FROM amazoncorretto:21-alpine
+
+ARG APP_VERSION=''
 
 # Set the working directory
 WORKDIR /app
