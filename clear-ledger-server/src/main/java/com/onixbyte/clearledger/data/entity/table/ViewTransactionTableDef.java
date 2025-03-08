@@ -45,6 +45,6 @@ public class ViewTransactionTableDef extends TableDef {
 
     public ViewTransactionTableDef as(String alias) {
         var key = getNameWithSchema() + "." + alias;
-        return getCache(key, k -> new ViewTransactionTableDef("", "users", alias));
+        return getCache(key, k -> new ViewTransactionTableDef("", "view_transactions", alias));
     }
 }

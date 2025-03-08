@@ -1,13 +1,16 @@
 package com.onixbyte.clearledger.service;
 
 import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryWrapper;
 import com.onixbyte.clearledger.common.Formatters;
 import com.onixbyte.clearledger.data.entity.Transaction;
 import com.onixbyte.clearledger.data.entity.ViewTransaction;
 import com.onixbyte.clearledger.data.entity.table.TransactionTableDef;
+import com.onixbyte.clearledger.data.entity.table.ViewTransactionTableDef;
 import com.onixbyte.clearledger.data.request.CreateTransactionRequest;
 import com.onixbyte.clearledger.data.request.UpdateTransactionRequest;
 import com.onixbyte.clearledger.exception.BizException;
+import com.onixbyte.clearledger.repository.ViewTransactionRepository;
 import com.onixbyte.clearledger.security.UserHolder;
 import com.onixbyte.clearledger.repository.LedgerRepository;
 import com.onixbyte.clearledger.repository.TransactionRepository;
@@ -34,17 +37,19 @@ public class TransactionService {
     private final LedgerRepository ledgerRepository;
     private final UserLedgerRepository userLedgerRepository;
     private final SerialService serialService;
+    private final ViewTransactionRepository viewTransactionRepository;
 
     public TransactionService(TransactionRepository transactionRepository,
                               GuidCreator<String> transactionIdCreator,
                               LedgerRepository ledgerRepository,
                               UserLedgerRepository userLedgerRepository,
-                              SerialService serialService) {
+                              SerialService serialService, ViewTransactionRepository viewTransactionRepository) {
         this.transactionRepository = transactionRepository;
         this.transactionIdCreator = transactionIdCreator;
         this.ledgerRepository = ledgerRepository;
         this.userLedgerRepository = userLedgerRepository;
         this.serialService = serialService;
+        this.viewTransactionRepository = viewTransactionRepository;
     }
 
     private void preValidate(String userId, String ledgerId) {
@@ -58,17 +63,10 @@ public class TransactionService {
     }
 
     public Page<ViewTransaction> getTransactionPage(String ledgerId, Long pageNum, Long pageSize) {
-        var offset = (pageNum - 1) * pageSize;
-        var transactions = transactionRepository.selectPaginateViewTransactions(ledgerId, offset, pageSize);
-
-        var result = new Page<ViewTransaction>(pageNum, pageSize);
-        result.setRecords(transactions);
-
-        var count = transactionRepository.selectCountByCondition(TransactionTableDef.TRANSACTION
-                .LEDGER_ID.eq(ledgerId));
-        result.setTotalRow(count);
-
-        return result;
+        final var table = ViewTransactionTableDef.VIEW_TRANSACTION;
+        return viewTransactionRepository.paginate(new Page<>(pageNum, pageSize), QueryWrapper.create()
+                .where(table.LEDGER_ID.eq(ledgerId))
+                .orderBy(table.TRANSACTION_DATE, false));
     }
 
     public ViewTransaction createTransaction(CreateTransactionRequest request) {

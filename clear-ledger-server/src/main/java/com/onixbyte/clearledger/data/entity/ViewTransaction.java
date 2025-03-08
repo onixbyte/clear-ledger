@@ -2,10 +2,12 @@ package com.onixbyte.clearledger.data.entity;
 
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
+import com.mybatisflex.annotation.Table;
 import com.onixbyte.clearledger.data.response.TransactionResponse;
 
 import java.time.LocalDateTime;
 
+@Table("view_transactions")
 public class ViewTransaction {
 
     @Id(keyType = KeyType.None)

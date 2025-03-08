@@ -92,4 +92,9 @@ public class LedgerController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/export/{ledgerId}")
+    public ResponseEntity<Void> exportLedger(@PathVariable String ledgerId) {
+        return ResponseEntity.noContent().build();
+    }
+
 }
