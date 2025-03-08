@@ -46,11 +46,12 @@ jobs:
         run: |
           docker buildx build \
             --platform linux/amd64 \
-            -t ghcr.io/${{ github.repository }}/clear-ledger-server:${{ github.sha }} \
-            -t ghcr.io/${{ github.repository }}/clear-ledger-server:latest \
+            -t ghcr.io/onixbyte/clear-ledger/clear-ledger-server:${{ github.sha }} \
+            -t ghcr.io/onixbyte/clear-ledger/clear-ledger-server:latest \
             --push .
   
   build-frontend:
+    name: Frontend Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -88,6 +89,6 @@ jobs:
           docker buildx build \
             --platform linux/amd64 \
             -f Dockerfile.temp \
-            -t ghcr.io/${{ github.repository }}/clear-ledger-web:${{ github.sha }} \
-            -t ghcr.io/${{ github.repository }}/clear-ledger-web:latest \
+            -t ghcr.io/onixbyte/clear-ledger/clear-ledger-web:${{ github.sha }} \
+            -t ghcr.io/onixbyte/clear-ledger/clear-ledger-web:latest \
             --push .
