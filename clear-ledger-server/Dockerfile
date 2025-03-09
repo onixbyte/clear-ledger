@@ -2,6 +2,7 @@
 FROM amazoncorretto:21-alpine
 
 ARG APP_VERSION=''
+ENV ACTIVE_PROFILES=''
 
 # Set the working directory
 WORKDIR /app
@@ -13,4 +14,4 @@ COPY ./build/libs/clear-ledger-server-${APP_VERSION}.jar /app/app.jar
 EXPOSE 8080
 
 # Run the application
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["/bin/sh", "-c", "java -jar -Dspring.profiles.active=$ACTIVE_PROFILES /app/app.jar"]
