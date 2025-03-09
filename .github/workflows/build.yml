@@ -47,8 +47,8 @@ jobs:
           docker buildx build \
             --platform linux/amd64 \
             --build-arg APP_VERSION="${{ github.event.release.tag_name }}" \
-            -t ghcr.io/onixbyte/clear-ledger/clear-ledger-server:${{ github.event.release.tag_name }} \
-            -t ghcr.io/onixbyte/clear-ledger/clear-ledger-server:latest \
+            -t ghcr.io/${{ github.repository }}/clear-ledger-server:${{ github.event.release.tag_name }} \
+            -t ghcr.io/${{ github.repository }}/clear-ledger-server:latest \
             --push .
   
   build-frontend:
@@ -90,6 +90,6 @@ jobs:
           docker buildx build \
             --platform linux/amd64 \
             --build-arg APP_VERSION="${{ github.event.release.tag_name }}" \
-            -t ghcr.io/onixbyte/clear-ledger/clear-ledger-web:${{ github.event.release.tag_name }} \
-            -t ghcr.io/onixbyte/clear-ledger/clear-ledger-web:latest \
+            -t ghcr.io/${{ github.repository }}/clear-ledger-web:${{ github.event.release.tag_name }} \
+            -t ghcr.io/${{ github.repository }}/clear-ledger-web:latest \
             --push .
