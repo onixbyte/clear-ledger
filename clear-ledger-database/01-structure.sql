@@ -1,4 +1,4 @@
-DROP VIEW IF EXISTS view_transaction;
+DROP VIEW IF EXISTS view_transactions;
 DROP TABLE IF EXISTS transactions;
 DROP TABLE IF EXISTS user_ledgers;
 DROP TABLE IF EXISTS ledgers;
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS transactions
     created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE VIEW view_transaction AS
+CREATE VIEW view_transactions AS
 SELECT t.id,
        t.ledger_id,
        t.user_id,
