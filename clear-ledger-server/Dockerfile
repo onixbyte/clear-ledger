@@ -3,6 +3,12 @@ FROM amazoncorretto:21-alpine
 
 ARG APP_VERSION=''
 ENV ACTIVE_PROFILES=''
+ENV TZ=''
+
+# Set timezone
+RUN apk add --no-cache tzdata \
+    && ln -sf /usr/share/zoneinfo/$TZ /etc/localtime \
+    && echo $TZ > /etc/timezone
 
 # Set the working directory
 WORKDIR /app
