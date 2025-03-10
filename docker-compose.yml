@@ -1,0 +1,30 @@
+services:
+  web:
+    image: caddy:2.9-alpine
+    ports:
+      - "20080:80"
+    depends_on:
+      - server
+    volumes:
+      - ./dist:/usr/share/caddy
+      - ./conf:/etc/caddy
+    restart: unless-stopped
+    networks:
+      - clear-ledger
+
+  server:
+    image: ghcr.io/onixbyte/clear-ledger/clear-ledger-server:1.0.0-alpha-p1
+    ports:
+      - "28080:8080"
+    volumes:
+      - ./config:/app/config
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Hong_Kong
+      - ACTIVE_PROFILES=db,prod
+    networks:
+      - clear-ledger
+
+networks:
+  clear-ledger:
+    external: true
