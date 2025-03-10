@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from "react"
 import { useParams } from "react-router"
-import { Button, Card, message, Table } from "antd"
 import { AxiosError } from "axios"
+import { Button, Card, message, Table } from "antd"
 import { Transaction } from "@/types"
 import * as TransactionApi from "@/api/transaction"
 import { CreateTransactionDialogue } from "@/components/create-transaction-dialogue"
 import { currencyFormatter } from "@/utils/formatter"
+import { useAppSelector } from "@/hooks/store"
 
 type PaginationParams = {
   pageNumber: number
@@ -16,6 +17,8 @@ type PaginationParams = {
 
 export const LedgerPage = () => {
   const { ledgerId } = useParams<{ ledgerId: string }>()
+
+  const user = useAppSelector((state) => state.auth.user)
 
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [paginationParam, setPaginationParams] = useState<PaginationParams>({
@@ -65,11 +68,15 @@ export const LedgerPage = () => {
   }, [fetchTransactions])
 
   return (
-    <div>
+    <div className="flex gap-[10px] flex-col">
       <Card>
-        <Button onClick={() => {
-          setIsCreateTransactionDialogueOpen(true)
-        }} type="primary">添加账单</Button>
+        <Button
+          onClick={() => {
+            setIsCreateTransactionDialogueOpen(true)
+          }}
+          type="primary">
+          添加账单
+        </Button>
       </Card>
       <Table<Transaction>
         dataSource={transactions}
@@ -79,7 +86,10 @@ export const LedgerPage = () => {
           current: paginationParam.pageNumber,
           total: paginationParam.totalRow,
           onChange: onPageChange,
-        }}>
+        }}
+        rowClassName={(record) =>
+          (record.username == (user?.username ?? "")) ? "bg-[#00FF6633]" : "bg-[#00FFFF33]"
+        }>
         <Table.Column<Transaction> title="ID" dataIndex="id" key="id" />
         <Table.Column<Transaction>
           title="用户名"
@@ -90,7 +100,7 @@ export const LedgerPage = () => {
           title="金额"
           key="amount"
           render={(value: Transaction) => {
-            return currencyFormatter.format(value.amount / 100);
+            return currencyFormatter.format(value.amount / 100)
           }}
         />
         <Table.Column<Transaction>
