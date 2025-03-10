@@ -1,10 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit"
 import authReducer from "./auth-slice"
 import ledgerReducer from "./ledger-slice"
+import { User } from "@/types"
 
 const preloadedState = {
   auth: {
-    user: null,
+    user: JSON.parse(localStorage.getItem("user") || `{"id": "", "username": "", "email": ""}`) as User,
     token: localStorage.getItem("token"),
     isAuthenticated: !!localStorage.getItem("token"),
   },
