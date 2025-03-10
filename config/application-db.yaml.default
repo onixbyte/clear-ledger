@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    # Remember to change the postgres to the host of the database
+    url: jdbc:postgresql://postgres:5432/clear_ledger
+    # Remember to change the username to connect database
+    username: postgres
+    # Remember to change the password to connect database
+    password: 123456
+    driver-class-name: org.postgresql.Driver
+  data:
+    redis:
+      # Remember to change the host of redis
+      host: redis
+      port: 6379
+      database: 0

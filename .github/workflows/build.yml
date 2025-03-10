@@ -50,3 +50,50 @@ jobs:
             -t ghcr.io/${{ github.repository }}/clear-ledger-server:${{ github.event.release.tag_name }} \
             -t ghcr.io/${{ github.repository }}/clear-ledger-server:latest \
             --push .
+
+  build-frontend:
+    name: Frontend Build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install Frontend Dependencies
+        working-directory: ./clear-ledger-web
+        run: pnpm install
+
+      - name: Build Frontend
+        working-directory: ./clear-ledger-web
+        run: pnpm build
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Packages
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push Frontend Docker Image
+        working-directory: ./clear-ledger-web
+        run: |
+          docker buildx build \
+            --platform linux/amd64 \
+            --build-arg APP_VERSION="${{ github.event.release.tag_name }}" \
+            -t ghcr.io/${{ github.repository }}/clear-ledger-web:${{ github.event.release.tag_name }} \
+            -t ghcr.io/${{ github.repository }}/clear-ledger-web:latest \
+            --push .

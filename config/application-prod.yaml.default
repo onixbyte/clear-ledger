@@ -1,0 +1,20 @@
+app:
+  concurrent:
+    # Change your non-IO thread pool size here
+    max-task-thread-count: 20
+  cors:
+    allow-credentials: true
+    allowed-headers: "*"
+    allowed-methods: get, post, put, patch, delete
+    allowed-origins:
+      # Add your web server origin here.
+      - http://web:20080/
+    exposed-headers: Authorization, X-ClearLedger-Authorisation
+
+onixbyte:
+  simple-jwt:
+    algorithm: hs512
+    # Remember use a 64-character long secret for hs512, 48-character long for hs384 and
+    # 32-character long for hs256
+    secret: a_sample_secret
+    issuer: "ClearLedger :: Server"
