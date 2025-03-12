@@ -3,12 +3,15 @@ package com.onixbyte.clearledger.controller;
 import com.mybatisflex.core.paginate.Page;
 import com.onixbyte.clearledger.data.entity.ViewTransaction;
 import com.onixbyte.clearledger.data.request.CreateTransactionRequest;
+import com.onixbyte.clearledger.data.request.QueryTransactionRequest;
 import com.onixbyte.clearledger.data.request.UpdateTransactionRequest;
 import com.onixbyte.clearledger.data.response.TransactionResponse;
 import com.onixbyte.clearledger.service.TransactionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+
+import javax.management.Query;
 
 /**
  * Transaction Controller.
@@ -30,8 +33,9 @@ public class TransactionController {
     @GetMapping("/{ledgerId:\\d+}")
     public Page<TransactionResponse> getTransactions(@PathVariable String ledgerId,
                                                      @RequestParam(required = false, defaultValue = "1") Long pageNum,
-                                                     @RequestParam(required = false, defaultValue = "10") Long pageSize) {
-        return transactionService.getTransactionPage(ledgerId, pageNum, pageSize)
+                                                     @RequestParam(required = false, defaultValue = "10") Long pageSize,
+                                                     @ModelAttribute QueryTransactionRequest request) {
+        return transactionService.getTransactionPage(ledgerId, pageNum, pageSize, request)
                 .map(ViewTransaction::toResponse);
     }
 

@@ -8,6 +8,7 @@ import com.onixbyte.clearledger.data.entity.ViewTransaction;
 import com.onixbyte.clearledger.data.entity.table.TransactionTableDef;
 import com.onixbyte.clearledger.data.entity.table.ViewTransactionTableDef;
 import com.onixbyte.clearledger.data.request.CreateTransactionRequest;
+import com.onixbyte.clearledger.data.request.QueryTransactionRequest;
 import com.onixbyte.clearledger.data.request.UpdateTransactionRequest;
 import com.onixbyte.clearledger.exception.BizException;
 import com.onixbyte.clearledger.repository.ViewTransactionRepository;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 @Service
 public class TransactionService {
@@ -62,11 +64,24 @@ public class TransactionService {
         }
     }
 
-    public Page<ViewTransaction> getTransactionPage(String ledgerId, Long pageNum, Long pageSize) {
+    public Page<ViewTransaction> getTransactionPage(String ledgerId,
+                                                    Long pageNum,
+                                                    Long pageSize,
+                                                    QueryTransactionRequest request) {
         final var table = ViewTransactionTableDef.VIEW_TRANSACTION;
-        return viewTransactionRepository.paginate(new Page<>(pageNum, pageSize), QueryWrapper.create()
+        var queryWrapper = QueryWrapper.create()
                 .where(table.LEDGER_ID.eq(ledgerId))
-                .orderBy(table.TRANSACTION_DATE, false));
+                .orderBy(table.TRANSACTION_DATE, false);
+        if (Objects.nonNull(request)) {
+            if (Objects.nonNull(request.transactionDateStart()) && Objects.nonNull(request.transactionDateEnd())) {
+                queryWrapper.and(table.TRANSACTION_DATE.between(request.transactionDateStart(), request.transactionDateEnd()));
+            } else if (Objects.nonNull(request.transactionDateStart())) {
+                queryWrapper.and(table.TRANSACTION_DATE.ge(request.transactionDateStart()));
+            } else if (Objects.nonNull(request.transactionDateEnd())) {
+                queryWrapper.and(table.TRANSACTION_DATE.le(request.transactionDateEnd()));
+            }
+        }
+        return viewTransactionRepository.paginate(new Page<>(pageNum, pageSize), queryWrapper);
     }
 
     public ViewTransaction createTransaction(CreateTransactionRequest request) {
