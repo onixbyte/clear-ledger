@@ -14,3 +14,8 @@ export type CreateTransactionRequest = {
   description: string
   transactionDate: string
 }
+
+export type FilterTransactionParams = {
+  transactionDateStart?: string
+  transactionDateEnd?: string
+}

@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react"
 import { useParams } from "react-router"
 import { AxiosError } from "axios"
-import { Button, Card, message, Table } from "antd"
-import { Transaction } from "@/types"
+import { Button, Card, Form, message, Table } from "antd"
+import { FilterTransactionParams, Transaction } from "@/types"
 import * as TransactionApi from "@/api/transaction"
 import { CreateTransactionDialogue } from "@/components/create-transaction-dialogue"
 import { currencyFormatter } from "@/utils/formatter"
@@ -29,6 +29,7 @@ export const LedgerPage = () => {
   })
   const [isCreateTransactionDialogueOpen, setIsCreateTransactionDialogueOpen] =
     useState<boolean>(false)
+  const [filterParams, setFilterParams] = useState<FilterTransactionParams>({})
 
   const onPageChange = (pageNum: number, pageSize: number) => {
     setPaginationParams((prev) => ({
@@ -45,7 +46,8 @@ export const LedgerPage = () => {
       const response = await TransactionApi.getTransactions(
         ledgerId,
         paginationParam.pageNumber,
-        paginationParam.pageSize
+        paginationParam.pageSize,
+        filterParams
       )
 
       setTransactions(response.records)
@@ -61,7 +63,7 @@ export const LedgerPage = () => {
           : "创建账本失败"
       )
     }
-  }, [ledgerId, paginationParam.pageNumber, paginationParam.pageSize])
+  }, [ledgerId, paginationParam.pageNumber, paginationParam.pageSize, filterParams])
 
   useEffect(() => {
     fetchTransactions().then()
