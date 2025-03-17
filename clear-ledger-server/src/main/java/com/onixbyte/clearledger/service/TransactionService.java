@@ -74,11 +74,11 @@ public class TransactionService {
                 .orderBy(table.TRANSACTION_DATE, false);
         if (Objects.nonNull(request)) {
             if (Objects.nonNull(request.transactionDateStart()) && Objects.nonNull(request.transactionDateEnd())) {
-                queryWrapper.and(table.TRANSACTION_DATE.between(request.transactionDateStart(), request.transactionDateEnd()));
+                queryWrapper.and(table.TRANSACTION_DATE.between(request.transactionDateStart().atTime(0, 0, 0), request.transactionDateEnd().atTime(23, 59, 59)));
             } else if (Objects.nonNull(request.transactionDateStart())) {
-                queryWrapper.and(table.TRANSACTION_DATE.ge(request.transactionDateStart()));
+                queryWrapper.and(table.TRANSACTION_DATE.ge(request.transactionDateStart().atTime(0, 0, 0)));
             } else if (Objects.nonNull(request.transactionDateEnd())) {
-                queryWrapper.and(table.TRANSACTION_DATE.le(request.transactionDateEnd()));
+                queryWrapper.and(table.TRANSACTION_DATE.le(request.transactionDateEnd().atTime(23, 59, 59)));
             }
         }
         return viewTransactionRepository.paginate(new Page<>(pageNum, pageSize), queryWrapper);

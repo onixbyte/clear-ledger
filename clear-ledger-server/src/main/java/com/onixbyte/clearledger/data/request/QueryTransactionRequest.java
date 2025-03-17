@@ -1,9 +1,9 @@
 package com.onixbyte.clearledger.data.request;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public record QueryTransactionRequest(
-        LocalDateTime transactionDateStart,
-        LocalDateTime transactionDateEnd
+        LocalDate transactionDateStart,
+        LocalDate transactionDateEnd
 ) {
 }
