@@ -1,10 +1,12 @@
 import webClient from "@/utils/web-client"
-import { CreateTransactionRequest, Pagination, Transaction } from "@/types"
+import { CreateTransactionRequest, FilterTransactionParams, Pagination, Transaction } from "@/types"
+import { Optional } from "@/utils/optional"
 
 const getTransactions = async (
   ledgerId: string,
   pageNum: number,
-  pageSize: number
+  pageSize: number,
+  filterParams?: FilterTransactionParams
 ): Promise<Pagination<Transaction>> => {
   // create instance of URLSearchParams
   const params = new URLSearchParams()
@@ -18,6 +20,14 @@ const getTransactions = async (
   if (pageSize !== undefined && pageSize !== null) {
     params.append("pageSize", pageSize.toString())
   }
+
+  Optional.ofNullable<FilterTransactionParams>(filterParams)
+    .map((filter) => filter.transactionDateStart)
+    .ifPresent((transactionDateStart) => params.append("transactionDateStart", transactionDateStart))
+
+  Optional.ofNullable<FilterTransactionParams>(filterParams)
+    .map((filter) => filter.transactionDateEnd)
+    .ifPresent((transactionDateEnd) => params.append("transactionDateEnd", transactionDateEnd))
 
   // compose full URI
   const url = `/transactions/${ledgerId}${params.toString() ? `?${params.toString()}` : ""}`
