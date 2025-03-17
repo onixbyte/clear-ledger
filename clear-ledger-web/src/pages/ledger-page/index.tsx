@@ -7,6 +7,7 @@ import * as TransactionApi from "@/api/transaction"
 import { CreateTransactionDialogue } from "@/components/create-transaction-dialogue"
 import { currencyFormatter } from "@/utils/formatter"
 import { useAppSelector } from "@/hooks/store"
+import { formatDatetime } from "@/utils/dayjs"
 
 type PaginationParams = {
   pageNumber: number
@@ -112,8 +113,10 @@ export const LedgerPage = () => {
         />
         <Table.Column<Transaction>
           title="交易时间"
-          dataIndex="transactionDate"
           key="transactionDate"
+          render={(value: Transaction) => {
+            return formatDatetime(value.transactionDate)
+          }}
         />
       </Table>
 
