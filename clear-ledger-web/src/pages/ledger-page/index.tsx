@@ -80,11 +80,10 @@ export const LedgerPage = () => {
   const onFilterSubmit = (values: _FilterTransactionParams) => {
     setFilterParams({
       transactionDateStart:
-        values.transactionDate?.[0].format("YYYY-MM-DDTHH:mm:ss") ?? undefined,
+        values.transactionDate?.[0].format("YYYY-MM-DD") ?? undefined,
       transactionDateEnd:
-        values.transactionDate?.[1].format("YYYY-MM-DDTHH:mm:ss") ?? undefined,
+        values.transactionDate?.[1].format("YYYY-MM-DD") ?? undefined,
     })
-    console.log(filterParams)
     setPaginationParams((prev) => ({ ...prev, pageNumber: 1 }))
   }
 
@@ -110,7 +109,7 @@ export const LedgerPage = () => {
           <Form.Item<_FilterTransactionParams>
             name="transactionDate"
             label="交易时间">
-            <DatePicker.RangePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+            <DatePicker.RangePicker format="YYYY-MM-DD" />
           </Form.Item>
           <div className="flex gap-4">
             <Button type="primary" htmlType="submit">
