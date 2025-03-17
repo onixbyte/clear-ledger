@@ -73,13 +73,7 @@ export const LedgerPage = () => {
   return (
     <div className="flex gap-[10px] flex-col">
       <Card>
-        <Button
-          onClick={() => {
-            setIsCreateTransactionDialogueOpen(true)
-          }}
-          type="primary">
-          添加账单
-        </Button>
+
       </Card>
       <Table<Transaction>
         dataSource={transactions}
@@ -92,7 +86,19 @@ export const LedgerPage = () => {
         }}
         rowClassName={(record) =>
           (record.username == (user?.username ?? "")) ? "bg-[#00FF6633]" : "bg-[#00FFFF33]"
-        }>
+        }
+        title={() => (
+          <div className="flex justify-between items-baseline">
+            <h1 className="text-[16px]">交易记录</h1>
+            <Button
+              onClick={() => {
+                setIsCreateTransactionDialogueOpen(true)
+              }}
+              type="primary">
+              添加账单
+            </Button>
+          </div>
+        )}>
         <Table.Column<Transaction> title="ID" dataIndex="id" key="id" />
         <Table.Column<Transaction>
           title="用户名"
