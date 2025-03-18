@@ -62,8 +62,12 @@ dist-ssr
 *.sw?
 
 ### User Defined
-**/config/*
-!**/config/*.yaml.default
-!**/config/*.java
+clear-ledger-server/config/*.yml
+clear-ledger-server/config/*.yaml
+clear-ledger-server/config/*.properties
+
+!clear-ledger-server/config/*.yml.default
+!clear-ledger-server/config/*.yaml.default
+!clear-ledger-server/config/*.properties.default
 auto-imports.d.ts
 components.d.ts
