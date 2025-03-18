@@ -1,6 +1,6 @@
-package com.onixbyte.clearledger.config;
+package com.onixbyte.clearledger.configuration;
 
-import com.onixbyte.clearledger.config.property.CorsProperty;
+import com.onixbyte.clearledger.configuration.property.CorsProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.cors.CorsConfiguration;

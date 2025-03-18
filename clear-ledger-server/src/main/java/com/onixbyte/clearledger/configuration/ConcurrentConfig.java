@@ -1,6 +1,6 @@
-package com.onixbyte.clearledger.config;
+package com.onixbyte.clearledger.configuration;
 
-import com.onixbyte.clearledger.config.property.ConcurrentProperty;
+import com.onixbyte.clearledger.configuration.property.ConcurrentProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

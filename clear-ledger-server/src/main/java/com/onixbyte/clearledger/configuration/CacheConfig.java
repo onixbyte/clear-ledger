@@ -1,4 +1,4 @@
-package com.onixbyte.clearledger.config;
+package com.onixbyte.clearledger.configuration;
 
 import com.onixbyte.clearledger.data.dto.BizUser;
 import org.springframework.context.annotation.Bean;

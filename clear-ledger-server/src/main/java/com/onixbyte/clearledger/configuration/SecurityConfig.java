@@ -1,4 +1,4 @@
-package com.onixbyte.clearledger.config;
+package com.onixbyte.clearledger.configuration;
 
 import com.onixbyte.clearledger.security.UserAuthenticationFilter;
 import com.onixbyte.clearledger.security.UsernamePasswordAuthenticationProvider;
