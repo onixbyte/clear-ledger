@@ -21,27 +21,36 @@ const login = async (
   }
 }
 
+const getVerificationCode = async (email: string) => {
+  const urlSearchParam = new URLSearchParams()
+  urlSearchParam.append("audience", email)
+  await webClient.get(`/auth/verification-code?${urlSearchParam.toString()}`)
+}
+
 /**
  * User register api. If the username and email has not been taken, this user
  * will successfully register.
  * @param username username
  * @param email user's email address
  * @param password password
+ * @param verificationCode email verification code
  */
 const register = async (
   username: string,
   email: string,
-  password: string
+  password: string,
+  verificationCode: string
 ): Promise<UserLoginResponse> => {
   const { data, headers } = await webClient.post<User>("/auth/register", {
     username,
     email,
     password,
+    verificationCode,
   })
   return {
     user: data,
-    authorisation: headers["authorization"] as string
+    authorisation: headers["authorization"] as string,
   }
 }
 
-export { login, register }
+export { login, getVerificationCode, register }
