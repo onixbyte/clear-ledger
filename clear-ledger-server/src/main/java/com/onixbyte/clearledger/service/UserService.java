@@ -5,10 +5,10 @@ import com.onixbyte.clearledger.data.entity.User;
 import com.onixbyte.clearledger.data.entity.table.UserTableDef;
 import com.onixbyte.clearledger.exception.BizException;
 import com.onixbyte.clearledger.repository.UserRepository;
+import com.onixbyte.clearledger.util.CacheKeyComposer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -24,33 +24,28 @@ public class UserService {
 
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
-    private final String cacheTag = "user";
-
-    private final String appName;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RedisTemplate<String, BizUser> userCache;
     private final SerialService serialService;
+    private final CacheKeyComposer cacheKeyComposer;
 
     @Autowired
-    public UserService(@Value("${spring.application.name}") String appName,
-                       UserRepository userRepository,
+    public UserService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
-                       RedisTemplate<String, BizUser> userCache, RedisTemplate<String, Long> serialCache, SerialService serialService) {
-        this.appName = appName;
+                       RedisTemplate<String, BizUser> userCache,
+                       SerialService serialService,
+                       CacheKeyComposer cacheKeyComposer) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userCache = userCache;
         this.serialService = serialService;
+        this.cacheKeyComposer = cacheKeyComposer;
     }
 
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
         return Optional.ofNullable(userRepository.selectOneByCondition(UserTableDef.USER.USERNAME.eq(username)))
                 .orElseThrow(() -> new UsernameNotFoundException("Cannot find user with given username."));
-    }
-
-    public String composeKey(String username) {
-        return "%s:user:%s".formatted(appName, username);
     }
 
     public boolean isUsernameTaken(String username) {
@@ -81,11 +76,12 @@ public class UserService {
     }
 
     public BizUser getUserByUsername(String username) {
-        return Optional.ofNullable(userCache.opsForValue().get(composeKey(username)))
+        var userKey = cacheKeyComposer.getUserKey(username);
+        return Optional.ofNullable(userCache.opsForValue().get(userKey))
                 .or(() -> Optional.ofNullable(userRepository.selectOneByCondition(UserTableDef.USER.USERNAME.eq(username)))
                         .map((_user) -> {
                             var bizUser = _user.toBiz();
-                            userCache.opsForValue().set(composeKey(bizUser.username()), bizUser);
+                            userCache.opsForValue().set(userKey, bizUser);
                             return bizUser;
                         })
                 )
@@ -95,7 +91,7 @@ public class UserService {
     @Scheduled(cron = "0 0 0 * * *")
     public void resetUserSerial() {
         log.info("Resetting user serial.");
-        serialService.resetSerial(cacheTag);
+        serialService.resetSerial("user");
         log.info("User serial has been reset to 0.");
     }
 

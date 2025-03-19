@@ -1,4 +1,4 @@
-package com.onixbyte.clearledger.config;
+package com.onixbyte.clearledger.configuration;
 
 import com.onixbyte.clearledger.data.dto.BizUser;
 import org.springframework.context.annotation.Bean;
@@ -31,6 +31,17 @@ public class CacheConfig {
 
         serialCache.afterPropertiesSet();
         return serialCache;
+    }
+
+    @Bean
+    public RedisTemplate<String, String> verificationCodeCache(RedisConnectionFactory redisConnectionFactory) {
+        var verificationCodeCache = new RedisTemplate<String, String>();
+        verificationCodeCache.setConnectionFactory(redisConnectionFactory);
+        verificationCodeCache.setKeySerializer(RedisSerializer.string());
+        verificationCodeCache.setValueSerializer(RedisSerializer.string());
+
+        verificationCodeCache.afterPropertiesSet();
+        return verificationCodeCache;
     }
 
 }

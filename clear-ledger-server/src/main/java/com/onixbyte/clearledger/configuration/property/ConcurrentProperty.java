@@ -1,4 +1,4 @@
-package com.onixbyte.clearledger.config.property;
+package com.onixbyte.clearledger.configuration.property;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

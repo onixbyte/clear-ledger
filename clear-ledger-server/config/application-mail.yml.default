@@ -1,0 +1,19 @@
+spring:
+  mail:
+    host: ${your_mail_provider_host}
+    port: ${your_mail_port}
+    username: ${your_username}
+    password: ${your_password}
+    properties:
+      mail:
+        smtp:
+          # These configurations are used to set starttls.
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
+app:
+  email:
+    from: ${sender email address}
+    sender: ${sender name}
