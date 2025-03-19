@@ -53,11 +53,11 @@
         <p>您好！以下是您的验证码，请在 5 分钟内使用：</p>
     </div>
     <div class="code">
-        <span th:text="${verificationCode}">0123456789</span>
+        ${verificationCode}
     </div>
     <div class="footer">
         <p>此邮件为系统自动发送，请勿回复。</p>
-        <p>&copy; 2024-<span th:text="${T(java.time.LocalDateTime).now().getYear()}">2024</span> OnixByte Inc.</p>
+        <p>© 2024-${.now?string('yyyy')} OnixByte Inc.</p>
     </div>
 </div>
 </body>
