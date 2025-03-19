@@ -12,3 +12,8 @@ spring:
           starttls:
             enable: true
             required: true
+
+app:
+  email:
+    from: ${sender email address}
+    sender: ${sender name}
