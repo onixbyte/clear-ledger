@@ -95,5 +95,9 @@ public class AuthService {
         }
     }
 
+    public String getVerificationCode(String audience) {
+        return verificationCodeCache.opsForValue()
+                .get(cacheKeyComposer.getVerificationCodeKey(audience));
+    }
 
 }

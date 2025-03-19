@@ -73,6 +73,11 @@ public class AuthController {
             throw new BizException(HttpStatus.BAD_REQUEST, "用户邮箱不能为空");
         }
 
+        var _verificationCode = authService.getVerificationCode(request.email());
+        if (Objects.isNull(request.verificationCode()) || Objects.isNull(_verificationCode) || !_verificationCode.equals(request.verificationCode())) {
+            throw new BizException(HttpStatus.BAD_REQUEST, "邮箱验证码错误");
+        }
+
         // build user
         var user = User.builder()
                 .id(userIdCreator.nextId())
