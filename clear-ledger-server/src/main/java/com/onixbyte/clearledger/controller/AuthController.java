@@ -7,15 +7,13 @@ import com.onixbyte.clearledger.data.request.UserRegisterRequest;
 import com.onixbyte.clearledger.data.response.UserResponse;
 import com.onixbyte.clearledger.exception.BizException;
 import com.onixbyte.clearledger.service.AuthService;
+import com.onixbyte.clearledger.service.VerificationCodeService;
 import com.onixbyte.guid.GuidCreator;
 import com.onixbyte.simplejwt.TokenResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -28,14 +26,16 @@ public class AuthController {
     private final TokenResolver<DecodedJWT> tokenResolver;
     private final GuidCreator<String> userIdCreator;
     private final AuthService authService;
+    private final VerificationCodeService verificationCodeService;
 
     @Autowired
     public AuthController(TokenResolver<DecodedJWT> tokenResolver,
                           GuidCreator<String> userIdCreator,
-                          AuthService authService) {
+                          AuthService authService, VerificationCodeService verificationCodeService) {
         this.tokenResolver = tokenResolver;
         this.userIdCreator = userIdCreator;
         this.authService = authService;
+        this.verificationCodeService = verificationCodeService;
     }
 
     /**
@@ -89,6 +89,12 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Authorization", jwt)
                 .body(user.toResponse());
+    }
+
+    @GetMapping("/verification-code")
+    public ResponseEntity<Void> sendVerificationCode(@RequestParam String audience) {
+        authService.sendVerificationCode(audience);
+        return ResponseEntity.noContent().build();
     }
 
 }

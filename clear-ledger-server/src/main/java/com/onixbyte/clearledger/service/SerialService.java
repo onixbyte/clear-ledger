@@ -1,6 +1,7 @@
 package com.onixbyte.clearledger.service;
 
 import com.onixbyte.clearledger.exception.BizException;
+import com.onixbyte.clearledger.util.CacheKeyComposer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,20 +15,17 @@ import java.util.Optional;
 public class SerialService {
 
     private static final Logger log = LoggerFactory.getLogger(SerialService.class);
-    private final String appName;
+
     private final RedisTemplate<String, Long> serialCache;
+    private final CacheKeyComposer cacheKeyComposer;
 
-    public SerialService(@Value("${spring.application.name}") String appName, RedisTemplate<String, Long> serialCache) {
-        this.appName = appName;
+    public SerialService(RedisTemplate<String, Long> serialCache, CacheKeyComposer cacheKeyComposer) {
         this.serialCache = serialCache;
-    }
-
-    public String composeKey(String tag) {
-        return "%s:serial:%s".formatted(appName, tag);
+        this.cacheKeyComposer = cacheKeyComposer;
     }
 
     public Long nextSerial(String tag) {
-        var serial = Optional.ofNullable(serialCache.opsForValue().increment(composeKey(tag)))
+        var serial = Optional.ofNullable(serialCache.opsForValue().increment(cacheKeyComposer.getSerialKey(tag)))
                 .orElse(1L);
         if (serial < 10_000L) {
             return serial;
@@ -37,7 +35,7 @@ public class SerialService {
     }
 
     public void resetSerial(String tag) {
-        serialCache.opsForValue().set(composeKey(tag), 0L);
+        serialCache.opsForValue().set(cacheKeyComposer.getSerialKey(tag), 0L);
     }
 
 }

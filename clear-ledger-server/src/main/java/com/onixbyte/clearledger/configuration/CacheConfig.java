@@ -33,4 +33,15 @@ public class CacheConfig {
         return serialCache;
     }
 
+    @Bean
+    public RedisTemplate<String, String> verificationCodeCache(RedisConnectionFactory redisConnectionFactory) {
+        var verificationCodeCache = new RedisTemplate<String, String>();
+        verificationCodeCache.setConnectionFactory(redisConnectionFactory);
+        verificationCodeCache.setKeySerializer(RedisSerializer.string());
+        verificationCodeCache.setValueSerializer(RedisSerializer.string());
+
+        verificationCodeCache.afterPropertiesSet();
+        return verificationCodeCache;
+    }
+
 }

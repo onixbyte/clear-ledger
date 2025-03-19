@@ -8,10 +8,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.context.IContext;
-import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 @Service
 public class EmailService {
@@ -20,14 +19,14 @@ public class EmailService {
 
     private final EmailProperty emailProperty;
     private final JavaMailSender mailSender;
-    private final SpringTemplateEngine templateEngine;
+    private final TemplateService templateService;
 
     public EmailService(EmailProperty emailProperty,
                         JavaMailSender mailSender,
-                        SpringTemplateEngine templateEngine) {
+                        TemplateService templateService) {
         this.emailProperty = emailProperty;
         this.mailSender = mailSender;
-        this.templateEngine = templateEngine;
+        this.templateService = templateService;
     }
 
     @Async
@@ -41,8 +40,8 @@ public class EmailService {
     }
 
     @Async
-    public void sendRichTextMessageWithTemplate(String audience, String subject, String templateName, IContext context) throws MessagingException, UnsupportedEncodingException {
-        var htmlContent = templateEngine.process(templateName, context);
+    public void sendTemplatedRichTextMessage(String audience, String subject, String templateName, Map<String, Object> params) throws MessagingException, UnsupportedEncodingException {
+        var htmlContent = templateService.process(templateName, params);
         sendMessage(audience, subject, htmlContent, true);
     }
 
