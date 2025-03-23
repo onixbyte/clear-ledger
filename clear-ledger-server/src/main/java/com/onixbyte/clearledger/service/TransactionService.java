@@ -2,10 +2,8 @@ package com.onixbyte.clearledger.service;
 
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
-import com.onixbyte.clearledger.common.Formatters;
 import com.onixbyte.clearledger.data.entity.Transaction;
 import com.onixbyte.clearledger.data.entity.ViewTransaction;
-import com.onixbyte.clearledger.data.entity.table.TransactionTableDef;
 import com.onixbyte.clearledger.data.entity.table.ViewTransactionTableDef;
 import com.onixbyte.clearledger.data.request.CreateTransactionRequest;
 import com.onixbyte.clearledger.data.request.QueryTransactionRequest;
@@ -24,7 +22,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 @Service
@@ -105,6 +102,7 @@ public class TransactionService {
                 .id(request.id())
                 .ledgerId(request.ledgerId())
                 .userId(currentUser.id())
+                .amount(request.amount())
                 .transactionDate(request.transactionDate())
                 .description(request.description())
                 .build();

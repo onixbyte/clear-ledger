@@ -19,3 +19,11 @@ export type FilterTransactionParams = {
   transactionDateStart?: string
   transactionDateEnd?: string
 }
+
+export type EditTransactionRequest = {
+  id: string
+  ledgerId: string
+  amount?: number
+  description?: string
+  transactionDate?: string
+}

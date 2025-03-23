@@ -9,6 +9,7 @@ import { CreateTransactionDialogue } from "@/components/create-transaction-dialo
 import { currencyFormatter } from "@/utils/formatter"
 import { useAppSelector } from "@/hooks/store"
 import { formatDatetime } from "@/utils/dayjs"
+import { EditTransactionDialogue } from "@/components/edit-transaction-dialogue"
 
 type PaginationParams = {
   pageNumber: number
@@ -36,6 +37,10 @@ export const LedgerPage = () => {
   const [isCreateTransactionDialogueOpen, setIsCreateTransactionDialogueOpen] =
     useState<boolean>(false)
   const [filterParams, setFilterParams] = useState<FilterTransactionParams>({})
+  const [isEditTransactionDialogueOpen, setIsEditTransactionDialogueOpen] =
+    useState<boolean>(false)
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<Transaction | null>(null)
   const [form] = Form.useForm<_FilterTransactionParams>()
 
   const onPageChange = (pageNum: number, pageSize: number) => {
@@ -170,6 +175,20 @@ export const LedgerPage = () => {
             return formatDatetime(value.transactionDate)
           }}
         />
+        <Table.Column<Transaction>
+          title="操作"
+          key="action"
+          render={(value: Transaction) => (
+            <Button
+              type="link"
+              onClick={() => {
+                setSelectedTransaction(value)
+                setIsEditTransactionDialogueOpen(true)
+              }}>
+              编辑
+            </Button>
+          )}
+        />
       </Table>
 
       <CreateTransactionDialogue
@@ -178,6 +197,15 @@ export const LedgerPage = () => {
           setIsCreateTransactionDialogueOpen(false)
         }}
         ledgerId={ledgerId!}
+        onSuccess={fetchTransactions}
+      />
+
+      <EditTransactionDialogue
+        open={isEditTransactionDialogueOpen}
+        onClose={() => {
+          setIsEditTransactionDialogueOpen(false)
+        }}
+        transaction={selectedTransaction!}
         onSuccess={fetchTransactions}
       />
     </div>
