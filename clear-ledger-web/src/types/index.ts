@@ -12,6 +12,7 @@ export type {
   Transaction,
   CreateTransactionRequest,
   FilterTransactionParams,
+  EditTransactionRequest
 } from "./transaction.ts"
 
 export type { Pagination } from "./pagination.ts"

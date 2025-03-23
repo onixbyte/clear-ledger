@@ -1,5 +1,11 @@
 import webClient from "@/utils/web-client"
-import { CreateTransactionRequest, FilterTransactionParams, Pagination, Transaction } from "@/types"
+import {
+  CreateTransactionRequest,
+  EditTransactionRequest,
+  FilterTransactionParams,
+  Pagination,
+  Transaction,
+} from "@/types"
 import { Optional } from "@/utils/optional"
 
 const getTransactions = async (
@@ -43,4 +49,10 @@ const createTransaction = async (
   return data
 }
 
-export { getTransactions, createTransaction }
+const editTransaction = async (request: EditTransactionRequest): Promise<Transaction> => {
+  console.log(`request in API: `, request)
+  const { data } = await webClient.patch<Transaction>("/transactions", request)
+  return data
+}
+
+export { getTransactions, createTransaction, editTransaction }

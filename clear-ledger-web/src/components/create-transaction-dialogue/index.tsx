@@ -63,7 +63,7 @@ export const CreateTransactionDialogue = ({
           name="amount"
           label="账单金额"
           rules={[{ required: true, message: "请输入账单金额" }]}>
-          <InputNumber precision={2} addonBefore="¥" />
+          <InputNumber precision={2} addonBefore="¥" className="w-[100%]" />
         </Form.Item>
         <Form.Item<CreateTransactionRequest>
           name="description"
@@ -73,7 +73,11 @@ export const CreateTransactionDialogue = ({
         <Form.Item<CreateTransactionRequest>
           name="transactionDate"
           label="交易日期">
-          <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+          <DatePicker
+            showTime
+            format="YYYY-MM-DD HH:mm:ss"
+            className="w-[100%]"
+          />
         </Form.Item>
         <div className="flex gap-[8px] justify-end">
           <Button onClick={onClose}>取消</Button>

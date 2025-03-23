@@ -10,3 +10,4 @@ export type CreateLedgerRequest = {
   name: string
   description: string
 }
+
