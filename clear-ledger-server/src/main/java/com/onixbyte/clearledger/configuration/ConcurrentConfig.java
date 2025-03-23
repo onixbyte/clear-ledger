@@ -5,8 +5,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 /**
  * Configuration class for setting up concurrent thread pools. This class defines beans for different types of thread
@@ -29,7 +28,12 @@ public class ConcurrentConfig {
      */
     @Bean
     public ExecutorService ioThreadPool() {
-        return Executors.newCachedThreadPool();
+        return new ThreadPoolExecutor(
+                5,
+                50,
+                60L, TimeUnit.SECONDS,
+                new LinkedBlockingQueue<>(200)
+        );
     }
 
     /**
@@ -40,7 +44,12 @@ public class ConcurrentConfig {
      */
     @Bean
     public ExecutorService taskThreadPool(ConcurrentProperty concurrentProperty) {
-        return Executors.newFixedThreadPool(concurrentProperty.getMaxTaskThreadCount());
+        return new ThreadPoolExecutor(
+                concurrentProperty.getMaxTaskThreadCount(),
+                concurrentProperty.getMaxTaskThreadCount(),
+                0L, TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<>(100)
+        );
     }
 
 }
