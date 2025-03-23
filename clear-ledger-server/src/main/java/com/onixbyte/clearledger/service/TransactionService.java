@@ -105,6 +105,7 @@ public class TransactionService {
                 .id(request.id())
                 .ledgerId(request.ledgerId())
                 .userId(currentUser.id())
+                .amount(request.amount())
                 .transactionDate(request.transactionDate())
                 .description(request.description())
                 .build();
