@@ -1,0 +1,141 @@
+openapi: 3.1.0
+info:
+  title: Clear Ledger - Auth APIs
+  description: |
+    The auth APIs for Clear Ledger, including login, register and send verification code by email.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+paths:
+  /auth/login:
+    post:
+      summary: User login
+      description: User login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Username
+                password:
+                  type: string
+                  description: Password
+              required:
+                - username
+                - password
+      responses:
+        '200':
+          description: Login success
+          headers:
+            Authorization:
+              schema:
+                type: string
+              description: User authorisation token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: User id
+                  username:
+                    type: string
+                    description: Username
+                  email:
+                    type: string
+                    description: User's email
+        '401':
+          description: User authorisation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  timestamp:
+                    type: string
+                    format: date-time
+                    description: Request time
+                  message:
+                    type: string
+                    description: Error message
+  /auth/register:
+    post:
+      summary: User registration
+      description: User registration
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Username
+                password:
+                  type: string
+                  description: Password
+                email:
+                  type: string
+                  description: User's email
+                verificationCode:
+                  type: string
+                  description: The verification code sent to user by email
+              required:
+                - username
+                - password
+                - email
+                - verificationCode
+      responses:
+        '200':
+          description: User successfully registered
+          headers:
+            Authorization:
+              schema:
+                type: string
+              description: User authorisation token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: User id
+                  username:
+                    type: string
+                    description: Username
+                  email:
+                    type: string
+                    description: User's email
+        '409':
+          description: User information conflict with existing info.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  timestamp:
+                    type: string
+                    format: date-time
+                    description: Request time
+                  message:
+                    type: string
+                    description: Error message
+  /auth/verification-code/{audience}:
+    get:
+      summary: Get verification code.
+      description: Send an email containing a verification code to the given email address.
+      parameters:
+        - name: audience
+          in: path
+          required: true
+          schema:
+            type: string
+          description: User's email address.
+      responses:
+        '204':
+          description: The email containing the verification code has been sent successfully.
