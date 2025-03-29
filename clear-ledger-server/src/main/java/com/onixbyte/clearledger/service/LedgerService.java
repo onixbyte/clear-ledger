@@ -219,6 +219,10 @@ public class LedgerService {
             throw new BizException(HttpStatus.FORBIDDEN, "您不能编辑这个账本");
         }
 
+        if (isNameTaken(ledger.getName())) {
+            throw new BizException(HttpStatus.CONFLICT, "账本名称已被使用");
+        }
+
         // perform update ledger
         ledgerRepository.update(ledger, true);
     }
