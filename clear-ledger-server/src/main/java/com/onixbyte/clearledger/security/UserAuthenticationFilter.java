@@ -23,6 +23,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * A filter for authenticating users based on JWT tokens in HTTP requests.
+ * <p>
+ * This class extends {@link OncePerRequestFilter} to process incoming requests, validate JWT tokens,
+ * and set the authenticated user in the security context using {@link UsernamePasswordToken}.
+ *
+ * @author zihluwang
+ */
 @Component
 public class UserAuthenticationFilter extends OncePerRequestFilter {
 
@@ -30,6 +38,13 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
     private final ObjectMapper objectMapper;
     private final UserService userService;
 
+    /**
+     * Constructs a user authentication filter with required dependencies.
+     *
+     * @param tokenResolver the resolver for validating and decoding JWT tokens
+     * @param objectMapper  the mapper for serialising response data
+     * @param userService   the service for retrieving user information
+     */
     public UserAuthenticationFilter(TokenResolver<DecodedJWT> tokenResolver,
                                     ObjectMapper objectMapper,
                                     UserService userService) {
@@ -38,11 +53,25 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
         this.userService = userService;
     }
 
+    /**
+     * Filters HTTP requests to authenticate users based on JWT tokens.
+     * <p>
+     * Extracts the JWT from the "Authorisation" header, validates it, retrieves the associated user,
+     * and sets the authentication in the security context. If validation fails, an error response is
+     * returned.
+     *
+     * @param request     the incoming HTTP request
+     * @param response    the HTTP response
+     * @param filterChain the filter chain to proceed with the request
+     * @throws ServletException if a servlet-related error occurs
+     * @throws IOException      if an I/O error occurs
+     */
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         var jwt = Optional.of(request)
-                .map((req) -> req.getHeader("Authorization"))
-                .orElseGet(() -> request.getHeader("authorization"));
+                .map((req) -> req.getHeader("Authorisation"))
+                .orElseGet(() -> request.getHeader("authorisation"));
 
         // no token was found, let the request pass through
         if (Objects.isNull(jwt) || jwt.isBlank()) {
@@ -59,7 +88,7 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
 
             if (Objects.isNull(username)) {
                 writeResponse(response, HttpStatus.UNAUTHORIZED, BizExceptionResponse.builder()
-                        .message("无法读取用户信息，请登录后再试")
+                        .message("Unable to read user information, please log in again")
                         .build());
                 return;
             }
@@ -67,7 +96,7 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
             var user = userService.getUserByUsername(username);
             if (Objects.isNull(user)) {
                 writeResponse(response, HttpStatus.UNAUTHORIZED, BizExceptionResponse.builder()
-                        .message("无法读取用户信息，请登录后再试")
+                        .message("Unable to read user information, please log in again")
                         .build());
                 return;
             }
@@ -75,13 +104,21 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (JWTVerificationException e) {
             writeResponse(response, HttpStatus.UNAUTHORIZED, BizExceptionResponse.builder()
-                    .message("身份信息读取失败，请重新登录后再试")
+                    .message("Authentication failed, please log in again")
                     .build());
         } catch (BizException e) {
             writeResponse(response, e.composeResponse());
         }
     }
 
+    /**
+     * Writes a response entity to the HTTP response.
+     *
+     * @param response       the HTTP response to write to
+     * @param responseEntity the response entity containing status and body
+     * @param <T>            the type of the response body
+     * @throws IOException if an I/O error occurs during writing
+     */
     private <T> void writeResponse(HttpServletResponse response, ResponseEntity<T> responseEntity)
             throws IOException {
         response.setStatus(responseEntity.getStatusCode().value());
@@ -91,6 +128,15 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
         response.getWriter().flush();
     }
 
+    /**
+     * Writes a response with a specified status and data to the HTTP response.
+     *
+     * @param response the HTTP response to write to
+     * @param status   the HTTP status code
+     * @param data     the data to write as the response body
+     * @param <T>      the type of the response data
+     * @throws IOException if an I/O error occurs during writing
+     */
     private <T> void writeResponse(HttpServletResponse response, HttpStatus status, T data)
             throws IOException {
         response.setStatus(status.value());
@@ -99,5 +145,4 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
         response.getWriter().write(objectMapper.writeValueAsString(data));
         response.getWriter().flush();
     }
-
 }
