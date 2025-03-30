@@ -30,7 +30,7 @@ public class SerialService {
         if (serial < 10_000L) {
             return serial;
         } else {
-            throw new BizException(HttpStatus.SERVICE_UNAVAILABLE, "当前序号已超过当日最大上限，请明天再试");
+            throw BizException.serviceUnavailable("当前序号已超过当日最大上限，请明天再试");
         }
     }
 

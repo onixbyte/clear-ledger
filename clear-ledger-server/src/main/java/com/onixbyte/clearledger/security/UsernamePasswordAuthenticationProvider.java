@@ -1,6 +1,6 @@
 package com.onixbyte.clearledger.security;
 
-import com.onixbyte.clearledger.exception.UnauthenticatedException;
+import com.onixbyte.clearledger.exception.BizException;
 import com.onixbyte.clearledger.security.token.UsernamePasswordToken;
 import com.onixbyte.clearledger.service.UserService;
 import org.slf4j.Logger;
@@ -49,9 +49,9 @@ public class UsernamePasswordAuthenticationProvider implements AuthenticationPro
                 return usernamePasswordToken;
             }
 
-            throw new UnauthenticatedException("用户名与密码不匹配");
+            throw BizException.unauthorised("用户名与密码不匹配");
         }
-        throw new UnauthenticatedException("服务器错误，无法完成身份验证");
+        throw BizException.unauthorised("服务器错误，无法完成身份验证");
     }
 
 }

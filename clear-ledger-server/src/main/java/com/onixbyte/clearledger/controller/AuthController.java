@@ -83,20 +83,20 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<UserResponse> register(@RequestBody UserRegisterRequest request) {
         if (Objects.isNull(request.username()) || request.username().isBlank()) {
-            throw new BizException(HttpStatus.BAD_REQUEST, "用户名不能为空");
+            throw BizException.badRequest("用户名不能为空");
         }
 
         if (Objects.isNull(request.password()) || request.password().isBlank()) {
-            throw new BizException(HttpStatus.BAD_REQUEST, "用户密码不能为空");
+            throw BizException.badRequest("用户密码不能为空");
         }
 
         if (Objects.isNull(request.email()) || request.email().isBlank()) {
-            throw new BizException(HttpStatus.BAD_REQUEST, "用户邮箱不能为空");
+            throw BizException.badRequest("用户邮箱不能为空");
         }
 
         var _verificationCode = authService.getVerificationCode(request.email());
         if (Objects.isNull(request.verificationCode()) || Objects.isNull(_verificationCode) || !_verificationCode.equals(request.verificationCode())) {
-            throw new BizException(HttpStatus.BAD_REQUEST, "邮箱验证码错误");
+            throw BizException.badRequest("邮箱验证码错误");
         }
 
         // build user

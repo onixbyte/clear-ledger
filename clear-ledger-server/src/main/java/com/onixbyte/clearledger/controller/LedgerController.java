@@ -110,7 +110,7 @@ public class LedgerController {
     @PatchMapping
     public ResponseEntity<Void> updateLedger(@RequestBody UpdateLedgerRequest request) {
         if (Objects.isNull(request.id())) {
-            throw new BizException(HttpStatus.BAD_REQUEST, "Missing parameter id.");
+            throw BizException.badRequest("Missing parameter id.");
         }
 
         var ledger = Ledger.builder()

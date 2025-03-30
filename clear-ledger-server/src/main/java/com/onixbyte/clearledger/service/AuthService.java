@@ -3,15 +3,12 @@ package com.onixbyte.clearledger.service;
 import com.onixbyte.clearledger.data.dto.BizUser;
 import com.onixbyte.clearledger.data.entity.User;
 import com.onixbyte.clearledger.exception.BizException;
-import com.onixbyte.clearledger.exception.UnauthenticatedException;
 import com.onixbyte.clearledger.security.token.UsernamePasswordToken;
 import com.onixbyte.clearledger.util.CacheKeyComposer;
 import jakarta.mail.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
@@ -60,9 +57,9 @@ public class AuthService {
                 return bizUser;
             }
 
-            throw new UnauthenticatedException("Server error!");
+            throw BizException.unauthorised("Server error!");
         } catch (AuthenticationException e) {
-            throw new UnauthenticatedException();
+            throw BizException.unauthorised("Server error");
         }
     }
 
@@ -88,10 +85,10 @@ public class AuthService {
                 verificationCodeCache.opsForValue().set(lockKey, "1", Duration.ofMinutes(1));
                 verificationCodeCache.opsForValue().set(codeKey, code, Duration.ofMinutes(5));
             } else {
-                throw new BizException(HttpStatus.TOO_MANY_REQUESTS, "您的请求频率过高，请稍后再试");
+                throw BizException.tooManyRequests("您的请求频率过高，请稍后再试");
             }
         } catch (MessagingException | UnsupportedEncodingException e) {
-            throw new BizException(HttpStatus.INTERNAL_SERVER_ERROR, "服务器异常，请稍后再试");
+            throw BizException.internalServerError("服务器异常，请稍后再试");
         }
     }
 

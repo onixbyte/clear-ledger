@@ -53,11 +53,11 @@ public class TransactionService {
 
     private void preValidate(String userId, String ledgerId) {
         if (!ledgerRepository.hasLedger(ledgerId)) {
-            throw new BizException(HttpStatus.NOT_FOUND, "账本不存在");
+            throw BizException.notFound("账本不存在");
         }
 
         if (!userLedgerRepository.canWriteTransaction(userId, ledgerId)) {
-            throw new BizException(HttpStatus.FORBIDDEN, "您没有对该账本的操作权限");
+            throw BizException.forbidden("您没有对该账本的操作权限");
         }
     }
 

@@ -60,11 +60,11 @@ public class UserService {
     public int saveUser(User user) {
         // check user can be registered
         if (isUsernameTaken(user.getUsername())) {
-            throw new BizException(HttpStatus.CONFLICT, "Username is taken.");
+            throw BizException.conflict("Username is taken.");
         }
 
         if (isEmailTaken(user.getEmail())) {
-            throw new BizException(HttpStatus.CONFLICT, "Email is taken.");
+            throw BizException.conflict("Email is taken.");
         }
 
         // encrypt user password
@@ -85,7 +85,7 @@ public class UserService {
                             return bizUser;
                         })
                 )
-                .orElseThrow(() -> new BizException(HttpStatus.UNAUTHORIZED, "用户不存在，请注册后再试。"));
+                .orElseThrow(() -> BizException.unauthorised("用户不存在，请注册后再试。"));
     }
 
     @Scheduled(cron = "0 0 0 * * *")

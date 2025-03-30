@@ -7,14 +7,12 @@ import com.onixbyte.clearledger.data.entity.table.LedgerTableDef;
 import com.onixbyte.clearledger.data.entity.table.TransactionTableDef;
 import com.onixbyte.clearledger.data.entity.table.UserLedgerTableDef;
 import com.onixbyte.clearledger.exception.BizException;
-import com.onixbyte.clearledger.exception.ServiceUnavailableException;
 import com.onixbyte.clearledger.security.UserHolder;
 import com.onixbyte.clearledger.repository.LedgerRepository;
 import com.onixbyte.clearledger.repository.TransactionRepository;
 import com.onixbyte.clearledger.repository.UserLedgerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,11 +56,11 @@ public class LedgerService {
         var currentUser = UserHolder.getCurrentUser();
 
         if (isNameTaken(ledger.getName())) {
-            throw new BizException(HttpStatus.CONFLICT, "账本名称已被使用");
+            throw BizException.conflict("账本名称已被使用");
         }
 
         if (!canCreateOrJoinLedger()) {
-            throw new BizException(HttpStatus.CONFLICT, "您最多可以加入三个账本");
+            throw BizException.conflict("您最多可以加入三个账本");
         }
 
         var userLedger = UserLedger.builder()
@@ -90,17 +88,17 @@ public class LedgerService {
 
         // check whether the ledger exists
         if (!hasLedger(ledgerId)) {
-            throw new BizException(HttpStatus.NOT_FOUND, "无法根据指定的 ID 找到账本信息");
+            throw BizException.notFound("无法根据指定的 ID 找到账本信息");
         }
 
         // validate user can create or join a ledger
         if (!canCreateOrJoinLedger()) {
-            throw new BizException(HttpStatus.CONFLICT, "您最多只能加入 3 个账本");
+            throw BizException.conflict("您最多只能加入 3 个账本");
         }
 
         // validate whether user is already join this ledger
         if (isLedgerJoined(ledgerId)) {
-            throw new BizException(HttpStatus.CONFLICT, "您已经加入了这个账本");
+            throw BizException.conflict("您已经加入了这个账本");
         }
 
         var joinedAt = LocalDateTime.now();
@@ -183,12 +181,12 @@ public class LedgerService {
     public void deleteLedger(String ledgerId) {
         // check whether the ledger exists
         if (!hasLedger(ledgerId)) {
-            throw new BizException(HttpStatus.NOT_FOUND, "无法根据指定的 ID 找到账本");
+            throw BizException.notFound("无法根据指定的 ID 找到账本");
         }
 
         // check whether this ledger can be edited by current user
         if (!canEdit(ledgerId)) {
-            throw new BizException(HttpStatus.FORBIDDEN, "您不能删除一个不是您创建的账本");
+            throw BizException.forbidden("您不能删除一个不是您创建的账本");
         }
 
         // perform deleting
@@ -216,11 +214,11 @@ public class LedgerService {
     @Transactional
     public void updateLedger(Ledger ledger) {
         if (!canEdit(ledger.getId())) {
-            throw new BizException(HttpStatus.FORBIDDEN, "您不能编辑这个账本");
+            throw BizException.forbidden("您不能编辑这个账本");
         }
 
         if (isNameTaken(ledger.getName())) {
-            throw new BizException(HttpStatus.CONFLICT, "账本名称已被使用");
+            throw BizException.conflict("账本名称已被使用");
         }
 
         // perform update ledger
@@ -246,7 +244,7 @@ public class LedgerService {
      * @return ledgers user can join
      */
     public List<BizLedger> getLedgersCanJoin() {
-        throw new ServiceUnavailableException("该服务暂未实现，请耐心等候！");
+        throw BizException.serviceUnavailable("该服务暂未实现，请耐心等候！");
     }
 
     public void exitLedger(Long ledgerId) {
@@ -255,7 +253,7 @@ public class LedgerService {
         var table = UserLedgerTableDef.USER_LEDGER;
         var affectedRows = userLedgerRepository.deleteByCondition(table.USER_ID.eq(user.id()).and(table.LEDGER_ID.eq(ledgerId)).and(table.ROLE.ne("owner")));
         if (affectedRows == 0) {
-            throw new BizException(HttpStatus.CONFLICT, "您不能退出自己创建的账本，如不需要该账本，请删除该账本");
+            throw BizException.conflict("您不能退出自己创建的账本，如不需要该账本，请删除该账本");
         }
     }
 

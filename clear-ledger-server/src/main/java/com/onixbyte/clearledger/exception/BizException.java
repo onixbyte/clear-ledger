@@ -221,10 +221,20 @@ public class BizException extends RuntimeException {
         return new BizException(HttpStatus.GATEWAY_TIMEOUT, message);
     }
 
+    /**
+     * Retrieves the HTTP status associated with this exception.
+     *
+     * @return the HTTP status of the exception
+     */
     public HttpStatus getStatus() {
         return status;
     }
 
+    /**
+     * Retrieves the timestamp when this exception was thrown.
+     *
+     * @return the timestamp of the exception
+     */
     public LocalDateTime getTimestamp() {
         return timestamp;
     }
