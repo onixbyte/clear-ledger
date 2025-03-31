@@ -19,6 +19,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+/**
+ * Service class for managing user-related operations.
+ * <p>
+ * Provides methods for user registration, retrieval, and validation, with caching and password
+ * encryption support, as well as a scheduled task to reset user serial numbers daily.
+ *
+ * @author zihluwang
+ */
 @Service
 public class UserService {
 
@@ -30,6 +38,15 @@ public class UserService {
     private final SerialService serialService;
     private final CacheKeyComposer cacheKeyComposer;
 
+    /**
+     * Constructs a user service with required dependencies.
+     *
+     * @param userRepository   the repository for user data operations
+     * @param passwordEncoder  the encoder for securing user passwords
+     * @param userCache        the Redis template for caching {@link BizUser} objects
+     * @param serialService    the service for managing serial numbers
+     * @param cacheKeyComposer the utility for composing cache keys
+     */
     @Autowired
     public UserService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
@@ -43,19 +60,48 @@ public class UserService {
         this.cacheKeyComposer = cacheKeyComposer;
     }
 
+    /**
+     * Loads a user by their username from the database.
+     *
+     * @param username the username of the user to load
+     * @return the {@link User} entity
+     * @throws UsernameNotFoundException if no user is found with the given username
+     */
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
         return Optional.ofNullable(userRepository.selectOneByCondition(UserTableDef.USER.USERNAME.eq(username)))
                 .orElseThrow(() -> new UsernameNotFoundException("Cannot find user with given username."));
     }
 
+    /**
+     * Checks whether the specified username is already in use.
+     *
+     * @param username the username to check
+     * @return {@code true} if the username is taken, otherwise {@code false}
+     */
     public boolean isUsernameTaken(String username) {
         return userRepository.selectCountByCondition(UserTableDef.USER.USERNAME.eq(username)) != 0;
     }
 
+    /**
+     * Checks whether the specified email is already in use.
+     *
+     * @param email the email address to check
+     * @return {@code true} if the email is taken, otherwise {@code false}
+     */
     public boolean isEmailTaken(String email) {
         return userRepository.selectCountByCondition(UserTableDef.USER.EMAIL.eq(email)) != 0;
     }
 
+    /**
+     * Saves a new user to the database with encrypted password.
+     * <p>
+     * Validates that the username and email are unique, encrypts the password, and persists the user
+     * within a transaction.
+     *
+     * @param user the {@link User} entity to save
+     * @return the number of affected rows (typically 1)
+     * @throws BizException if the username or email is already taken
+     */
     @Transactional
     public int saveUser(User user) {
         // check user can be registered
@@ -75,6 +121,16 @@ public class UserService {
         return userRepository.insert(user);
     }
 
+    /**
+     * Retrieves a user by their username, checking the cache first.
+     * <p>
+     * Attempts to fetch the user from Redis cache; if not found, queries the database, caches the
+     * result, and returns the business representation of the user.
+     *
+     * @param username the username of the user to retrieve
+     * @return the {@link BizUser} object
+     * @throws BizException if the user does not exist
+     */
     public BizUser getUserByUsername(String username) {
         var userKey = cacheKeyComposer.getUserKey(username);
         return Optional.ofNullable(userCache.opsForValue().get(userKey))
@@ -88,6 +144,11 @@ public class UserService {
                 .orElseThrow(() -> BizException.unauthorised("用户不存在，请注册后再试。"));
     }
 
+    /**
+     * Resets the serial number for user-related operations daily.
+     * <p>
+     * Scheduled to run at midnight every day to reset the user serial counter.
+     */
     @Scheduled(cron = "0 0 0 * * *")
     public void resetUserSerial() {
         log.info("Resetting user serial.");

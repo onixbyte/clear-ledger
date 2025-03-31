@@ -13,6 +13,7 @@ import com.onixbyte.clearledger.repository.TransactionRepository;
 import com.onixbyte.clearledger.repository.UserLedgerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,9 @@ import java.util.List;
 
 /**
  * Service class for managing ledgers.
+ * <p>
+ * Provides methods to create, join, update, delete, and query ledgers, as well as manage user
+ * participation and ownership, with transactional support where applicable.
  *
  * @author zihluwang
  */
@@ -37,9 +41,19 @@ public class LedgerService {
     private final TransactionRepository transactionRepository;
     private final SerialService serialService;
 
+    /**
+     * Constructs a ledger service with required dependencies.
+     *
+     * @param ledgerRepository      the repository for ledger data operations
+     * @param userLedgerRepository  the repository for user-ledger relationship data operations
+     * @param transactionRepository the repository for transaction data operations
+     * @param serialService         the service for managing serial numbers
+     */
+    @Autowired
     public LedgerService(LedgerRepository ledgerRepository,
                          UserLedgerRepository userLedgerRepository,
-                         TransactionRepository transactionRepository, SerialService serialService) {
+                         TransactionRepository transactionRepository,
+                         SerialService serialService) {
         this.ledgerRepository = ledgerRepository;
         this.userLedgerRepository = userLedgerRepository;
         this.transactionRepository = transactionRepository;
@@ -47,9 +61,12 @@ public class LedgerService {
     }
 
     /**
-     * Create a ledger.
+     * Creates a new ledger and associates it with the current user as the owner.
      *
-     * @return the created ledger
+     * @param ledger the {@link Ledger} entity to create
+     * @return the created {@link BizLedger} with ownership details
+     * @throws BizException if the ledger name is already taken or the user has reached the
+     *                      join limit
      */
     @Transactional
     public BizLedger saveLedger(Ledger ledger) {
@@ -77,10 +94,12 @@ public class LedgerService {
     }
 
     /**
-     * Let the current user join the given ledger.
+     * Allows the current user to join an existing ledger as a member.
      *
-     * @param ledgerId ledger id
-     * @return joined ledger and role data
+     * @param ledgerId the ID of the ledger to join
+     * @return the joined {@link BizLedger} with membership details
+     * @throws BizException if the ledger does not exist, the user has reached the join limit, or
+     *                      the user is already a member
      */
     @Transactional
     public BizLedger joinLedger(String ledgerId) {
@@ -121,19 +140,19 @@ public class LedgerService {
     }
 
     /**
-     * Check whether the ledger name has been taken.
+     * Checks whether the specified ledger name is already in use.
      *
-     * @param name name of the ledger
-     * @return {@code true} if the name has been taken, otherwise {@code false}
+     * @param name the name of the ledger to check
+     * @return {@code true} if the name is taken, otherwise {@code false}
      */
     public boolean isNameTaken(String name) {
         return ledgerRepository.selectCountByCondition(LedgerTableDef.LEDGER.NAME.eq(name)) != 0;
     }
 
     /**
-     * Count ledgers the user created or joined.
+     * Counts the number of ledgers the current user has created or joined.
      *
-     * @return the count of ledgers the current user created or joined
+     * @return the number of ledgers the current user is associated with
      */
     public long countCreatedOrJoinedLedgers() {
         var currentUser = UserHolder.getCurrentUser();
@@ -141,19 +160,21 @@ public class LedgerService {
     }
 
     /**
-     * Check whether current user can create or join a ledger.
+     * Determines whether the current user can create or join a ledger.
+     * <p>
+     * Users are limited to a maximum of three ledgers.
      *
-     * @return {@code true} if current user can create or join a ledger, otherwise {@code false}
+     * @return {@code true} if the user can create or join a ledger, otherwise {@code false}
      */
     public boolean canCreateOrJoinLedger() {
         return countCreatedOrJoinedLedgers() < 3;
     }
 
     /**
-     * Check whether current user has joined the given ledger.
+     * Checks whether the current user has joined the specified ledger.
      *
-     * @param ledgerId ledger id
-     * @return {@code true} if current user has joined the ledger
+     * @param ledgerId the ID of the ledger to check
+     * @return {@code true} if the user has joined the ledger, otherwise {@code false}
      */
     public boolean isLedgerJoined(String ledgerId) {
         var currentUser = UserHolder.getCurrentUser();
@@ -163,19 +184,22 @@ public class LedgerService {
     }
 
     /**
-     * Check whether the given ledger exists in database.
+     * Checks whether the specified ledger exists in the database.
      *
-     * @param ledgerId ledger id
-     * @return {@code true} if ledger exists, otherwise {@code false}
+     * @param ledgerId the ID of the ledger to check
+     * @return {@code true} if the ledger exists, otherwise {@code false}
      */
     public boolean hasLedger(String ledgerId) {
         return ledgerRepository.selectCountByCondition(LedgerTableDef.LEDGER.ID.eq(ledgerId)) == 1;
     }
 
     /**
-     * Delete the given ledger.
+     * Deletes the specified ledger and its associated data.
+     * <p>
+     * Removes the ledger, its transactions, and user associations if the current user is the owner.
      *
-     * @param ledgerId ledger id
+     * @param ledgerId the ID of the ledger to delete
+     * @throws BizException if the ledger does not exist or the user lacks permission to delete it
      */
     @Transactional
     public void deleteLedger(String ledgerId) {
@@ -196,10 +220,12 @@ public class LedgerService {
     }
 
     /**
-     * Check whether a user can edit or delete the given ledger.
+     * Determines whether the current user can edit or delete the specified ledger.
+     * <p>
+     * Only the owner of the ledger has edit and delete permissions.
      *
-     * @param ledgerId ledger id
-     * @return {@code true} if user can edit this ledger, otherwise {@code false}
+     * @param ledgerId the ID of the ledger to check
+     * @return {@code true} if the user can edit the ledger, otherwise {@code false}
      */
     public boolean canEdit(String ledgerId) {
         var currentUser = UserHolder.getCurrentUser();
@@ -207,9 +233,10 @@ public class LedgerService {
     }
 
     /**
-     * Update ledger, ignore null values.
+     * Updates the specified ledger, ignoring null values.
      *
-     * @param ledger the ledger that will be updated
+     * @param ledger the {@link Ledger} entity with updated values
+     * @throws BizException if the user lacks permission or the new name is already taken
      */
     @Transactional
     public void updateLedger(Ledger ledger) {
@@ -226,9 +253,9 @@ public class LedgerService {
     }
 
     /**
-     * Get ledgers you have joined.
+     * Retrieves a list of ledgers the current user has joined.
      *
-     * @return ledgers you joined
+     * @return a list of {@link BizLedger} objects representing the user's joined ledgers
      */
     public List<BizLedger> getJoinedLedgers() {
         // get user information
@@ -239,14 +266,23 @@ public class LedgerService {
     }
 
     /**
-     * Get ledgers user can join.
+     * Retrieves a list of ledgers the current user can join.
      *
-     * @return ledgers user can join
+     * @return a list of {@link BizLedger} objects representing available ledgers
+     * @throws BizException as this service is not yet implemented
      */
     public List<BizLedger> getLedgersCanJoin() {
         throw BizException.serviceUnavailable("该服务暂未实现，请耐心等候！");
     }
 
+    /**
+     * Allows the current user to exit the specified ledger.
+     * <p>
+     * Removes the user's association with the ledger if they are not the owner.
+     *
+     * @param ledgerId the ID of the ledger to exit
+     * @throws BizException if the user is the owner or the exit operation fails
+     */
     public void exitLedger(Long ledgerId) {
         // get user information
         var user = UserHolder.getCurrentUser();
@@ -257,6 +293,11 @@ public class LedgerService {
         }
     }
 
+    /**
+     * Resets the serial number for ledger-related operations daily.
+     * <p>
+     * Scheduled to run at midnight every day to reset the serial counter.
+     */
     @Scheduled(cron = "0 0 0 * * *")
     public void resetSerial() {
         log.info("Resetting ledger serial.");

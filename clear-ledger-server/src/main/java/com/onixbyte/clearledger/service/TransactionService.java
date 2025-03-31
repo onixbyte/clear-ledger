@@ -17,13 +17,21 @@ import com.onixbyte.clearledger.repository.UserLedgerRepository;
 import com.onixbyte.guid.GuidCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+/**
+ * Service class for managing transactions within ledgers.
+ * <p>
+ * Provides methods to create, update, and query transactions, ensuring proper validation and
+ * integration with ledger and user permissions, with a scheduled task to reset serial numbers daily.
+ *
+ * @author zihluwang
+ * @author siujamo
+ */
 @Service
 public class TransactionService {
 
@@ -38,6 +46,16 @@ public class TransactionService {
     private final SerialService serialService;
     private final ViewTransactionRepository viewTransactionRepository;
 
+    /**
+     * Constructs a transaction service with required dependencies.
+     *
+     * @param transactionRepository    the repository for transaction data operations
+     * @param transactionIdCreator     the creator for generating unique transaction identifiers
+     * @param ledgerRepository         the repository for ledger data operations
+     * @param userLedgerRepository     the repository for user-ledger relationship data operations
+     * @param serialService            the service for managing serial numbers
+     * @param viewTransactionRepository the repository for view transaction data operations
+     */
     public TransactionService(TransactionRepository transactionRepository,
                               GuidCreator<String> transactionIdCreator,
                               LedgerRepository ledgerRepository,
@@ -51,6 +69,15 @@ public class TransactionService {
         this.viewTransactionRepository = viewTransactionRepository;
     }
 
+    /**
+     * Validates prerequisites for transaction operations.
+     * <p>
+     * Ensures the specified ledger exists and the user has permission to perform transactions on it.
+     *
+     * @param userId   the ID of the user performing the operation
+     * @param ledgerId the ID of the ledger to validate
+     * @throws BizException if the ledger does not exist or the user lacks permission
+     */
     private void preValidate(String userId, String ledgerId) {
         if (!ledgerRepository.hasLedger(ledgerId)) {
             throw BizException.notFound("账本不存在");
@@ -61,6 +88,18 @@ public class TransactionService {
         }
     }
 
+    /**
+     * Retrieves a paginated list of transactions for a specified ledger.
+     * <p>
+     * Queries transactions with optional date range filtering, sorted by transaction date in
+     * descending order.
+     *
+     * @param ledgerId the ID of the ledger to query transactions for
+     * @param pageNum  the page number to retrieve (1-based)
+     * @param pageSize the number of transactions per page
+     * @param request  the optional {@link QueryTransactionRequest} with date range filters
+     * @return a {@link Page} of {@link ViewTransaction} objects
+     */
     public Page<ViewTransaction> getTransactionPage(String ledgerId,
                                                     Long pageNum,
                                                     Long pageSize,
@@ -77,6 +116,16 @@ public class TransactionService {
         return viewTransactionRepository.paginate(new Page<>(pageNum, pageSize), queryWrapper);
     }
 
+    /**
+     * Creates a new transaction in the specified ledger.
+     * <p>
+     * Validates the user's permission, generates a unique ID, and persists the transaction, returning
+     * it as a view object.
+     *
+     * @param request the {@link CreateTransactionRequest} containing transaction details
+     * @return the created {@link ViewTransaction}
+     * @throws BizException if validation fails
+     */
     public ViewTransaction createTransaction(CreateTransactionRequest request) {
         var currentUser = UserHolder.getCurrentUser();
         preValidate(currentUser.id(), request.ledgerId());
@@ -94,6 +143,16 @@ public class TransactionService {
         return transaction.toView(currentUser.username());
     }
 
+    /**
+     * Updates an existing transaction in the specified ledger.
+     * <p>
+     * Validates the user's permission and updates the transaction, ignoring null values, then returns
+     * it as a view object.
+     *
+     * @param request the {@link UpdateTransactionRequest} containing updated transaction details
+     * @return the updated {@link ViewTransaction}
+     * @throws BizException if validation fails
+     */
     public ViewTransaction updateTransaction(UpdateTransactionRequest request) {
         var currentUser = UserHolder.getCurrentUser();
         preValidate(currentUser.id(), request.ledgerId());
@@ -111,6 +170,11 @@ public class TransactionService {
         return transaction.toView(currentUser.username());
     }
 
+    /**
+     * Resets the serial number for transaction-related operations daily.
+     * <p>
+     * Scheduled to run at midnight every day to reset the transaction serial counter.
+     */
     @Scheduled(cron = "0 0 0 * * *")
     public void resetSerial() {
         log.info("Resetting transaction serial.");

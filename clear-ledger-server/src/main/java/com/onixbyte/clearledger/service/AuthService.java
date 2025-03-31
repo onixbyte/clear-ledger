@@ -17,6 +17,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.UnsupportedEncodingException;
 import java.time.Duration;
 
+/**
+ * Service for handling user authentication and registration operations.
+ * <p>
+ * This class provides methods for user login, registration, and verification code management,
+ * integrating with authentication, caching, and email services.
+ *
+ * @author zihluwang
+ */
 @Service
 public class AuthService {
 
@@ -29,6 +37,16 @@ public class AuthService {
     private final RedisTemplate<String, String> verificationCodeCache;
     private final CacheKeyComposer cacheKeyComposer;
 
+    /**
+     * Constructs an authentication service with required dependencies.
+     *
+     * @param userService            the service for managing user data
+     * @param userCache              the Redis template for caching {@link BizUser} objects
+     * @param authenticationManager  the manager for performing authentication
+     * @param verificationCodeService the service for sending verification codes
+     * @param verificationCodeCache  the Redis template for caching verification codes
+     * @param cacheKeyComposer       the utility for composing cache keys
+     */
     public AuthService(UserService userService,
                        RedisTemplate<String, BizUser> userCache,
                        AuthenticationManager authenticationManager,
@@ -43,6 +61,17 @@ public class AuthService {
         this.cacheKeyComposer = cacheKeyComposer;
     }
 
+    /**
+     * Authenticates a user based on their username and password.
+     * <p>
+     * Performs authentication using the {@link AuthenticationManager}, caches the authenticated
+     * user in Redis for one day, and returns the user's business representation.
+     *
+     * @param username the username of the user attempting to log in
+     * @param password the password of the user
+     * @return the authenticated {@link BizUser} object
+     * @throws BizException if authentication fails or a server error occurs
+     */
     public BizUser login(String username, String password) {
         try {
             // perform authentication
@@ -63,6 +92,15 @@ public class AuthService {
         }
     }
 
+    /**
+     * Registers a new user and caches their details.
+     * <p>
+     * Saves the user to the database within a transaction, converts the entity to a business
+     * representation, and caches it in Redis for one day.
+     *
+     * @param user the {@link User} entity to register
+     * @return the registered {@link BizUser} object
+     */
     @Transactional
     public BizUser register(User user) {
         // ensure user can be created
@@ -74,6 +112,15 @@ public class AuthService {
         return bizUser;
     }
 
+    /**
+     * Sends a verification code to the specified audience.
+     * <p>
+     * Generates and sends a verification code via email, caching it in Redis with a five-minute
+     * expiry. Implements a one-minute lock to prevent frequent requests.
+     *
+     * @param audience the recipient (e.g., email address) to send the verification code to
+     * @throws BizException if the request rate is too high or a server error occurs
+     */
     public void sendVerificationCode(String audience) {
         var lockKey = cacheKeyComposer.getVerificationLockKey(audience);
         var codeKey = cacheKeyComposer.getVerificationCodeKey(audience);
@@ -85,16 +132,22 @@ public class AuthService {
                 verificationCodeCache.opsForValue().set(lockKey, "1", Duration.ofMinutes(1));
                 verificationCodeCache.opsForValue().set(codeKey, code, Duration.ofMinutes(5));
             } else {
-                throw BizException.tooManyRequests("您的请求频率过高，请稍后再试");
+                throw BizException.tooManyRequests(
+                        "Your request frequency is too high, please try again later");
             }
         } catch (MessagingException | UnsupportedEncodingException e) {
-            throw BizException.internalServerError("服务器异常，请稍后再试");
+            throw BizException.internalServerError("Server exception, please try again later");
         }
     }
 
+    /**
+     * Retrieves the cached verification code for the specified audience.
+     *
+     * @param audience the recipient (e.g., email address) associated with the verification code
+     * @return the verification code, or null if not found in the cache
+     */
     public String getVerificationCode(String audience) {
         return verificationCodeCache.opsForValue()
                 .get(cacheKeyComposer.getVerificationCodeKey(audience));
     }
-
 }
