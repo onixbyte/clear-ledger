@@ -8,6 +8,8 @@ spring:
   jackson:
     serialization:
       write-dates-as-timestamps: false
+  web:
+    locale: zh_CN
 
 mybatis-flex:
   configuration:
